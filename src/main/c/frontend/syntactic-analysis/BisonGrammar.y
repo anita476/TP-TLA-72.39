@@ -37,10 +37,15 @@
 %token <integer> INTEGER
 %token <token> ADD
 %token <token> CLOSE_PARENTHESIS
+%token <token> OPEN_CURLY_BRACE
+%token <token> CLOSE_CURLY_BRACE
 %token <token> DIV
 %token <token> MUL
 %token <token> OPEN_PARENTHESIS
 %token <token> SUB
+%token <token> IDENTIFIER
+%token <token> STRING
+
 
 %token <token> UNKNOWN
 
@@ -73,6 +78,7 @@ expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressi
 	;
 
 factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }
+	|   OPEN_CURLY_BRACE expression CLOSE_CURLY_BRACE				{ $$ = ExpressionFactorSemanticAction($2); }
 	| constant														{ $$ = ConstantFactorSemanticAction($1); }
 	;
 

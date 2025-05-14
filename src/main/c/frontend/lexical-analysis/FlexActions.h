@@ -29,6 +29,21 @@ Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerCon
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
+
+/* 
+* Ours 
+*/
+
+/* like parenthesis */
+Token CurlyBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
+/* to identify the names of variables and so on */
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
+/* to identify the names of variables and so on */
+Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
+/* error */
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 #endif
