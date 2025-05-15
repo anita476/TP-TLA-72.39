@@ -83,13 +83,6 @@ Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, T
 }
 
 
-Token CurlyBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
-	return token;
-}
-
 /* to identify the names of variables and so on */
 Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	return STRING;

@@ -78,7 +78,6 @@ expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressi
 	;
 
 factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }
-	|   OPEN_CURLY_BRACE expression CLOSE_CURLY_BRACE				{ $$ = ExpressionFactorSemanticAction($2); }
 	| constant														{ $$ = ConstantFactorSemanticAction($1); }
 	;
 

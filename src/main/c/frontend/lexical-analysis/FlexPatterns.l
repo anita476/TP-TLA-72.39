@@ -15,16 +15,12 @@
  * @see https://westes.github.io/flex/manual/Start-Conditions.html
  */
 %x MULTILINE_COMMENT
-
-/**
-Contextual definitions.
- *
- * @see https://westes.github.io/flex/manual/Contextual-Definitions.html
- */
-
 %x OBJECTS
 %x STRUCTURE
 %x ANIMATIONS
+%x PRESENTATION
+
+
 /**
  * Reusable patterns.
  *
@@ -34,7 +30,9 @@ Contextual definitions.
 
 %%
 
-"/*"								{ yy_push_state(MULTILINE_COMMENT); BeginMultilineCommentLexemeAction(createLexicalAnalyzerContext()); }
+<*>[[:space:]]+		                { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+
+<*>"/*"								{ yy_push_state(MULTILINE_COMMENT); BeginMultilineCommentLexemeAction(createLexicalAnalyzerContext()); }
 <MULTILINE_COMMENT>"*/"				{ EndMultilineCommentLexemeAction(createLexicalAnalyzerContext()); yy_pop_state(); }
 <MULTILINE_COMMENT>[[:space:]]+		{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <MULTILINE_COMMENT>[^*]+			{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
@@ -48,21 +46,19 @@ Contextual definitions.
 
 "("									{ return ParenthesisLexemeAction(createLexicalAnalyzerContext(), OPEN_PARENTHESIS); }
 ")"									{ return ParenthesisLexemeAction(createLexicalAnalyzerContext(), CLOSE_PARENTHESIS); }
-"{"                                 { return CurlyBraceLexemeAction(createLexicalAnalyzerContext(), OPEN_CURLY_BRACE); }   
-"}"                                 { return CurlyBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE); }   
+"}"                                 { IgnoredLexemeAction(createLexicalAnalyzerContext()); yy_pop_state(); }   
 
 [[:digit:]]+						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
 
-"Presentation"                    { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-"Objects"                         { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-"Structure"                       { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-"Animations"                      { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+"Presentation"                    { yy_push_state(PRESENTATION); IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+"Objects {"                         { yy_push_state(OBJECTS); IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+"Structure {"                       { yy_push_state(STRUCTURE); IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+"Animations {"                      { yy_push_state(ANIMATIONS); IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
 <OBJECTS>"Slide"                  { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <OBJECTS>"Image"                  { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <OBJECTS>"Textblock"              { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <OBJECTS>"Animation"              { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-
 <OBJECTS>"define"                 { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
 <STRUCTURE>"add"                  { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
@@ -80,9 +76,8 @@ Contextual definitions.
 <STRUCTURE>"below"                { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <STRUCTURE>"left"                 { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <STRUCTURE>"right"                { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+<STRUCTURE>"anchor"               { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
-<STRUCTURE>"anchor center"        { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-<STRUCTURE>"anchor top"           { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 [[:alpha:]][[:alnum:]]*             { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
