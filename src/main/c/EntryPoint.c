@@ -38,6 +38,7 @@ const int main(const int count, const char ** arguments) {
 	CompilationStatus compilationStatus = SUCCEED;
 	Program * program = compilerState.abstractSyntaxtTree;
 	if (syntacticAnalysisStatus == ACCEPT) {
+		/*
 		// ----------------------------------------------------------------------------------------
 		// Beginning of the Backend... ------------------------------------------------------------
 		logDebugging(logger, "Computing expression value...");
@@ -50,6 +51,7 @@ const int main(const int count, const char ** arguments) {
 			logError(logger, "The computation phase rejects the input program.");
 			compilationStatus = FAILED;
 		}
+		*/
 		// ...end of the Backend. -----------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------
 	}
