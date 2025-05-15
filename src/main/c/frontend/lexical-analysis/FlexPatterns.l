@@ -20,6 +20,8 @@
 %x ANIMATIONS
 %x PRESENTATION
 
+%x STRING
+
 
 /**
  * Reusable patterns.
@@ -78,8 +80,13 @@
 <STRUCTURE>"right"                { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 <STRUCTURE>"anchor"               { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
+<STRING>"\""						{ yy_push_state(STRING); IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+<STRING>[[:alpha:]][[:alnum:]]*             { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+<STRING>"\""						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); yy_pop_state(); }
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+
+
 [[:alpha:]][[:alnum:]]*             { IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
 

@@ -37,8 +37,6 @@ static void _logLexicalAnalyzerContext(const char * functionName, LexicalAnalyze
 
 /* PUBLIC FUNCTIONS */
 
-/* these we can keep (im guessing we'll support multiline comments) */
-
 void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	if (_logIgnoredLexemes) {
 		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
