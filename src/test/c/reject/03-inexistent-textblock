@@ -1,0 +1,13 @@
+Presentation presentation {
+    
+    objects {
+        define slide1 Slide { }
+    }   
+
+    structure {
+        slide1 { 
+            add heading with "hola";
+        }
+    }
+
+}
