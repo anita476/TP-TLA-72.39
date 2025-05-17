@@ -56,7 +56,7 @@
 %type <constant> constant
 %type <expression> expression
 %type <factor> factor
-%type <program> program
+%type <program> 
 
 /**
  * Precedence and associativity.
