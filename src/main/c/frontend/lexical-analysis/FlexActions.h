@@ -25,22 +25,16 @@ void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerC
 void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
-Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
+Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
 
-/* 
-* Ours 
-*/
+Token OpenBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token CloseBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
-/* like parenthesis */
-Token CurlyBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
-
-/* to identify the names of variables and so on */
 Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-
-/* to identify the names of variables and so on */
 Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 /* error */

@@ -12,6 +12,7 @@
 
 	int integer;
 	Token token;
+	char * string;
 
 	/** Non-terminals. */
 
@@ -39,12 +40,14 @@
 %token <token> CLOSE_PARENTHESIS
 %token <token> OPEN_CURLY_BRACE
 %token <token> CLOSE_CURLY_BRACE
-%token <token> DIV
-%token <token> MUL
 %token <token> OPEN_PARENTHESIS
 %token <token> SUB
-%token <token> IDENTIFIER
-%token <token> STRING
+%token <string> IDENTIFIER
+%token <string> STRING
+%token <token> PRESENTATION
+%token <token> COLON 
+%token <token> SEMICOLON
+
 
 
 %token <token> UNKNOWN
@@ -67,7 +70,12 @@
 
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol.
 
-program: expression													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+
+
+%%
+
+/*
+program: PRESENTATION IDENTIFIER OPEN_CURLY_BRACE CLOSE_CURLY_BRACE													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
 	;
 
 expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
@@ -83,5 +91,4 @@ factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactor
 
 constant: INTEGER													{ $$ = IntegerConstantSemanticAction($1); }
 	;
-
-%%
+*/
