@@ -30,7 +30,37 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 }
 
 /* PUBLIC FUNCTIONS */
+
+
+Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureSentence * structureList, AnimationDefinition * animationList){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Program * program = calloc(1, sizeof(Program));
+	program->object_definitions = objectList;
+	program->structure_sentences = structureList;
+	program->animation_definitions = animationList;
+	compilerState->abstractSyntaxtTree = program;
+	if (0 < flexCurrentContext()) {
+		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
+		compilerState->succeed = false;
+	}
+	else {
+		compilerState->succeed = true;
+	}
+	return program;
+}
+
+AnimationDefinition * AnimationDefinitionSemanticAction(AnimationDefinitionKind kind, AnimationStep * steps, int repeat_count){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+}
+
+
+
+
+
+
 /*
+
+
 
 Constant * IntegerConstantSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);

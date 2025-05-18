@@ -159,5 +159,6 @@ typedef struct {
 /**
  * Node recursive destructors.
  */
-
+void destroyProgram(Program * program);
+void destroyAnimationDefinition(AnimationDefinition * animationDefinition);
 #endif

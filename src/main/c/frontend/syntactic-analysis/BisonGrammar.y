@@ -9,7 +9,7 @@
 
 %union {
 	/** Terminals. */
-
+	//todo add decimal numbers for css properties
 	int integer;
 	Token token;
 	char * string;

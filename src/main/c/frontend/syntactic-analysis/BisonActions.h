@@ -26,4 +26,6 @@ Factor * ExpressionFactorSemanticAction(Expression * expression);
 Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression);
 */
 
+Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureSentence * structureList, AnimationDefinition * animationList);
+
 #endif
