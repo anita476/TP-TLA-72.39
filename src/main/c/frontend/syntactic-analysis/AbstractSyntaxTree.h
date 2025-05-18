@@ -14,13 +14,7 @@ void shutdownAbstractSyntaxTreeModule();
  * This typedefs allows self-referencing types.
  */
 
-typedef enum ExpressionType ExpressionType;
-typedef enum FactorType FactorType;
 
-typedef struct Constant Constant;
-typedef struct Expression Expression;
-typedef struct Factor Factor;
-typedef struct Program Program;
 /**
  * Node types for the Abstract Syntax Tree (AST).
  */
@@ -32,7 +26,7 @@ typedef enum {
     OBJ_IMAGE,
 } ObjectType;
 
-// Enum for property value types
+// Property value types 
 typedef enum {
     PROP_VAL_IDENTIFIER,
     PROP_VAL_INTEGER,
@@ -59,22 +53,22 @@ typedef struct ObjectDefinition {
 
 // Enum for all positions (centralize them all for simplicity, but in each case we accept only a subset)
 typedef enum {
-    TOP_LEFT,
-    TOP_RIGHT,
-    BOTTOM_LEFT,
-    BOTTOM_RIGHT,
-    CENTER_LEFT,
-    CENTER_RIGHT,
-    CENTER,
-    CENTER_TOP,
-    CENTER_BOTTOM,
-	TOP,
-	BOTTOM,
-	LEFT,
-	RIGHT
+    POS_TOP_LEFT,
+    POS_TOP_RIGHT,
+    POS_BOTTOM_LEFT,
+    POS_BOTTOM_RIGHT,
+    POS_CENTER_LEFT,
+    POS_CENTER_RIGHT,
+    POS_CENTER,
+    POS_CENTER_TOP,
+    POS_CENTER_BOTTOM,
+	POS_TOP,
+	POS_BOTTOM,
+	POS_LEFT,
+	POS_RIGHT
 } Position;
 
-// Enum to discriminate slide_content variants
+// Slide content types 
 typedef enum {
     SLIDE_CONTENT_EMPTY,
     SLIDE_CONTENT_ADD,
@@ -126,7 +120,6 @@ typedef enum {
     ANIM_DEF_SEQUENCE,     // START ... END control structure or with repeat
 } AnimationDefinitionKind;
 
-
 typedef struct AnimationStep AnimationStep;
 
 // Struct for animation step: THEN IDENTIFIER animation_type
@@ -160,14 +153,11 @@ typedef struct {
     ObjectDefinition *object_definitions;   
     StructureSentence *structure_sentences; 
     AnimationDefinition *animation_definitions; 
+
 } Program;
 
 /**
  * Node recursive destructors.
  */
-void releaseConstant(Constant * constant);
-void releaseExpression(Expression * expression);
-void releaseFactor(Factor * factor);
-void releaseProgram(Program * program);
 
 #endif

@@ -60,7 +60,7 @@ const int main(const int count, const char ** arguments) {
 		compilationStatus = FAILED;
 	}
 	logDebugging(logger, "Releasing AST resources...");
-	releaseProgram(program);
+	//releaseProgram(program);
 	logDebugging(logger, "Releasing modules resources...");
 	shutdownGeneratorModule();
 	shutdownCalculatorModule();

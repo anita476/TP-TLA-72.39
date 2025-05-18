@@ -30,6 +30,7 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 }
 
 /* PUBLIC FUNCTIONS */
+/*
 
 Constant * IntegerConstantSemanticAction(const int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
@@ -85,3 +86,4 @@ Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Express
 	}
 	return program;
 }
+*/

@@ -171,7 +171,6 @@ animation_definitions:
 	;
 animation_definition:
 	IDENTIFIER animation_type SEMICOLON
-	| IDENTIFIER animation_type SEMICOLON
 	| START animation_sequence END SEMICOLON
 	| START animation_sequence END REPEAT INTEGER TIMES SEMICOLON
 	;
