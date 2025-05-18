@@ -141,7 +141,7 @@ structure_sentence:
 slide_content:
 	%empty 																													
 	| ADD IDENTIFIER SEMICOLON 																							{ fprintf(stdout, "Inside slide content"); }
-	| ADD WITH STRING SEMICOLON 																							{ fprintf(stdout, "Inside slide content"); }
+	| ADD IDENTIFIER WITH STRING SEMICOLON 																							{ fprintf(stdout, "Inside slide content"); }
 	| ANCHOR anchor_position SEMICOLON																						{ fprintf(stdout, "Inside slide content"); }
 	| IDENTIFIER simple_position SEMICOLON  																							{ fprintf(stdout, "Inside slide content"); }
 	| IDENTIFIER compound_position SEMICOLON  																							{ fprintf(stdout, "Inside slide content"); }
@@ -184,7 +184,7 @@ animation_definition:
 	;
 animation_sequence:
 	%empty 																													
-	| animation_sequence animation_step
+	| animation_step animation_sequence 
 	;
 animation_step:
 	THEN IDENTIFIER animation_type
