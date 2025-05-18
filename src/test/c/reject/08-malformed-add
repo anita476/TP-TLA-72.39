@@ -1,14 +1,13 @@
 Presentation presentation {
     
     objects {
-        define heading Textblock { 
-            font-size:x;
-        }
+        define slide1 Slide { }
+        define image Image { }
     }   
 
     structure {
         slide1 { 
-            add heading with "hola";
+            add image "local/image/path"
         }
     }
 

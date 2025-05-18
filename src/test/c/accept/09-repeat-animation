@@ -1,0 +1,20 @@
+Presentation presentation {
+    
+    objects {
+        define slide1 Slide { }
+        define image Image { }
+    }   
+
+    structure {
+        slide1 { 
+            add image with "local/image/path";
+        }
+    }
+
+    animations {
+        slide1 start 
+        repeat 10 image appear
+        end; 
+    }
+
+}

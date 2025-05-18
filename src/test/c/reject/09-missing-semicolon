@@ -7,14 +7,8 @@ Presentation presentation {
 
     structure {
         slide1 { 
-            add image with "local/image/path";
+            add image with "local/image/path"
         }
-    }
-
-    animations {
-        slide1 start 
-        repeat 10 image rotate_left
-        end; 
     }
 
 }
