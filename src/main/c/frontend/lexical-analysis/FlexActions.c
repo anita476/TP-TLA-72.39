@@ -110,6 +110,20 @@ Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	return IDENTIFIER;
 }
 
+Token PropertyLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
+	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
+	return PROPERTY;
+}
+
+Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
+	return token;
+}
+
 
 /* reject, invalid syntax */
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {

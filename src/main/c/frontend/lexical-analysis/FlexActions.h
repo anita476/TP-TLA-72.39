@@ -30,12 +30,15 @@ Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
+Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
 Token OpenBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token CloseBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
 Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token PropertyLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
 
 /* error */
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
