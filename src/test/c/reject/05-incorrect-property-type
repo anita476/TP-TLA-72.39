@@ -2,7 +2,7 @@ Presentation presentation {
     
     objects {
         define heading Textblock { 
-            font = x;
+            font:x;
         }
     }   
 

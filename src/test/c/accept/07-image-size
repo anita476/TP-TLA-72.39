@@ -3,8 +3,8 @@ Presentation presentation {
     objects {
         define slide1 Slide { }
         define image Image {
-            width = 200;
-            height = 200;
+            width:200;
+            height:200;
          }
     }   
 
