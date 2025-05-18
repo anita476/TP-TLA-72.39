@@ -57,34 +57,22 @@ typedef struct ObjectDefinition {
     struct ObjectDefinition *next;
 } ObjectDefinition;
 
-// Enum for anchor positions
+// Enum for all positions (centralize them all for simplicity, but in each case we accept only a subset)
 typedef enum {
-    ANCHOR_TOP_LEFT,
-    ANCHOR_TOP_RIGHT,
-    ANCHOR_BOTTOM_LEFT,
-    ANCHOR_BOTTOM_RIGHT,
-    ANCHOR_CENTER_LEFT,
-    ANCHOR_CENTER_RIGHT,
-    ANCHOR_CENTER,
-    ANCHOR_CENTER_TOP,
-    ANCHOR_CENTER_BOTTOM,
-} AnchorPosition;
-
-// Enum for simple positions
-typedef enum {
-    POS_ABOVE,
-    POS_BELOW,
-    POS_LEFT,
-    POS_RIGHT,
-} SimplePosition;
-
-// Enum for compound positions
-typedef enum {
-    POS_ABOVE_LEFT,
-    POS_ABOVE_RIGHT,
-    POS_BELOW_LEFT,
-    POS_BELOW_RIGHT,
-} CompoundPosition;
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT,
+    CENTER_LEFT,
+    CENTER_RIGHT,
+    CENTER,
+    CENTER_TOP,
+    CENTER_BOTTOM,
+	TOP,
+	BOTTOM,
+	LEFT,
+	RIGHT
+} Position;
 
 // Enum to discriminate slide_content variants
 typedef enum {
@@ -105,16 +93,16 @@ typedef struct SlideContent {
             char *with_string;   // NULL if none
         } add;
 
-        AnchorPosition anchor;
+        Position anchor;
 
         struct {
             char *identifier;
-            SimplePosition pos;
+            Position pos;
         } simple_pos;
 
         struct {
             char *identifier;
-            CompoundPosition pos;
+            Position pos;
         } compound_pos;
     };
     struct SlideContent *next;  // linked list of slide content items
