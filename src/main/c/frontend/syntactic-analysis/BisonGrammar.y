@@ -15,23 +15,8 @@
 	char * string;
 
 	/** Non-terminals. */
-	//todo turn these into structs
-	String objects; /* define objects */
-	String structure; /* define structure and relationships of objects */
-	String animations; /* define extra behaviour*/
-
-	String object_definition; /* define type of object definition also */
-	String css_property /* has a key (kebab case) and a value (a constant)*/
-	String slide_content; /* type of addition, text and so on */
-	String structure_sentences /* list of slide1 { slide_content } */
-	
-	String animation_definition; /* define type of animation -> sequence or standalone */
-	String animation_sequence; /* should i store as a map ? or something like that*/
-	String animation_standalone; /* should probably know the type */
-
 
 	Program * program;
-	Constant * constant; /* string, integer and later on float*/
 }
 
 /**
@@ -42,9 +27,7 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Destructor-Decl.html
  */
-%destructor { releaseConstant($$); } <constant>
-%destructor { releaseExpression($$); } <>
-%destructor { releaseFactor($$); } <>
+
 
 /** Terminals. */
 
@@ -57,15 +40,37 @@
 %token <string> STRING
 %token <integer> INTEGER
 
+/* naming variables and definin css properties */
+%token <string> IDENTIFIER
+%token <string> PROPERTY
+
 /* Non built in data types*/
 %token <token> PRESENTATION
 %token <token> SLIDE
 %token <token> TEXTBLOCK
 %token <token> IMAGE
 
-/* naming variables and definin css properties */
-%token <string> IDENTIFIER
-%token <string> PROPERTY
+/* actions */
+%token <token> ADD
+%token <token> ANCHOR
+%token <token> WITH
+%token <token> TOP
+%token <token> BOTTOM
+%token <token> BELOW
+%token <token> ABOVE
+%token <token> LEFT
+%token <token> RIGHT
+%token <token> CENTER
+%token <token> START
+%token <token> THEN
+%token <token> END
+%token <token> REPEAT
+%token <token> TIMES
+
+/* animations we accept*/
+%token <token> ROTATE
+%token <token> APPEAR
+%token <token> DISSAPPEAR
 
 
 /* separation */
@@ -77,21 +82,7 @@
 %token <token> UNKNOWN
 
 /** Non-terminals. */
-%type <constant> constant
 %type <program> program
-%type <string> objects 
-%type <string> structure 
-%type <string> animations 
-%type <string> object_definitions
-%type <string> object_definition 
-%type <string> css_properties 
-
-%type <string> css_property 
-%type <string> structure_sentences
-%type <string> slide_content 
-%type <string> animation_definition 
-%type <string> animation_sequence 
-%type <string> animation_standalone;
 
 /**
  * Precedence and associativity.
@@ -105,7 +96,7 @@
 
 program: 
 	%empty 																														{ fprintf(stderr, "Empty program\n"); }
-	| PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure animations CLOSE_CURLY_BRACE      								{ fprintf(stdout, "Inside propgram"); }
+	| PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure animation CLOSE_CURLY_BRACE      								{ fprintf(stdout, "Inside propgram"); }
 	;
 objects:
 	OBJECT OPEN_CURLY_BRACE object_definitions CLOSE_CURLY_BRACE  																							{ fprintf(stdout, "Inside objects"); }
@@ -130,6 +121,7 @@ css_property:
 	; 
 structure:
 	STRUCTURE OPEN_CURLY_BRACE structure_sentences CLOSE_CURLY_BRACE 														{ fprintf(stdout, "Inside structure"); }
+	;
 structure_sentences:
 	%empty 																													
 	| structure_sentences structure_sentence
@@ -145,7 +137,7 @@ slide_content:
 	| ANCHOR anchor_position SEMICOLON																						{ fprintf(stdout, "Inside slide content"); }
 	| IDENTIFIER simple_position SEMICOLON  																							{ fprintf(stdout, "Inside slide content"); }
 	| IDENTIFIER compound_position SEMICOLON  																							{ fprintf(stdout, "Inside slide content"); }
-
+	;
 anchor_position:
 	TOP LEFT
 	| TOP RIGHT
@@ -164,13 +156,14 @@ simple_position:
 	| RIGHT
 	;
 compound_position:
-	ABOVE LEFT
+	  ABOVE LEFT
 	| ABOVE RIGHT
 	| BELOW LEFT
 	| BELOW RIGHT
 	;
 animation:
 	ANIMATION OPEN_CURLY_BRACE animation_definitions CLOSE_CURLY_BRACE 														{ fprintf(stdout, "Inside animation"); }
+	;
 
 animation_definitions:
 	%empty 																													
@@ -195,22 +188,3 @@ animation_type:
 	| ROTATE
 	;
 %%
-
-/*
-program: PRESENTATION IDENTIFIER OPEN_CURLY_BRACE CLOSE_CURLY_BRACE													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
-	;
-
-expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
-	| expression[left] DIV expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, DIVISION); }
-	| expression[left] MUL expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, MULTIPLICATION); }
-	| expression[left] SUB expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, SUBTRACTION); }
-	| factor														{ $$ = FactorExpressionSemanticAction($1); }
-	;
-
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }
-	| constant														{ $$ = ConstantFactorSemanticAction($1); }
-	;
-
-constant: INTEGER													{ $$ = IntegerConstantSemanticAction($1); }
-	;
-*/

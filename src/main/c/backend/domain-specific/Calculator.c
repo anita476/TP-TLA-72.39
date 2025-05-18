@@ -1,5 +1,4 @@
 #include "Calculator.h"
-
 /* MODULE INTERNAL STATE */
 
 static Logger * _logger = NULL;
@@ -134,3 +133,4 @@ ComputationResult computeFactor(Factor * factor) {
 			return _invalidComputation();
 	}
 }
+**/

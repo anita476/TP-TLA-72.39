@@ -15,7 +15,7 @@ void shutdownAbstractSyntaxTreeModule() {
 }
 
 /** PUBLIC FUNCTIONS */
-
+/*
 void releaseConstant(Constant * constant) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (constant != NULL) {
@@ -64,3 +64,4 @@ void releaseProgram(Program * program) {
 		free(program);
 	}
 }
+*/
