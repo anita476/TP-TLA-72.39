@@ -100,6 +100,7 @@
 %type <position> simple_position
 %type <position> anchor_position
 %type <slide_content> slide_content
+%type <slide_content> slide_contents
 
 %type <structure_definition> structure_definition
 %type <structure_definition> structure_definitions
@@ -167,12 +168,16 @@ structure_definitions:
 	| structure_definitions structure_definition								{ $$ = StructureListSemanticAction($1,$2); }											
 	;
 structure_definition:
-	IDENTIFIER OPEN_CURLY_BRACE slide_content CLOSE_CURLY_BRACE 				{ $$ = StructureDefinitionSemanticAction($1,$3); }
+	IDENTIFIER OPEN_CURLY_BRACE slide_contents CLOSE_CURLY_BRACE 				{ $$ = StructureDefinitionSemanticAction($1,$3); }
+	;
+
+slide_contents:
+	%empty 																		{ $$ = NULL; }											
+	| slide_contents slide_content												{ $$ = SlideContentListSemanticAction($1,$2); }	
 	;
 
 slide_content:
-	%empty 																		{ $$ = NULL; }											
-	| ADD IDENTIFIER SEMICOLON 													{ $$ = AdditionSlideContent($2, NULL); }
+	ADD IDENTIFIER SEMICOLON 													{ $$ = AdditionSlideContent($2, NULL); }
 	| ADD IDENTIFIER WITH STRING SEMICOLON 										{ $$ = AdditionSlideContent($2,$4); }
 	| ANCHOR anchor_position SEMICOLON											{ $$ = AnchorPositionSlideContent($2);  }
 	| IDENTIFIER simple_position SEMICOLON  									{ $$ = RelativeSimplePositionSlideContent($1,$2); }
@@ -190,6 +195,10 @@ anchor_position:
 	| CENTER                                                                	{ $$ = POS_CENTER;}
 	| CENTER TOP 														    	{ $$ = POS_CENTER_TOP;}	
 	| CENTER BOTTOM                                                         	{ $$ = POS_CENTER_BOTTOM;}
+	| TOP																		{ $$ = POS_CENTER_TOP;}
+	| BOTTOM																	{ $$ = POS_CENTER_BOTTOM;}
+	| LEFT																		{ $$ = POS_CENTER_LEFT;}
+	| RIGHT																		{ $$ = POS_CENTER_RIGHT;}
 	;
 simple_position:
 	ABOVE																		{ $$ = POS_TOP;}

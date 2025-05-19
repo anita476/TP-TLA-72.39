@@ -40,6 +40,7 @@ CssProperty * PropertyNumberSemanticAction(char * propertyName, int value);
 StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure);										
 StructureDefinition * StructureDefinitionSemanticAction(char * identifier, SlideContent * content);
 
+SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent);
 SlideContent * AdditionSlideContent(char * identifier, char * content); 
 SlideContent * AnchorPositionSlideContent(Position position);  
 SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position); 

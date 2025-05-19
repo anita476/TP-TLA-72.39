@@ -17,6 +17,7 @@ void shutdownAbstractSyntaxTreeModule() {
 /**  PRIVATE FUNCTIONS **/
 void releaseAnimationSteps(AnimationStep * animationSteps);
 void releaseCssProperties(CssProperty * propertyList);
+void releaseSlideContentList(SlideContent * slideContentList);
 void releaseSlideContent(SlideContent * slideContent);
 
 
@@ -97,6 +98,14 @@ void releaseStructureSection(StructureDefinition * structureList){
 		free(structureList->identifier);
 		releaseStructureSection(structureList->next);
 		free(structureList);
+	}
+}
+
+void releaseSlideContentList(SlideContent * slideContentList){
+	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
+	if (slideContentList != NULL) {
+		releaseSlideContent(slideContentList->next);
+		free(slideContentList);
 	}
 }
 

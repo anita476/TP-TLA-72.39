@@ -111,6 +111,14 @@ StructureDefinition * StructureDefinitionSemanticAction(char * identifier, Slide
 	return structure;
 }
 
+SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	if (slideContentList != NULL) {
+		newSlideContent->next = slideContentList;
+	}
+	return newSlideContent;
+}
+
 SlideContent * AdditionSlideContent(char * identifier, char * content){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
