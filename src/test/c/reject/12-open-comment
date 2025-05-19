@@ -1,11 +1,21 @@
-Presentation pres {/* Este comentario no va a ninguna parte
-    Object {
+
+Presentation {
+    Objects { /* Este comentario no va a ninguna parte
+
         Slide slide1  { }
-        Textblock heading  { }
-    }
+        Textblock heading1  { }
+        Textblock heading2  { }
+    }   
+ 
     Structure {
         slide1 { 
-            add heading with "hola";
+            add heading1 with "hola";
+            add heading2 with "chau";
+            anchor top;
+            heading2 below heading1;
         }
     }
 }
+
+
+

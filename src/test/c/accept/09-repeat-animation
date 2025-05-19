@@ -1,4 +1,3 @@
-/* --------------- TEST MUST BE REDONE --------------------- */
 Presentation presentation {
     
     Objects {
@@ -14,8 +13,9 @@ Presentation presentation {
 
     Animations {
         slide1 start 
-        then image appear repeat 10
-        then image dissapear
-        end ; 
+        then image appear
+        then image disappear
+        end repeat 10; 
     }
+
 }

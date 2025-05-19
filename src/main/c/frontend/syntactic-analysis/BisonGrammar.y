@@ -135,8 +135,8 @@
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol. -> should use it for empty structure or objects, or animations! 
 /* Only animations section is optional */
 program: 
-	PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure animation CLOSE_CURLY_BRACE     { ProgramSemanticAction(currentCompilerState(),$2,$4,$5,$6); }
-	|PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure CLOSE_CURLY_BRACE 			   { ProgramSemanticAction(currentCompilerState(),$2,$4,$5,NULL); }
+	PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure animation CLOSE_CURLY_BRACE     { $$ = ProgramSemanticAction(currentCompilerState(),$2,$4,$5,$6); }
+	|PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure CLOSE_CURLY_BRACE 			   	{ $$ = ProgramSemanticAction(currentCompilerState(),$2,$4,$5,NULL); }
 	;
 objects:
 	OBJECT OPEN_CURLY_BRACE object_definitions CLOSE_CURLY_BRACE  				{$$ = $3;}						
