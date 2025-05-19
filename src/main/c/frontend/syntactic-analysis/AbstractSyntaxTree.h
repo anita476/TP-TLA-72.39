@@ -30,7 +30,7 @@ typedef enum {
     PROP_VAL_DECIMAL
 } PropertyValueType;
 
-// Struct for a CSS property: property name and value (identifier or integer)
+// Struct for a CSS property: property name and value 
 typedef struct CssProperty {
     char *property_name;     // PROPERTY token text
     PropertyValueType value_type;
@@ -155,7 +155,7 @@ typedef struct AnimationDefinition {
 
 /************************************* OUR PROGRAM *********************************************** */
 typedef struct {
-    char *presentation_identifier; // Presentation name
+    char *presentation_identifier; 
 
     ObjectDefinition *object_definitions;   
     StructureDefinition *structure_definitions; 

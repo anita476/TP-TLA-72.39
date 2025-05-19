@@ -25,19 +25,21 @@ void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerC
 void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
+Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token DecimalLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token PropertyLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
 Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
-
-Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
 Token OpenBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token CloseBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
-Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token PropertyLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
 
 
 /* error */
