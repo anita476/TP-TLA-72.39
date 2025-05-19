@@ -3,7 +3,7 @@ Presentation presentation {
     objects {
         define slide1 Slide { }
         define heading Textblock { 
-            text-color = "green";
+            text-color:"green";
         }
     }   
 

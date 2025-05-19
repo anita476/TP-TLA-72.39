@@ -1,0 +1,17 @@
+Presentation presentation {
+    
+    objects {
+        define slide1 Slide { }
+        define image Image {
+            width:200;
+            height:200;
+         }
+    }   
+
+    structure {
+        slide1 { 
+            add image with "local/image/path";
+        }
+    }
+
+}
