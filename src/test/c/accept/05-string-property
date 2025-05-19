@@ -1,0 +1,16 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1{ }
+        Textblock heading { 
+            text-color: green;
+        }
+    }   
+
+    Structure {
+        slide1 { 
+            add heading with "hola";
+        }
+    }
+
+}

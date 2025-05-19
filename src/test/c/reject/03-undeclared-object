@@ -1,0 +1,16 @@
+/* FALSE POSITIVE */
+/*
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+    }   
+
+    Structure {
+        slide1 { 
+            add heading with "hola";
+        }
+    }
+
+}
+*/

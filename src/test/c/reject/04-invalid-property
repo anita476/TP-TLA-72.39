@@ -1,0 +1,19 @@
+
+/* FALSE POSITIVE */
+
+
+Presentation presentation {
+    
+    Objects {
+        heading Textblock {
+            property:1;
+        }
+    }   
+
+    Structure {
+        slide1 { 
+            add heading with "hola";
+        }
+    }
+
+}

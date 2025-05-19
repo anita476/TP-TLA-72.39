@@ -26,28 +26,28 @@ typedef struct {
 	int value;
 } ComputationResult;
 
-typedef ComputationResult (*BinaryOperator)(const int, const int);
+//typedef ComputationResult (*BinaryOperator)(const int, const int);
 
 /** Arithmetic operations. */
 
-ComputationResult add(const int leftAddend, const int rightAddend);
-ComputationResult divide(const int dividend, const int divisor);
-ComputationResult multiply(const int multiplicand, const int multiplier);
-ComputationResult subtract(const int minuend, const int subtract);
+//ComputationResult add(const int leftAddend, const int rightAddend);
+//ComputationResult divide(const int dividend, const int divisor);
+//ComputationResult multiply(const int multiplicand, const int multiplier);
+//ComputationResult subtract(const int minuend, const int subtract);
 
 /**
  * Computes the final value of a mathematical constant.
  */
-ComputationResult computeConstant(Constant * constant);
+//ComputationResult computeConstant(Constant * constant);
 
 /**
  * Computes the final value of a mathematical expression.
  */
-ComputationResult computeExpression(Expression * expression);
+//ComputationResult computeExpression(Expression * expression);
 
 /**
  * Computes the final value of a mathematical factor.
  */
-ComputationResult computeFactor(Factor * factor);
+//ComputationResult computeFactor(Factor * factor);
 
 #endif

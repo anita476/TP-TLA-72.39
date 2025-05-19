@@ -1,0 +1,18 @@
+/*
+	Un comentario de varias líneas
+*/
+Presentation pres {
+	Objects {
+		Slide slide1{ }
+		Textblock heading { 
+			/* hello ! */
+			text-color: green;
+		}
+	}   
+
+	Structure 			/* hello ! */ {
+		slide1 { 
+			add heading with "hola";
+		}
+	}
+}
