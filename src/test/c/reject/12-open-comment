@@ -2,9 +2,9 @@
 Presentation {
     Objects { /* This goes nowhere...
 
-        Slide slide1  { }
-        Textblock heading1  { }
-        Textblock heading2  { }
+        Slide slide1 { }
+        Textblock heading1 { }
+        Textblock heading2 { }
     }   
  
     Structure {

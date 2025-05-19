@@ -1,7 +1,7 @@
 Presentation presentation {
     
     Objects {
-        Slide slide1{ }
+        Slide slide1 { }
         Textblock heading { 
             text-color: green;
         }

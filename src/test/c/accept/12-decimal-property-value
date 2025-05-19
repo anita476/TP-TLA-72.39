@@ -4,7 +4,7 @@ Presentation presentation {
         Slide slide1 { }
         Image image {
             width:200.0;
-         }
+        }
     }   
 
     Structure {

@@ -1,7 +1,7 @@
 Presentation presentation { 
 
-    Objects {}
+    Objects { }
 
-    Structure {}
+    Structure { }
     
 }

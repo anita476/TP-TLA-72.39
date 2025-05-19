@@ -1,8 +1,8 @@
 Presentation presentation {
     
     Objects {
-        Slide slide1  { }
-        Textblock heading  { }
+        Slide slide1 { }
+        Textblock heading { }
     }   
 
     Structure {

@@ -4,7 +4,7 @@
 Presentation pres {
 
 	Objects {
-		Slide slide1{ }
+		Slide slide1 { }
 		Textblock heading { 
 			/* hello ! */
 			text-color: green;
