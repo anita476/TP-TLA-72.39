@@ -34,7 +34,9 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Destructor-Decl.html
  */
-
+%destructor { releaseObjectsSection($$); } ObjectDefinition
+%destructor { releaseStructureSection($$); } StructureDefinition
+%destructor { releaseAnimationsSection($$); } AnimationDefinition
 
 /** Terminals. */
 
@@ -114,6 +116,9 @@
 %type <animation_definition> animation_definition
 %type <animation_definition> animation_definitions
 %type <animation_definition> animation
+
+
+
 /**
  * Precedence and associativity.
  *
@@ -214,7 +219,7 @@ animation_step:
 	;
 animation_type:
 	APPEAR																		{$$ = ANIM_APPEAR;}
-	| DISSAPEAR																{$$ = ANIM_DISSAPPEAR;}	
+	| DISSAPEAR																	{$$ = ANIM_DISSAPPEAR;}	
 	| ROTATE																	{$$ = ANIM_ROTATE;}
 	;
 %%

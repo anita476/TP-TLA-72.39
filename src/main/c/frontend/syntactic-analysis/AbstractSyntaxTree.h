@@ -10,9 +10,6 @@ void initializeAbstractSyntaxTreeModule();
 /** Shutdown module's internal state. */
 void shutdownAbstractSyntaxTreeModule();
 
-/**
- * This typedefs allows self-referencing types.
- */
 
 
 /**
@@ -40,7 +37,7 @@ typedef struct CssProperty {
         char *identifier;
         int integer;
     } value;
-    struct CssProperty *next;  // linked list
+    struct CssProperty *next;  
 } CssProperty;
 
 // Struct for object definition (slide, textblock, image)
@@ -71,7 +68,6 @@ typedef enum {
 
 // Slide content types 
 typedef enum {
-    SLIDE_CONTENT_EMPTY,
     SLIDE_CONTENT_ADD,
     SLIDE_CONTENT_ADD_WITH_STRING,
     SLIDE_CONTENT_ANCHOR,
@@ -146,7 +142,7 @@ typedef struct AnimationDefinition {
 
 
 
-/************************************* MY PROGRAM *********************************************** */
+/************************************* OUR PROGRAM *********************************************** */
 typedef struct {
     char *presentation_identifier; // Presentation name
 
@@ -161,5 +157,9 @@ typedef struct {
  * Node recursive destructors.
  */
 void destroyProgram(Program * program);
-void destroyAnimationDefinition(AnimationDefinition * animationDefinition);
+
+void releaseAnimationsSection(AnimationDefinition * animationList);
+void releaseObjectsSection(ObjectDefinition * objectList);
+void releaseStructuresSection(StructureDefinition * structureList);
+
 #endif

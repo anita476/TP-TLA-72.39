@@ -1,2 +1,14 @@
- { 1 + 2 }
-Slide
+Presentation presentation {
+    
+    Objects {
+        Slide slide1  { }
+    }   
+
+    Structure {
+        slide1 { }
+    }
+    Animations {
+        
+    }
+
+}

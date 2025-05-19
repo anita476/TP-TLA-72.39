@@ -1,11 +1,14 @@
 Presentation presentation {
     
-    objects {
-        define slide1 Slide { }
+    Objects {
+        Slide slide1  { }
     }   
 
-    structure {
+    Structure {
         slide1 { }
+    }
+    Animations {
+        
     }
 
 }
