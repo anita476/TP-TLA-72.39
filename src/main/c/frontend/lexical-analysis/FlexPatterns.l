@@ -45,10 +45,11 @@
 <OBJECTS_DEFINITION>"{"                 { yy_push_state(PROPERTIES); return OpenBraceLexemeAction(createLexicalAnalyzerContext(), OPEN_CURLY_BRACE);  }
 <OBJECTS_DEFINITION>"}"                 { yy_pop_state(); yy_pop_state(); return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE);  }
 
-<PROPERTIES>[a-z]+(-[a-z]+)*            {return PropertyLexemeAction(createLexicalAnalyzerContext());}
-<PROPERTIES>[0-9]+\.[0-9]+              {return DecimalLexemeAction(createLexicalAnalyzerContext());}
-<PROPERTIES>[0-9]+(\.[0-9]+)?[a-zA-Z]+  {return PropertyLexemeAction(createLexicalAnalyzerContext());}
-<PROPERTIES>"}"                         { yy_pop_state(); return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE);  }
+<PROPERTIES>[a-z]+(-[a-z]+)*            { return PropertyLexemeAction(createLexicalAnalyzerContext());}
+<PROPERTIES>-?[0-9]+\.[0-9]+              { return DecimalLexemeAction(createLexicalAnalyzerContext());}
+<PROPERTIES>-?[0-9]+                    { return IntegerLexemeAction(createLexicalAnalyzerContext());}
+<PROPERTIES>[0-9]+(\.[0-9]+)?[a-zA-Z]+  { return PropertyLexemeAction(createLexicalAnalyzerContext());}
+<PROPERTIES>"}"                         { yy_pop_state(); return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE);}
 
 "Structure"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), STRUCTURE); }
 "Animations"                            { return KeywordLexemeAction(createLexicalAnalyzerContext(), ANIMATION); }
