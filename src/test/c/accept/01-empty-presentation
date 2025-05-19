@@ -1,1 +1,4 @@
-Presentation presentation { }
+Presentation presentation { 
+    Objects {}
+    Structure {}
+}

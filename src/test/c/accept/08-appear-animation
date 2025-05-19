@@ -1,8 +1,8 @@
 Presentation presentation {
     
     Objects {
-        slide1 Slide { }
-        heading Textblock { }
+        Slide slide1  { }
+        Textblock heading  { }
     }   
 
     Structure {
@@ -13,7 +13,7 @@ Presentation presentation {
 
     Animations {
         slide1 start 
-        heading appear 
+        then heading appear 
         end; 
     }
 

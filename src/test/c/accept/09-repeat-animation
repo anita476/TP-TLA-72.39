@@ -1,8 +1,9 @@
+/* --------------- TEST MUST BE REDONE --------------------- */
 Presentation presentation {
     
     Objects {
-        slide1 Slide { }
-        image Image { }
+        Slide slide1  { }
+        Image image  { }
     }   
 
     Structure {
@@ -13,8 +14,8 @@ Presentation presentation {
 
     Animations {
         slide1 start 
-        repeat 10 image appear
-        end; 
+        then image appear repeat 10
+        then image dissapear
+        end ; 
     }
-
 }

@@ -87,6 +87,7 @@ CssProperty * PropertySemanticAction(char * propertyName, char * value){
 CssProperty * PropertyNumberSemanticAction(char * propertyName, int value){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	CssProperty * property = calloc(1, sizeof(CssProperty));
+	property->value_type = PROP_VAL_INTEGER;
 	property->property_name = propertyName;
 	property->value.integer = value;
 	property->next = NULL; 
@@ -163,16 +164,27 @@ AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, Anima
 	animation->single.type = type;
 	return animation;
 }
-AnimationDefinition * AnimationDefinitionSequenceSemanticAction(AnimationStep * steps, int repeat){
+AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifier ,AnimationStep * steps, int repeat){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	AnimationDefinition * animation = calloc(1, sizeof(AnimationDefinition));
 	animation->kind = ANIM_DEF_SEQUENCE;
+	animation->sequence.identifier = identifier;
 	animation->sequence.steps = steps;
 	animation->sequence.repeat_count = repeat;
 	return animation;
 }
 
-AnimationStep * AnimationSequenceSemanticAction(AnimationStep * new, AnimationStep * steps){
+AnimationDefinition * AnimationDefinitionPairSemanticAction(char * identifier1, char * identifier2, AnimationType type){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	AnimationDefinition * animation = calloc(1, sizeof(AnimationDefinition));
+	animation->kind = ANIM_DEF_PAIR;
+	animation->pair.identifier1 = identifier1;
+	animation->pair.identifier2 = identifier2;
+	animation->pair.type = type;
+	return animation;
+}
+
+AnimationStep * AnimationSequenceSemanticAction(AnimationStep * steps, AnimationStep * new){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (steps != NULL) {
 		new->next = steps;

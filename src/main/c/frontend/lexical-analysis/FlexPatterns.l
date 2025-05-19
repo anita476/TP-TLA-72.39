@@ -14,10 +14,10 @@
  *
  * @see https://westes.github.io/flex/manual/Start-Conditions.html
  */
-%x MULTILINE_COMMENT
-%x OBJECTS_SECTION 
-%x OBJECTS_DEFINITION 
-%x PROPERTIES
+%s MULTILINE_COMMENT
+%s OBJECTS_SECTION 
+%s OBJECTS_DEFINITION 
+%s PROPERTIES
 
 
 /**
@@ -39,14 +39,14 @@
 [[:digit:]]+						    { return IntegerLexemeAction(createLexicalAnalyzerContext()); }
 
 "Presentation"                          { return KeywordLexemeAction(createLexicalAnalyzerContext(),PRESENTATION); }
-"Objects"                               { return KeywordLexemeAction(createLexicalAnalyzerContext(),OBJECT); yy_push_state(OBJECTS_SECTION); }
-<OBJECTS_SECTION>"{"                    { return OpenBraceLexemeAction(createLexicalAnalyzerContext(), OPEN_CURLY_BRACE); yy_push_state(OBJECTS_DEFINITION); }
-<OBJECTS_SECTION>"}"                    { return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE); yy_pop_state(); }
-<OBJECTS_DEFINITION>"{"                 { return OpenBraceLexemeAction(createLexicalAnalyzerContext(), OPEN_CURLY_BRACE); yy_push_state(PROPERTIES); }
-<OBJECTS_DEFINITION>"}"                 { return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE); yy_pop_state(); }
+"Objects"                               { yy_push_state(OBJECTS_SECTION); return KeywordLexemeAction(createLexicalAnalyzerContext(),OBJECT); }
+<OBJECTS_SECTION>"{"                    { yy_push_state(OBJECTS_DEFINITION); return OpenBraceLexemeAction(createLexicalAnalyzerContext(), OPEN_CURLY_BRACE);  }
+<OBJECTS_SECTION>"}"                    {  yy_pop_state(); return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE); }
+<OBJECTS_DEFINITION>"{"                 { yy_push_state(PROPERTIES); return OpenBraceLexemeAction(createLexicalAnalyzerContext(), OPEN_CURLY_BRACE);  }
+<OBJECTS_DEFINITION>"}"                 { yy_pop_state(); yy_pop_state(); return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE);  }
 
 <PROPERTIES>[a-z]+(-[a-z]+)*            {return PropertyLexemeAction(createLexicalAnalyzerContext());}
-<PROPERTIES>"}"                         { return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE); yy_pop_state(); }
+<PROPERTIES>"}"                         { yy_pop_state(); return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE);  }
 
 "Structure"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), STRUCTURE); }
 "Animations"                            { return KeywordLexemeAction(createLexicalAnalyzerContext(), ANIMATION); }
@@ -60,11 +60,14 @@
 "then"                                  { return KeywordLexemeAction(createLexicalAnalyzerContext(), THEN); }
 "repeat"                                { return KeywordLexemeAction(createLexicalAnalyzerContext(), REPEAT); }
 "end"                                   { return KeywordLexemeAction(createLexicalAnalyzerContext(), END); }
-"times"                                 { return KeywordLexemeAction(createLexicalAnalyzerContext(), TIMES); }
 
 "appear"                                { return KeywordLexemeAction(createLexicalAnalyzerContext(), APPEAR); }
-"dissapear"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), DISSAPEAR); }
+"disappear"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), DISAPPEAR); }
 "rotate"                                { return KeywordLexemeAction(createLexicalAnalyzerContext(), ROTATE); }
+"fade"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), FADE); }
+"jump"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), JUMP); }
+"into"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), INTO); }
+
 
 
 

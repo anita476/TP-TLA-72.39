@@ -109,11 +109,14 @@ typedef enum {
     ANIM_APPEAR,
     ANIM_DISSAPPEAR,
     ANIM_ROTATE,
+    ANIM_FADE_INTO,
+    ANIM_JUMP_INTO
 } AnimationType;
 
 typedef enum {
     ANIM_DEF_SINGLE,       // to animate a single object
     ANIM_DEF_SEQUENCE,     // START ... END control structure or with repeat
+    ANIM_DEF_PAIR,         // to animate slide transitions
 } AnimationDefinitionKind;
 
 typedef struct AnimationStep AnimationStep;
@@ -133,9 +136,15 @@ typedef struct AnimationDefinition {
             AnimationType type;
         } single;
         struct {
+            char * identifier; // identifier of SLIDE (validate identifier types later in backend)
             AnimationStep *steps; // linked list of steps
             int repeat_count;     // 1 if no repeat, otherwise repeat times
         } sequence;
+        struct {
+            char * identifier1;
+            char * identifier2;
+            AnimationType type; 
+        } pair;
     };
     struct AnimationDefinition *next;
 } AnimationDefinition;

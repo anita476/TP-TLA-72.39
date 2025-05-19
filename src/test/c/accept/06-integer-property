@@ -1,10 +1,9 @@
 Presentation presentation {
     
     Objects {
-        slide1 Slide { }
-        image Image {
+        Slide slide1 { }
+        Image image {
             width:200;
-            height:200;
          }
     }   
 

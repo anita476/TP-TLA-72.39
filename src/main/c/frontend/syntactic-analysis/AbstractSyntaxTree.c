@@ -40,7 +40,12 @@ void releaseAnimationsSection(AnimationDefinition * animationList){
 				free(animationList->single.identifier);
 				break;
 			case ANIM_DEF_SEQUENCE:
+				free(animationList->sequence.identifier);
 				releaseAnimationSteps(animationList->sequence.steps);
+				break;
+			case ANIM_DEF_PAIR:
+				free(animationList->pair.identifier1);
+				free(animationList->pair.identifier2);
 				break;
 		}
 		releaseAnimationsSection(animationList->next);
@@ -72,9 +77,11 @@ void releaseCssProperties(CssProperty * propertyList){
 	if (propertyList != NULL) {
 		switch (propertyList->value_type) {
 			case PROP_VAL_IDENTIFIER:
+				logDebugging(_logger, "Freeing identifier property");
 				free(propertyList->value.identifier);
 				break;
-			default:
+			case PROP_VAL_INTEGER:
+				logDebugging(_logger, "Freeing integer property");
 				break;
 		}
 		free(propertyList->property_name);

@@ -1,9 +1,9 @@
 Presentation presentation {
     
     Objects {
-        slide1 Slide { }
-        heading Textblock { 
-            text-color:"green";
+        Slide slide1{ }
+        Textblock heading { 
+            text-color: green;
         }
     }   
 

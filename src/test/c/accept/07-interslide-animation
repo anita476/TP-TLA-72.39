@@ -1,8 +1,8 @@
 Presentation presentation {
     
     Objects {
-        slide1 Slide { }
-        slide2 Slide { }
+        Slide slide1  { }
+        Slide slide2  { }
     }   
 
     Structure {
@@ -11,7 +11,7 @@ Presentation presentation {
     }
 
     Animations {
-        slide1 dissolve_into slide2;
+        slide1 fade into slide2;
     }
 
 }

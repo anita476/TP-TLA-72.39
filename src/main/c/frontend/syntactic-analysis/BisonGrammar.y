@@ -74,12 +74,14 @@
 %token <token> THEN
 %token <token> END
 %token <token> REPEAT
-%token <token> TIMES
 
 /* animations we accept*/
 %token <token> ROTATE
 %token <token> APPEAR
-%token <token> DISSAPEAR
+%token <token> DISAPPEAR
+%token <token> JUMP
+%token <token> FADE
+%token <token> INTO
 
 
 /* separation */
@@ -111,6 +113,8 @@
 %type <object_definition> objects
 
 %type <animation_type> animation_type
+%type <animation_type> animation_type_slides
+
 %type <animation_step> animation_step
 %type <animation_step> animation_sequence
 %type <animation_definition> animation_definition
@@ -128,9 +132,10 @@
 %%
 
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol. -> should use it for empty structure or objects, or animations! 
-
+/* Only animations section is optional */
 program: 
 	PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure animation CLOSE_CURLY_BRACE     { ProgramSemanticAction(currentCompilerState(),$2,$4,$5,$6); }
+	|PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure CLOSE_CURLY_BRACE 			   { ProgramSemanticAction(currentCompilerState(),$2,$4,$5,NULL); }
 	;
 objects:
 	OBJECT OPEN_CURLY_BRACE object_definitions CLOSE_CURLY_BRACE  				{$$ = $3;}						
@@ -151,6 +156,7 @@ css_properties:
 	;
 css_property:
 	PROPERTY COLON IDENTIFIER SEMICOLON 										{ $$ = PropertySemanticAction($1, $3); }
+	|PROPERTY COLON PROPERTY SEMICOLON 										{ $$ = PropertySemanticAction($1, $3); }
 	| PROPERTY COLON INTEGER SEMICOLON 											{ $$ = PropertyNumberSemanticAction($1,$3); }
 	; 
 structure:
@@ -207,8 +213,9 @@ animation_definitions:
 	;
 animation_definition:
 	IDENTIFIER animation_type SEMICOLON								        	{ $$ = AnimationDefinitionSemanticAction($1,$2); }
-	| START animation_sequence END SEMICOLON									{ $$ = AnimationDefinitionSequenceSemanticAction($2,1); }
-	| START animation_sequence END REPEAT INTEGER TIMES SEMICOLON				{ $$ = AnimationDefinitionSequenceSemanticAction($2,$5); }
+	| IDENTIFIER animation_type_slides IDENTIFIER SEMICOLON							{ $$ = AnimationDefinitionPairSemanticAction($1,$3,$2); }
+	| IDENTIFIER START animation_sequence END SEMICOLON							{ $$ = AnimationDefinitionSequenceSemanticAction($1, $3,1); }
+	| IDENTIFIER START animation_sequence END REPEAT INTEGER SEMICOLON	{ $$ = AnimationDefinitionSequenceSemanticAction($1, $3,$6); }
 	;
 animation_sequence:
 	%empty 																		{ $$ = NULL; }											
@@ -219,7 +226,11 @@ animation_step:
 	;
 animation_type:
 	APPEAR																		{$$ = ANIM_APPEAR;}
-	| DISSAPEAR																	{$$ = ANIM_DISSAPPEAR;}	
+	| DISAPPEAR																	{$$ = ANIM_DISSAPPEAR;}	
 	| ROTATE																	{$$ = ANIM_ROTATE;}
+	;
+animation_type_slides:
+	FADE INTO																	{$$ = ANIM_FADE_INTO;}
+	| JUMP INTO																	{$$ = ANIM_JUMP_INTO;}
 	;
 %%
