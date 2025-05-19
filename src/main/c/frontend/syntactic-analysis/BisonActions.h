@@ -28,4 +28,25 @@ Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Express
 
 Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureSentence * structureList, AnimationDefinition * animationList);
 
+ObjectDefinition * ObjectListSemanticAction(); 
+ObjectDefinition * SlideSemanticAction(); 
+ObjectDefinition * TextBlockSemanticAction(); 
+ObjectDefinition * ImageSemanticAction(); 
+
+CssProperty * PropertyListSemanticAction(); 	
+CssProperty * PropertySemanticAction(); 
+
+StructureSentence * StructureListSemanticAction();										
+StructureSentence * StructureSentenceSemanticAction();
+
+SlideContent * AdditionSlideContent(); 
+SlideContent * AdditionSlideContent(); 
+SlideContent * AnchorPositionSlideContent();  
+SlideContent * RelativeSimplePositionSlideContent(); 
+SlideContent * RelativeDoublePositionSlideContent(); 
+
+AnimationDefinition * AnimationListSemanticAction(); 
+AnimationDefinition * AnimationDefinitionSemanticAction(AnimationStep);
+AnimationStep * AnimationSequenceSemanticAction(AnimationStep * new, AnimationStep * steps); 
+AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type); 		
 #endif

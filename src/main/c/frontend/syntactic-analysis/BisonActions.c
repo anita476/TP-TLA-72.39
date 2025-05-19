@@ -49,11 +49,6 @@ Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition 
 	return program;
 }
 
-AnimationDefinition * AnimationDefinitionSemanticAction(AnimationDefinitionKind kind, AnimationStep * steps, int repeat_count){
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-}
-
-
 
 
 

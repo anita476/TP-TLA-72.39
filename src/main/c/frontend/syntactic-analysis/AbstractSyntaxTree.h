@@ -75,7 +75,7 @@ typedef enum {
     SLIDE_CONTENT_ADD_WITH_STRING,
     SLIDE_CONTENT_ANCHOR,
     SLIDE_CONTENT_SIMPLE_POS,
-    SLIDE_CONTENT_COMPOUND_POS,
+    SLIDE_CONTENT_DOUBLE_POS,
 } SlideContentType;
 
 // Struct for slide content
@@ -88,16 +88,15 @@ typedef struct SlideContent {
         } add;
 
         Position anchor;
-
+		struct {
+			char * child;
+			Position pos;
+			char * parent;
+		} position_items;
         struct {
             char *identifier;
             Position pos;
-        } simple_pos;
-
-        struct {
-            char *identifier;
-            Position pos;
-        } compound_pos;
+        } position_item;
     };
     struct SlideContent *next;  // linked list of slide content items
 } SlideContent;
@@ -155,6 +154,7 @@ typedef struct {
     AnimationDefinition *animation_definitions; 
 
 } Program;
+
 
 /**
  * Node recursive destructors.
