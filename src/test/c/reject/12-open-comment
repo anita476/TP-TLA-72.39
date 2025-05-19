@@ -1,6 +1,6 @@
 
 Presentation {
-    Objects { /* Este comentario no va a ninguna parte
+    Objects { /* This goes nowhere...
 
         Slide slide1  { }
         Textblock heading1  { }
