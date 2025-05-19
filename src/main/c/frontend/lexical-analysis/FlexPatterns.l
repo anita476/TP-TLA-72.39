@@ -47,6 +47,7 @@
 
 <PROPERTIES>[a-z]+(-[a-z]+)*            {return PropertyLexemeAction(createLexicalAnalyzerContext());}
 <PROPERTIES>[0-9]+\.[0-9]+              {return DecimalLexemeAction(createLexicalAnalyzerContext());}
+<PROPERTIES>[0-9]+(\.[0-9]+)?[a-zA-Z]+  {return PropertyLexemeAction(createLexicalAnalyzerContext());}
 <PROPERTIES>"}"                         { yy_pop_state(); return CloseBraceLexemeAction(createLexicalAnalyzerContext(), CLOSE_CURLY_BRACE);  }
 
 "Structure"                             { return KeywordLexemeAction(createLexicalAnalyzerContext(), STRUCTURE); }
