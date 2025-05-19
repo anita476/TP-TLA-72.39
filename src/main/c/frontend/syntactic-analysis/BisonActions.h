@@ -32,10 +32,10 @@ ObjectDefinition * ObjectListSemanticAction(ObjectDefinition * objectList, Objec
 ObjectDefinition * ObjectDefinitionSemanticAction(ObjectType type, char * identifier, CssProperty * cssProperties); 
 
 CssProperty * PropertyListSemanticAction(CssProperty * propertyList, CssProperty * newProperty); 	
-//todo make value not identifier but something more flexible
+
 CssProperty * PropertySemanticAction(char * propertyName, char * value); 
-// todo make value can be negative
 CssProperty * PropertyNumberSemanticAction(char * propertyName, int value); 
+CssProperty * PropertyDecimalSemanticAction(char * propertyName, float value);
 
 StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure);										
 StructureDefinition * StructureDefinitionSemanticAction(char * identifier, SlideContent * content);

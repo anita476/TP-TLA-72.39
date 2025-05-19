@@ -26,7 +26,7 @@ void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerCon
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-
+Token DecimalLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 

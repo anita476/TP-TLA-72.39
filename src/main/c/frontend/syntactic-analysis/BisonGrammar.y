@@ -9,10 +9,10 @@
 
 %union {
 	/** Terminals. */
-	//todo add decimal numbers for css properties
 	int integer;
 	Token token;
 	char * string;
+	float decimal;
 	Position position;
 	AnimationType animation_type;
 
@@ -48,6 +48,7 @@
 /* built in data types*/
 %token <string> STRING
 %token <integer> INTEGER
+%token <decimal> DECIMAL
 
 /* naming variables and definin css properties */
 %token <string> IDENTIFIER
@@ -157,7 +158,8 @@ css_properties:
 	;
 css_property:
 	PROPERTY COLON IDENTIFIER SEMICOLON 										{ $$ = PropertySemanticAction($1, $3); }
-	|PROPERTY COLON PROPERTY SEMICOLON 										{ $$ = PropertySemanticAction($1, $3); }
+	| PROPERTY COLON DECIMAL SEMICOLON 											{ $$ = PropertyDecimalSemanticAction($1, $3); }
+	|PROPERTY COLON PROPERTY SEMICOLON 											{ $$ = PropertySemanticAction($1, $3); }
 	| PROPERTY COLON INTEGER SEMICOLON 											{ $$ = PropertyNumberSemanticAction($1,$3); }
 	; 
 structure:
