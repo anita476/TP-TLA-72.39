@@ -1,7 +1,9 @@
-/* Presentation presentation {
+Presentation presentation {
     
     Objects {
-
+        slide1 {
+            property : property
+        }
     }   
 
     Structure {
@@ -11,5 +13,3 @@
     }
 
 }
-*/
-/* THIS IS NOT VALIDATED YET */

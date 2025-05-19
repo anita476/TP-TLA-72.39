@@ -1,12 +1,8 @@
-
-/* FALSE POSITIVE */
-
-
 Presentation presentation {
     
     Objects {
-        heading Textblock {
-            property:1;
+        Textblock heading  {
+            property:12!!!;
         }
     }   
 

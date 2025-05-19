@@ -93,7 +93,15 @@ CssProperty * PropertyNumberSemanticAction(char * propertyName, int value){
 	property->next = NULL; 
 	return property;
 } 
-
+CssProperty * PropertyDecimalSemanticAction(char * propertyName, float value){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	CssProperty * property = calloc(1, sizeof(CssProperty));
+	property->value_type = PROP_VAL_DECIMAL;
+	property->property_name = propertyName;
+	property->value.decimal = value;
+	property->next = NULL; 
+	return property;
+}
 StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (structureList != NULL) {

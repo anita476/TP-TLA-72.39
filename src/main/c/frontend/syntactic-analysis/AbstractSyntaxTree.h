@@ -27,6 +27,7 @@ typedef enum {
 typedef enum {
     PROP_VAL_IDENTIFIER,
     PROP_VAL_INTEGER,
+    PROP_VAL_DECIMAL
 } PropertyValueType;
 
 // Struct for a CSS property: property name and value (identifier or integer)
@@ -36,6 +37,7 @@ typedef struct CssProperty {
     union value{
         char *identifier;
         int integer;
+        float decimal;
     } value;
     struct CssProperty *next;  
 } CssProperty;

@@ -1,9 +1,9 @@
 /* FALSE POSITIVE */
-/*
+
 Presentation presentation {
     
     Objects {
-        Slide slide1 { }
+        Slide { }
     }   
 
     Structure {
@@ -13,4 +13,3 @@ Presentation presentation {
     }
 
 }
-*/
