@@ -34,9 +34,9 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Destructor-Decl.html
  */
-%destructor { releaseObjectsSection($$); } ObjectDefinition
-%destructor { releaseStructureSection($$); } StructureDefinition
-%destructor { releaseAnimationsSection($$); } AnimationDefinition
+%destructor { releaseObjectsSection($$); } objects
+%destructor { releaseStructureSection($$); } structure
+%destructor { releaseAnimationsSection($$); } animation
 
 /** Terminals. */
 

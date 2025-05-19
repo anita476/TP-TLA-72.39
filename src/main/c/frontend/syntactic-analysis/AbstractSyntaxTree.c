@@ -14,12 +14,18 @@ void shutdownAbstractSyntaxTreeModule() {
 	}
 }
 
+/**  PRIVATE FUNCTIONS **/
+void releaseAnimationSteps(AnimationStep * animationSteps);
+void releaseCssProperties(CssProperty * propertyList);
+void releaseSlideContent(SlideContent * slideContent);
+
+
 /** PUBLIC FUNCTIONS */
 void destroyProgram(Program * program){
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (program != NULL) {
 		releaseObjectsSection(program->object_definitions);
-		releaseStructuresSection(program->structure_definitions);
+		releaseStructureSection(program->structure_definitions);
 		releaseAnimationsSection(program->animation_definitions);
 		free(program->presentation_identifier);
 		free(program);
@@ -77,12 +83,12 @@ void releaseCssProperties(CssProperty * propertyList){
 	}
 }
 
-void releaseStructuresSection(StructureDefinition * structureList){
+void releaseStructureSection(StructureDefinition * structureList){
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (structureList != NULL) {
 		releaseSlideContent(structureList->content);
 		free(structureList->identifier);
-		releaseStructuresSection(structureList->next);
+		releaseStructureSection(structureList->next);
 		free(structureList);
 	}
 }
@@ -109,58 +115,3 @@ void releaseSlideContent(SlideContent * slideContent){
 		free(slideContent);
 	}
 }
-
-
-
-
-
-/*
-void releaseConstant(Constant * constant) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
-	if (constant != NULL) {
-		free(constant);
-	}
-}
-
-void releaseExpression(Expression * expression) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
-	if (expression != NULL) {
-		switch (expression->type) {
-			case ADDITION:
-			case DIVISION:
-			case MULTIPLICATION:
-			case SUBTRACTION:
-				releaseExpression(expression->leftExpression);
-				releaseExpression(expression->rightExpression);
-				break;
-			case FACTOR:
-				releaseFactor(expression->factor);
-				break;
-		}
-		free(expression);
-	}
-}
-
-void releaseFactor(Factor * factor) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
-	if (factor != NULL) {
-		switch (factor->type) {
-			case CONSTANT:
-				releaseConstant(factor->constant);
-				break;
-			case EXPRESSION:
-				releaseExpression(factor->expression);
-				break;
-		}
-		free(factor);
-	}
-}
-
-void releaseProgram(Program * program) {
-	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
-	if (program != NULL) {
-		releaseExpression(program->expression);
-		free(program);
-	}
-}
-*/

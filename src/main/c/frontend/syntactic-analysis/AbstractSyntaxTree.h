@@ -160,6 +160,6 @@ void destroyProgram(Program * program);
 
 void releaseAnimationsSection(AnimationDefinition * animationList);
 void releaseObjectsSection(ObjectDefinition * objectList);
-void releaseStructuresSection(StructureDefinition * structureList);
+void releaseStructureSection(StructureDefinition * structureList);
 
 #endif
