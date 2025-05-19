@@ -131,7 +131,7 @@ objects:
 	OBJECT OPEN_CURLY_BRACE object_definitions CLOSE_CURLY_BRACE  				{$$ = $3;}						
 	;
 object_definitions:
-	%empty 																													
+	%empty 																		{ $$ = NULL; }											
 	|object_definitions object_definition									    { $$ = ObjectListSemanticAction($1,$2); }	
 	;  
 
@@ -141,7 +141,7 @@ object_definition:
 	|IMAGE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 		{ $$ = ObjectDefinitionSemanticAction(OBJ_IMAGE, $2, $4); }
 	;
 css_properties:
-	%empty 																													
+	%empty 																		{ $$ = NULL; }											
 	| css_properties css_property												{ $$ = PropertyListSemanticAction($1,$2); }	
 	;
 css_property:
@@ -152,15 +152,15 @@ structure:
 	STRUCTURE OPEN_CURLY_BRACE structure_definitions CLOSE_CURLY_BRACE 			{ $$ = $3; }
 	;
 structure_definitions:
-	%empty 																													
-	| structure_definitions structure_definition									{$$ = StructureListSemanticAction($1,$2); }											
+	%empty 																		{ $$ = NULL; }										
+	| structure_definitions structure_definition								{ $$ = StructureListSemanticAction($1,$2); }											
 	;
 structure_definition:
 	IDENTIFIER OPEN_CURLY_BRACE slide_content CLOSE_CURLY_BRACE 				{ $$ = StructureDefinitionSemanticAction($1,$3); }
 	;
 
 slide_content:
-	%empty 																													
+	%empty 																		{ $$ = NULL; }											
 	| ADD IDENTIFIER SEMICOLON 													{ $$ = AdditionSlideContent($2, NULL); }
 	| ADD IDENTIFIER WITH STRING SEMICOLON 										{ $$ = AdditionSlideContent($2,$4); }
 	| ANCHOR anchor_position SEMICOLON											{ $$ = AnchorPositionSlideContent($2);  }
@@ -197,7 +197,7 @@ animation:
 	;
 
 animation_definitions:
-	%empty 																													
+	%empty 																		{ $$ = NULL; }											
 	| animation_definitions animation_definition								{ $$ = AnimationListSemanticAction($1,$2); }
 	;
 animation_definition:
@@ -206,7 +206,7 @@ animation_definition:
 	| START animation_sequence END REPEAT INTEGER TIMES SEMICOLON				{ $$ = AnimationDefinitionSequenceSemanticAction($2,$5); }
 	;
 animation_sequence:
-	%empty 																													
+	%empty 																		{ $$ = NULL; }											
 	| animation_sequence animation_step  										{ $$ = AnimationSequenceSemanticAction($1,$2); }	
 	;
 animation_step:
