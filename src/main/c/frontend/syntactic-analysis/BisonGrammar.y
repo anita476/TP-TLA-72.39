@@ -20,8 +20,7 @@
 	AnimationDefinition * animation_definition;
 	AnimationStep * animation_step;
 	ObjectDefinition * object_definition;
-	PropertyList * css_property_list;
-	CSSProperty * css_property;
+	CssProperty * css_property;
 	StructureDefinition * structure_definition;
 	SlideContent * slide_content;
 	Program * program;
@@ -103,7 +102,7 @@
 %type <structure_definition> structure
 
 %type <css_property> css_property
-%type <css_property_list> css_properties
+%type <css_property> css_properties
 
 %type <object_definition> object_definition
 %type <object_definition> object_definitions
@@ -126,7 +125,7 @@
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol. -> should use it for empty structure or objects, or animations! 
 
 program: 
-	PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure animation CLOSE_CURLY_BRACE     { ProgramSemanticAction(currentCompilerState(),$1,$2,$3); }
+	PRESENTATION IDENTIFIER OPEN_CURLY_BRACE objects structure animation CLOSE_CURLY_BRACE     { ProgramSemanticAction(currentCompilerState(),$2,$4,$5,$6); }
 	;
 objects:
 	OBJECT OPEN_CURLY_BRACE object_definitions CLOSE_CURLY_BRACE  				{$$ = $3;}						

@@ -31,12 +31,13 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 
 
 /* PUBLIC FUNCTIONS */
-Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureDefinition * structureList, AnimationDefinition * animationList){
+Program * ProgramSemanticAction(CompilerState * compilerState, char * presName, ObjectDefinition * objectList, StructureDefinition * structureList, AnimationDefinition * animationList){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Program * program = calloc(1, sizeof(Program));
 	program->object_definitions = objectList;
 	program->structure_definitions = structureList;
 	program->animation_definitions = animationList;
+	program->presentation_identifier = presName;
 	compilerState->abstractSyntaxtTree = program;
 	if (0 < flexCurrentContext()) {
 		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
