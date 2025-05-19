@@ -77,7 +77,7 @@
 /* animations we accept*/
 %token <token> ROTATE
 %token <token> APPEAR
-%token <token> DISSAPPEAR
+%token <token> DISSAPEAR
 
 
 /* separation */
@@ -214,7 +214,7 @@ animation_step:
 	;
 animation_type:
 	APPEAR																		{$$ = ANIM_APPEAR;}
-	| DISSAPPEAR																{$$ = ANIM_DISSAPPEAR;}	
+	| DISSAPEAR																{$$ = ANIM_DISSAPPEAR;}	
 	| ROTATE																	{$$ = ANIM_ROTATE;}
 	;
 %%
