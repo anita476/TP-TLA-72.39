@@ -1,16 +1,16 @@
 Presentation presentation {
     
-    objects {
-        define slide1 Slide { }
-        define slide2 Slide { }
+    Objects {
+        slide1 Slide { }
+        slide2 Slide { }
     }   
 
-    structure {
+    Structure {
         slide1 { }
         slide2 { }
     }
 
-    animations {
+    Animations {
         slide1 dissolve_into slide2;
     }
 

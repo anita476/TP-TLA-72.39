@@ -1,17 +1,17 @@
 Presentation presentation {
     
-    objects {
-        define slide1 Slide { }
-        define heading Textblock { }
+    Objects {
+        slide1 Slide { }
+        heading Textblock { }
     }   
 
-    structure {
+    Structure {
         slide1 { 
             add heading with "hola";
         }
     }
 
-    animations {
+    Animations {
         slide1 start 
         heading appear 
         end; 

@@ -1,13 +1,13 @@
 Presentation presentation {
     
-    objects {
-        define slide1 Slide { }
-        define heading Textblock { 
+    Objects {
+        slide1 Slide { }
+        heading Textblock { 
             text-color:"green";
         }
     }   
 
-    structure {
+    Structure {
         slide1 { 
             add heading with "hola";
         }

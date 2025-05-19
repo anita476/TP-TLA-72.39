@@ -1,11 +1,11 @@
 Presentation presentation {
     
-    objects {
-        define slide1 Slide { }
-        define image Image { }
+    Objects {
+        slide1 Slide { }
+        image Image { }
     }   
 
-    structure {
+    Structure {
         slide1 { 
             add image with "local/image/path";
         }

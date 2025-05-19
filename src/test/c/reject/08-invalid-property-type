@@ -1,12 +1,12 @@
 Presentation presentation {
     
-    objects {
-        define heading Textblock { 
+    Objects {
+        heading Textblock { 
             font-size:x;
         }
     }   
 
-    structure {
+    Structure {
         slide1 { 
             add heading with "hola";
         }

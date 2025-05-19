@@ -1,10 +1,10 @@
 Presentation presentation {
     
-    objects {
-        define slide1 Slide { }
+    Objects {
+        slide1 Slide { }
     }   
 
-    structure {
+    Structure {
         slide1 { }
     }
 
