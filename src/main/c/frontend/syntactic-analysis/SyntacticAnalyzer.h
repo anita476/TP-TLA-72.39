@@ -29,9 +29,9 @@ typedef enum {
  */
 CompilerState * currentCompilerState();
 
-/**
- * Executes the parsing phase of the compiler.
- */
+/*
+* Executes the parsing phase of the compiler.
+*/
 SyntacticAnalysisStatus parse(CompilerState * compilerState);
 
 #endif

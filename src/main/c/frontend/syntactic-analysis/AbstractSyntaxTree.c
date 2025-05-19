@@ -22,7 +22,7 @@ void releaseSlideContent(SlideContent * slideContent);
 
 
 /** PUBLIC FUNCTIONS */
-void destroyProgram(Program * program){
+void destroyProgram(Program * program) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (program != NULL) {
 		releaseObjectsSection(program->object_definitions);
@@ -33,7 +33,7 @@ void destroyProgram(Program * program){
 	}
 }
 
-void releaseAnimationsSection(AnimationDefinition * animationList){
+void releaseAnimationsSection(AnimationDefinition * animationList) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (animationList != NULL) {
 		switch (animationList->kind) {
@@ -54,7 +54,7 @@ void releaseAnimationsSection(AnimationDefinition * animationList){
 	}
 }
 
-void releaseAnimationSteps(AnimationStep * animationSteps){
+void releaseAnimationSteps(AnimationStep * animationSteps) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (animationSteps != NULL) {
 		free(animationSteps->identifier);
@@ -63,7 +63,7 @@ void releaseAnimationSteps(AnimationStep * animationSteps){
 	}
 }
 
-void releaseObjectsSection(ObjectDefinition * objectList){
+void releaseObjectsSection(ObjectDefinition * objectList) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (objectList != NULL) {
 		free(objectList->identifier);
@@ -73,7 +73,7 @@ void releaseObjectsSection(ObjectDefinition * objectList){
 	}
 }
 
-void releaseCssProperties(CssProperty * propertyList){
+void releaseCssProperties(CssProperty * propertyList) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (propertyList != NULL) {
 		switch (propertyList->value_type) {
@@ -91,7 +91,7 @@ void releaseCssProperties(CssProperty * propertyList){
 	}
 }
 
-void releaseStructureSection(StructureDefinition * structureList){
+void releaseStructureSection(StructureDefinition * structureList) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (structureList != NULL) {
 		releaseSlideContent(structureList->content);
@@ -101,7 +101,7 @@ void releaseStructureSection(StructureDefinition * structureList){
 	}
 }
 
-void releaseSlideContentList(SlideContent * slideContentList){
+void releaseSlideContentList(SlideContent * slideContentList) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (slideContentList != NULL) {
 		releaseSlideContent(slideContentList->next);
@@ -109,7 +109,7 @@ void releaseSlideContentList(SlideContent * slideContentList){
 	}
 }
 
-void releaseSlideContent(SlideContent * slideContent){
+void releaseSlideContent(SlideContent * slideContent) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (slideContent != NULL) {
 		switch (slideContent->type) {

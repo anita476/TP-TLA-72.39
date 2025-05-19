@@ -31,7 +31,7 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 
 
 /* PUBLIC FUNCTIONS */
-Program * ProgramSemanticAction(CompilerState * compilerState, char * presName, ObjectDefinition * objectList, StructureDefinition * structureList, AnimationDefinition * animationList){
+Program * ProgramSemanticAction(CompilerState * compilerState, char * presName, ObjectDefinition * objectList, StructureDefinition * structureList, AnimationDefinition * animationList) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Program * program = calloc(1, sizeof(Program));
 	program->object_definitions = objectList;
@@ -49,7 +49,7 @@ Program * ProgramSemanticAction(CompilerState * compilerState, char * presName, 
 	return program;
 }
 
-ObjectDefinition * ObjectListSemanticAction(ObjectDefinition * objectList, ObjectDefinition * newObject){
+ObjectDefinition * ObjectListSemanticAction(ObjectDefinition * objectList, ObjectDefinition * newObject) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (objectList != NULL) {
 		newObject->next = objectList;
@@ -57,7 +57,7 @@ ObjectDefinition * ObjectListSemanticAction(ObjectDefinition * objectList, Objec
 	return newObject;
 } 
 
-ObjectDefinition * ObjectDefinitionSemanticAction(ObjectType type, char * identifier, CssProperty * cssProperties){
+ObjectDefinition * ObjectDefinitionSemanticAction(ObjectType type, char * identifier, CssProperty * cssProperties) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	ObjectDefinition * object = calloc(1, sizeof(ObjectDefinition));
 	object->type = type;
@@ -67,7 +67,7 @@ ObjectDefinition * ObjectDefinitionSemanticAction(ObjectType type, char * identi
 	return object;
 } 
 
-CssProperty * PropertyListSemanticAction(CssProperty * propertyList, CssProperty * newProperty){
+CssProperty * PropertyListSemanticAction(CssProperty * propertyList, CssProperty * newProperty) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (propertyList != NULL) {
 		newProperty->next = propertyList;
@@ -75,7 +75,7 @@ CssProperty * PropertyListSemanticAction(CssProperty * propertyList, CssProperty
 	return newProperty;
 } 	
 
-CssProperty * PropertySemanticAction(char * propertyName, char * value){
+CssProperty * PropertySemanticAction(char * propertyName, char * value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	CssProperty * property = calloc(1, sizeof(CssProperty));
 	property->property_name = propertyName;
@@ -84,7 +84,7 @@ CssProperty * PropertySemanticAction(char * propertyName, char * value){
 	return property;
 } 
 
-CssProperty * PropertyNumberSemanticAction(char * propertyName, int value){
+CssProperty * PropertyNumberSemanticAction(char * propertyName, int value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	CssProperty * property = calloc(1, sizeof(CssProperty));
 	property->value_type = PROP_VAL_INTEGER;
@@ -93,7 +93,7 @@ CssProperty * PropertyNumberSemanticAction(char * propertyName, int value){
 	property->next = NULL; 
 	return property;
 } 
-CssProperty * PropertyDecimalSemanticAction(char * propertyName, float value){
+CssProperty * PropertyDecimalSemanticAction(char * propertyName, float value) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	CssProperty * property = calloc(1, sizeof(CssProperty));
 	property->value_type = PROP_VAL_DECIMAL;
@@ -102,7 +102,7 @@ CssProperty * PropertyDecimalSemanticAction(char * propertyName, float value){
 	property->next = NULL; 
 	return property;
 }
-StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure){
+StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (structureList != NULL) {
 		newStructure->next = structureList;
@@ -110,7 +110,7 @@ StructureDefinition * StructureListSemanticAction(StructureDefinition * structur
 	return newStructure;
 }						
 
-StructureDefinition * StructureDefinitionSemanticAction(char * identifier, SlideContent * content){
+StructureDefinition * StructureDefinitionSemanticAction(char * identifier, SlideContent * content) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	StructureDefinition * structure = calloc(1, sizeof(StructureDefinition));
 	structure->identifier = identifier;
@@ -119,7 +119,7 @@ StructureDefinition * StructureDefinitionSemanticAction(char * identifier, Slide
 	return structure;
 }
 
-SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent){
+SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (slideContentList != NULL) {
 		newSlideContent->next = slideContentList;
@@ -127,7 +127,7 @@ SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, S
 	return newSlideContent;
 }
 
-SlideContent * AdditionSlideContent(char * identifier, char * content){
+SlideContent * AdditionSlideContent(char * identifier, char * content) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
 	slideContent->type = SLIDE_CONTENT_ADD;
@@ -135,16 +135,18 @@ SlideContent * AdditionSlideContent(char * identifier, char * content){
 	slideContent->add.with_string = content;
 	slideContent->next = NULL; 
 	return slideContent;
-} 
-SlideContent * AnchorPositionSlideContent(Position position){
+}
+
+SlideContent * AnchorPositionSlideContent(Position position) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
 	slideContent->type = SLIDE_CONTENT_ANCHOR;
 	slideContent->anchor = position;
 	slideContent->next = NULL; 
 	return slideContent;
-}  
-SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position){
+}
+
+SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
 	slideContent->type = SLIDE_CONTENT_SIMPLE_POS;
@@ -152,8 +154,9 @@ SlideContent * RelativeSimplePositionSlideContent(char * relative , Position pos
 	slideContent->position_item.pos = position;
 	slideContent->next = NULL; 
 	return slideContent;
-} 
-SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position){
+}
+
+SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
 	slideContent->type = SLIDE_CONTENT_DOUBLE_POS;
@@ -164,7 +167,7 @@ SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed,
 	return slideContent;
 } 
 
-AnimationDefinition * AnimationListSemanticAction(AnimationDefinition * animationList, AnimationDefinition * newAnimation){
+AnimationDefinition * AnimationListSemanticAction(AnimationDefinition * animationList, AnimationDefinition * newAnimation) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (animationList != NULL) {
 		newAnimation->next = animationList;
@@ -172,7 +175,7 @@ AnimationDefinition * AnimationListSemanticAction(AnimationDefinition * animatio
 	return newAnimation;
 } 
 
-AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, AnimationType type){
+AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, AnimationType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	AnimationDefinition * animation = calloc(1, sizeof(AnimationDefinition));
 	animation->kind = ANIM_DEF_SINGLE;
@@ -180,7 +183,8 @@ AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, Anima
 	animation->single.type = type;
 	return animation;
 }
-AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifier ,AnimationStep * steps, int repeat){
+
+AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifier ,AnimationStep * steps, int repeat) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	AnimationDefinition * animation = calloc(1, sizeof(AnimationDefinition));
 	animation->kind = ANIM_DEF_SEQUENCE;
@@ -190,7 +194,7 @@ AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifie
 	return animation;
 }
 
-AnimationDefinition * AnimationDefinitionPairSemanticAction(char * identifier1, char * identifier2, AnimationType type){
+AnimationDefinition * AnimationDefinitionPairSemanticAction(char * identifier1, char * identifier2, AnimationType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	AnimationDefinition * animation = calloc(1, sizeof(AnimationDefinition));
 	animation->kind = ANIM_DEF_PAIR;
@@ -200,14 +204,15 @@ AnimationDefinition * AnimationDefinitionPairSemanticAction(char * identifier1, 
 	return animation;
 }
 
-AnimationStep * AnimationSequenceSemanticAction(AnimationStep * steps, AnimationStep * new){
+AnimationStep * AnimationSequenceSemanticAction(AnimationStep * steps, AnimationStep * new) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (steps != NULL) {
 		new->next = steps;
 	}
 	return new;
-} 
-AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type){
+}
+
+AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	AnimationStep * step = calloc(1, sizeof(AnimationStep));
 	step->identifier = identifier;
@@ -215,65 +220,3 @@ AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type
 	step->next = NULL; 
 	return step;
 } 	
-
-
-
-/*
-
-
-
-Constant * IntegerConstantSemanticAction(const int value) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Constant * constant = calloc(1, sizeof(Constant));
-	constant->value = value;
-	return constant;
-}
-
-Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = calloc(1, sizeof(Expression));
-	expression->leftExpression = leftExpression;
-	expression->rightExpression = rightExpression;
-	expression->type = type;
-	return expression;
-}
-
-Expression * FactorExpressionSemanticAction(Factor * factor) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = calloc(1, sizeof(Expression));
-	expression->factor = factor;
-	expression->type = FACTOR;
-	return expression;
-}
-
-Factor * ConstantFactorSemanticAction(Constant * constant) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Factor * factor = calloc(1, sizeof(Factor));
-	factor->constant = constant;
-	factor->type = CONSTANT;
-	return factor;
-}
-
-Factor * ExpressionFactorSemanticAction(Expression * expression) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Factor * factor = calloc(1, sizeof(Factor));
-	factor->expression = expression;
-	factor->type = EXPRESSION;
-	return factor;
-}
-
-Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Program * program = calloc(1, sizeof(Program));
-	program->expression = expression;
-	compilerState->abstractSyntaxtTree = program;
-	if (0 < flexCurrentContext()) {
-		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
-		compilerState->succeed = false;
-	}
-	else {
-		compilerState->succeed = true;
-	}
-	return program;
-}
-*/

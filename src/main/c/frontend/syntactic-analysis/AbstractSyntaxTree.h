@@ -4,17 +4,15 @@
 #include "../../shared/Logger.h"
 #include <stdlib.h>
 
-/** Initialize module's internal state. */
+/* Initialize module's internal state. */
 void initializeAbstractSyntaxTreeModule();
 
-/** Shutdown module's internal state. */
+/* Shutdown module's internal state. */
 void shutdownAbstractSyntaxTreeModule();
 
-
-
-/**
+/*
  * Node types for the Abstract Syntax Tree (AST).
- */
+*/
 
 // Enum for object types (slide, textblock, image)
 typedef enum {
@@ -30,11 +28,11 @@ typedef enum {
     PROP_VAL_DECIMAL
 } PropertyValueType;
 
-// Struct for a CSS property: property name and value (identifier or integer)
+// Struct for a CSS property: property name and value 
 typedef struct CssProperty {
-    char *property_name;     // PROPERTY token text
+    char *property_name;                // PROPERTY token text
     PropertyValueType value_type;
-    union value{
+    union value {
         char *identifier;
         int integer;
         float decimal;
@@ -43,11 +41,10 @@ typedef struct CssProperty {
 } CssProperty;
 
 // Struct for object definition (slide, textblock, image)
-// could make a container for it to put the size i guess
 typedef struct ObjectDefinition {
     ObjectType type;
-    char *identifier;             // name of the object
-    CssProperty *css_properties; // linked list of properties
+    char *identifier;                   // Name of the object
+    CssProperty *css_properties;        // Linked list of properties
     struct ObjectDefinition *next;
 } ObjectDefinition;
 
@@ -83,7 +80,7 @@ typedef struct SlideContent {
     union {
         struct {
             char *identifier;
-            char *with_string;   // NULL if none
+            char *with_string;              // NULL if none
         } add;
 
         Position anchor;
@@ -97,28 +94,28 @@ typedef struct SlideContent {
             Position pos;
         } position_item;
     };
-    struct SlideContent *next;  // linked list of slide content items
+    struct SlideContent *next;              // linked list of slide content items
 } SlideContent;
 
 // Struct for structure sentence
 typedef struct StructureDefinition {
     char *identifier;      
-    SlideContent *content; // linked list of slide contents
+    SlideContent *content;                  // Linked list of slide contents
     struct StructureDefinition *next;
 } StructureDefinition;
 
 typedef enum {
     ANIM_APPEAR,
-    ANIM_DISSAPPEAR,
+    ANIM_DISAPPEAR,
     ANIM_ROTATE,
     ANIM_FADE_INTO,
     ANIM_JUMP_INTO
 } AnimationType;
 
 typedef enum {
-    ANIM_DEF_SINGLE,       // to animate a single object
-    ANIM_DEF_SEQUENCE,     // START ... END control structure or with repeat
-    ANIM_DEF_PAIR,         // to animate slide transitions
+    ANIM_DEF_SINGLE,                        // To animate a single object
+    ANIM_DEF_SEQUENCE,                      // START ... END control structure or with repeat
+    ANIM_DEF_PAIR,                          // To animate slide transitions
 } AnimationDefinitionKind;
 
 typedef struct AnimationStep AnimationStep;
@@ -138,9 +135,9 @@ typedef struct AnimationDefinition {
             AnimationType type;
         } single;
         struct {
-            char * identifier; // identifier of SLIDE (validate identifier types later in backend)
-            AnimationStep *steps; // linked list of steps
-            int repeat_count;     // 1 if no repeat, otherwise repeat times
+            char * identifier;              // Identifier of SLIDE (validate identifier types later in backend)
+            AnimationStep *steps;           // Linked list of steps
+            int repeat_count;               // 1 if no repeat, otherwise repeat times
         } sequence;
         struct {
             char * identifier1;
@@ -152,21 +149,18 @@ typedef struct AnimationDefinition {
 } AnimationDefinition;
 
 
+/************************************* OUR PROGRAM ************************************************/
 
-/************************************* OUR PROGRAM *********************************************** */
 typedef struct {
-    char *presentation_identifier; // Presentation name
-
+    char *presentation_identifier; 
     ObjectDefinition *object_definitions;   
     StructureDefinition *structure_definitions; 
     AnimationDefinition *animation_definitions; 
-
 } Program;
 
-
-/**
- * Node recursive destructors.
- */
+/*
+ * Node recursive destructors
+*/
 void destroyProgram(Program * program);
 
 void releaseAnimationsSection(AnimationDefinition * animationList);

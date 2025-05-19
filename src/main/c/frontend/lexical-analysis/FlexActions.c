@@ -21,9 +21,7 @@ void shutdownFlexActionsModule() {
 
 static void _logLexicalAnalyzerContext(const char * functionName, LexicalAnalyzerContext * lexicalAnalyzerContext);
 
-/**
- * Logs a lexical-analyzer context in DEBUGGING level.
- */
+/* Logs a lexical-analyzer context in DEBUGGING level */
 static void _logLexicalAnalyzerContext(const char * functionName, LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	char * escapedLexeme = escape(lexicalAnalyzerContext->lexeme);
 	logDebugging(_logger, "%s: %s (context = %d, length = %d, line = %d)",
@@ -58,14 +56,14 @@ void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
 }
 
-Token OpenBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+Token OpenBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = token;
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
 	return OPEN_CURLY_BRACE;
 }
 
-Token CloseBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+Token CloseBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = token;
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
@@ -78,6 +76,7 @@ Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
 	return INTEGER;
 }
+
 Token DecimalLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->decimal = atof(lexicalAnalyzerContext->lexeme);
@@ -107,30 +106,29 @@ Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
     return STRING;
 }
 
-/* to identify the names of variables and so on */
-Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+/* Identifies the names of variables and so on */
+Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
     lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
 	return IDENTIFIER;
 }
 
-Token PropertyLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token PropertyLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
 	return PROPERTY;
 }
 
-Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = token;
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
 	return token;
 }
 
-
-/* reject, invalid syntax */
+/* Rejects invalid syntax */
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
