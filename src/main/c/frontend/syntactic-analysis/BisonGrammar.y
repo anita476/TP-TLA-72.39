@@ -22,7 +22,7 @@
 	ObjectDefinition * object_definition;
 	PropertyList * css_property_list;
 	CSSProperty * css_property;
-	StructureSentence * structure_sentence;
+	StructureDefinition * structure_definition;
 	SlideContent * slide_content;
 	Program * program;
 }
@@ -98,9 +98,9 @@
 %type <position> anchor_position
 %type <slide_content> slide_content
 
-%type <structure_sentence> structure_sentence
-%type <structure_sentence> structure_sentences
-%type <structure_sentence> structure
+%type <structure_definition> structure_definition
+%type <structure_definition> structure_definitions
+%type <structure_definition> structure
 
 %type <css_property> css_property
 %type <css_property_list> css_properties
@@ -133,42 +133,42 @@ objects:
 	;
 object_definitions:
 	%empty 																													
-	|object_definitions object_definition									    { $$ = ObjectListSemanticAction(); }	
+	|object_definitions object_definition									    { $$ = ObjectListSemanticAction($1,$2); }	
 	;  
 
 object_definition:
-	SLIDE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 			{ $$ = SlideSemanticAction(); }
-	|TEXTBLOCK IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 	{ $$ = TextBlockSemanticAction(); }
-	|IMAGE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 		{ $$ = ImageSemanticAction(); }
+	SLIDE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 			{ $$ = ObjectDefinitionSemanticAction(OBJ_SLIDE,$2,$4); }
+	|TEXTBLOCK IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 	{ $$ = ObjectDefinitionSemanticAction(OBJ_TEXTBLOCK, $2, $4); }
+	|IMAGE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 		{ $$ = ObjectDefinitionSemanticAction(OBJ_IMAGE, $2, $4); }
 	;
 css_properties:
 	%empty 																													
-	| css_properties css_property												{ $$ = PropertyListSemanticAction(); }	
+	| css_properties css_property												{ $$ = PropertyListSemanticAction($1,$2); }	
 	;
 css_property:
-	PROPERTY COLON IDENTIFIER SEMICOLON 										{ $$ = PropertySemanticAction(); }
-	| PROPERTY COLON INTEGER SEMICOLON 											{ $$ = PropertySemanticAction(); }
+	PROPERTY COLON IDENTIFIER SEMICOLON 										{ $$ = PropertySemanticAction($1, $3); }
+	| PROPERTY COLON INTEGER SEMICOLON 											{ $$ = PropertyNumberSemanticAction($1,$3); }
 	; 
 structure:
-	STRUCTURE OPEN_CURLY_BRACE structure_sentences CLOSE_CURLY_BRACE 			{ $$ = $3; }
+	STRUCTURE OPEN_CURLY_BRACE structure_definitions CLOSE_CURLY_BRACE 			{ $$ = $3; }
 	;
-structure_sentences:
+structure_definitions:
 	%empty 																													
-	| structure_sentences structure_sentence									{$$ = StructureListSemanticAction(); }											
+	| structure_definitions structure_definition									{$$ = StructureListSemanticAction($1,$2); }											
 	;
-structure_sentence:
-	IDENTIFIER OPEN_CURLY_BRACE slide_content CLOSE_CURLY_BRACE 				{ $$ = StructureSentenceSemanticAction(); }
+structure_definition:
+	IDENTIFIER OPEN_CURLY_BRACE slide_content CLOSE_CURLY_BRACE 				{ $$ = StructureDefinitionSemanticAction($1,$3); }
 	;
 
 slide_content:
 	%empty 																													
-	| ADD IDENTIFIER SEMICOLON 													{ $$ = AdditionSlideContent(); }
-	| ADD IDENTIFIER WITH STRING SEMICOLON 										{ $$ = AdditionSlideContent(); }
-	| ANCHOR anchor_position SEMICOLON											{ $$ = AnchorPositionSlideContent();  }
-	| IDENTIFIER simple_position SEMICOLON  									{ $$ = RelativeSimplePositionSlideContent(); }
-	| IDENTIFIER compound_position SEMICOLON  									{ $$ = RelativeSimplePositionSlideContent(); }
-	| IDENTIFIER simple_position IDENTIFIER SEMICOLON  							{ $$ = RelativeDoublePositionSlideContent(); }
-	| IDENTIFIER compound_position IDENTIFIER SEMICOLON  						{ $$ = RelativeDoublePositionSlideContent(); }
+	| ADD IDENTIFIER SEMICOLON 													{ $$ = AdditionSlideContent($2, NULL); }
+	| ADD IDENTIFIER WITH STRING SEMICOLON 										{ $$ = AdditionSlideContent($2,$4); }
+	| ANCHOR anchor_position SEMICOLON											{ $$ = AnchorPositionSlideContent($2);  }
+	| IDENTIFIER simple_position SEMICOLON  									{ $$ = RelativeSimplePositionSlideContent($1,$2); }
+	| IDENTIFIER compound_position SEMICOLON  									{ $$ = RelativeSimplePositionSlideContent($1, $2); }
+	| IDENTIFIER simple_position IDENTIFIER SEMICOLON  							{ $$ = RelativeDoublePositionSlideContent($1,$3,$2); }
+	| IDENTIFIER compound_position IDENTIFIER SEMICOLON  						{ $$ = RelativeDoublePositionSlideContent($1,$3,$2); }
 	;
 anchor_position:
 	TOP LEFT                       												{ $$ = POS_TOP_LEFT;}
@@ -199,12 +199,12 @@ animation:
 
 animation_definitions:
 	%empty 																													
-	| animation_definitions animation_definition								{ $$ = AnimationListSemanticAction(); }
+	| animation_definitions animation_definition								{ $$ = AnimationListSemanticAction($1,$2); }
 	;
 animation_definition:
-	IDENTIFIER animation_type SEMICOLON								        	{ $$ = AnimationDefinitionSemanticAction(); }
-	| START animation_sequence END SEMICOLON									{ $$ = AnimationDefinitionSemanticAction(); }
-	| START animation_sequence END REPEAT INTEGER TIMES SEMICOLON				{ $$ = AnimationDefinitionSemanticAction(); }
+	IDENTIFIER animation_type SEMICOLON								        	{ $$ = AnimationDefinitionSemanticAction($1,$2); }
+	| START animation_sequence END SEMICOLON									{ $$ = AnimationDefinitionSequenceSemanticAction($2,1); }
+	| START animation_sequence END REPEAT INTEGER TIMES SEMICOLON				{ $$ = AnimationDefinitionSequenceSemanticAction($2,$5); }
 	;
 animation_sequence:
 	%empty 																													

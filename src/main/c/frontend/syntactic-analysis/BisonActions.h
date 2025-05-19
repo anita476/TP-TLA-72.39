@@ -26,27 +26,30 @@ Factor * ExpressionFactorSemanticAction(Expression * expression);
 Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression);
 */
 
-Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureSentence * structureList, AnimationDefinition * animationList);
+Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureDefinition * structureList, AnimationDefinition * animationList);
 
-ObjectDefinition * ObjectListSemanticAction(); 
-ObjectDefinition * SlideSemanticAction(); 
-ObjectDefinition * TextBlockSemanticAction(); 
-ObjectDefinition * ImageSemanticAction(); 
+ObjectDefinition * ObjectListSemanticAction(ObjectDefinition * objectList, ObjectDefinition * newObject); 
+ObjectDefinition * ObjectDefinitionSemanticAction(ObjectType type, char * identifier, CssProperty * cssProperties); 
 
-CssProperty * PropertyListSemanticAction(); 	
-CssProperty * PropertySemanticAction(); 
+CssProperty * PropertyListSemanticAction(CssProperty * propertyList, CssProperty * newProperty); 	
+//todo make value not identifier but something more flexible
+CssProperty * PropertySemanticAction(char * propertyName, char * value); 
+// todo make value can be negative
+CssProperty * PropertyNumberSemanticAction(char * propertyName, int value); 
 
-StructureSentence * StructureListSemanticAction();										
-StructureSentence * StructureSentenceSemanticAction();
+StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure);										
+StructureDefinition * StructureDefinitionSemanticAction(char * identifier, SlideContent * content);
 
-SlideContent * AdditionSlideContent(); 
-SlideContent * AdditionSlideContent(); 
-SlideContent * AnchorPositionSlideContent();  
-SlideContent * RelativeSimplePositionSlideContent(); 
-SlideContent * RelativeDoublePositionSlideContent(); 
+SlideContent * AdditionSlideContent(char * identifier, char * content); 
+SlideContent * AnchorPositionSlideContent(Position position);  
+SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position); 
+SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position); 
 
-AnimationDefinition * AnimationListSemanticAction(); 
-AnimationDefinition * AnimationDefinitionSemanticAction(AnimationStep);
+AnimationDefinition * AnimationListSemanticAction(AnimationDefinition * animationList, AnimationDefinition * newAnimation); 
+// todo add repeats for single definitions ?
+AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, AnimationType type);
+AnimationDefinition * AnimationDefinitionSequenceSemanticAction(AnimationStep * steps, int repeat);
+
 AnimationStep * AnimationSequenceSemanticAction(AnimationStep * new, AnimationStep * steps); 
 AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type); 		
 #endif

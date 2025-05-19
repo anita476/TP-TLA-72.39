@@ -102,11 +102,11 @@ typedef struct SlideContent {
 } SlideContent;
 
 // Struct for structure sentence
-typedef struct StructureSentence {
+typedef struct StructureDefinition {
     char *identifier;      
     SlideContent *content; // linked list of slide contents
-    struct StructureSentence *next;
-} StructureSentence;
+    struct StructureDefinition *next;
+} StructureDefinition;
 
 typedef enum {
     ANIM_APPEAR,
@@ -150,7 +150,7 @@ typedef struct {
     char *presentation_identifier; // Presentation name
 
     ObjectDefinition *object_definitions;   
-    StructureSentence *structure_sentences; 
+    StructureDefinition *structure_definitions; 
     AnimationDefinition *animation_definitions; 
 
 } Program;

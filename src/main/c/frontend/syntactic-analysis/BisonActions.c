@@ -32,11 +32,11 @@ static void _logSyntacticAnalyzerAction(const char * functionName) {
 /* PUBLIC FUNCTIONS */
 
 
-Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureSentence * structureList, AnimationDefinition * animationList){
+Program * ProgramSemanticAction(CompilerState * compilerState, ObjectDefinition * objectList, StructureDefinition * structureList, AnimationDefinition * animationList){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Program * program = calloc(1, sizeof(Program));
 	program->object_definitions = objectList;
-	program->structure_sentences = structureList;
+	program->structure_definitions = structureList;
 	program->animation_definitions = animationList;
 	compilerState->abstractSyntaxtTree = program;
 	if (0 < flexCurrentContext()) {
