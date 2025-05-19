@@ -1,12 +1,12 @@
 Presentation presentation {
     
-    objects {
-        define slide1 Slide { }
-        define heading1 Textblock { }
-        define heading2 Textblock { }
+    Objects {
+        slide1 Slide { }
+        heading1 Textblock { }
+        heading2 Textblock { }
     }   
 
-    structure {
+    Structure {
         slide1 { 
             add heading1 with "hola";
             add heading2 with "chau";

@@ -1,7 +1,7 @@
 Presentation presentation {
     
     Objects {
-        Slide slide1  { }
+        slide1 Slide { }
     }   
 
     Structure {
