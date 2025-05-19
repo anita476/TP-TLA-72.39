@@ -36,7 +36,7 @@ typedef enum {
 typedef struct CssProperty {
     char *property_name;     // PROPERTY token text
     PropertyValueType value_type;
-    union {
+    union value{
         char *identifier;
         int integer;
     } value;
@@ -44,6 +44,7 @@ typedef struct CssProperty {
 } CssProperty;
 
 // Struct for object definition (slide, textblock, image)
+// could make a container for it to put the size i guess
 typedef struct ObjectDefinition {
     ObjectType type;
     char *identifier;             // name of the object
