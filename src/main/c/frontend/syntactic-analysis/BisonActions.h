@@ -8,15 +8,16 @@
 #include "SyntacticAnalyzer.h"
 #include <stdlib.h>
 
-/** Initialize module's internal state. */
+/* Initialize module's internal state. */
 void initializeBisonActionsModule();
 
-/** Shutdown module's internal state. */
+/* Shutdown module's internal state. */
 void shutdownBisonActionsModule();
 
-/**
+/*
  * Bison semantic actions.
- */
+*/
+
 /*
 Constant * IntegerConstantSemanticAction(const int value);
 Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type);
@@ -47,12 +48,11 @@ SlideContent * RelativeSimplePositionSlideContent(char * relative , Position pos
 SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position); 
 
 AnimationDefinition * AnimationListSemanticAction(AnimationDefinition * animationList, AnimationDefinition * newAnimation); 
-// todo add repeats for single definitions ?
 AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, AnimationType type);
 AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifier, AnimationStep * steps, int repeat);
 AnimationDefinition * AnimationDefinitionPairSemanticAction(char * identifier1, char * identifier2, AnimationType type);
 
-
 AnimationStep * AnimationSequenceSemanticAction(AnimationStep * new, AnimationStep * steps); 
 AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type); 		
+
 #endif

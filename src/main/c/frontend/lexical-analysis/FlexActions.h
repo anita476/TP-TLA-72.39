@@ -11,16 +11,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/** Initialize module's internal state. */
+/* Initialize module's internal state. */
 void initializeFlexActionsModule();
 
-/** Shutdown module's internal state. */
+/* Shutdown module's internal state. */
 void shutdownFlexActionsModule();
 
-/**
- * Flex lexeme processing actions.
- */
-
+/* Flex lexeme processing actions. */
 void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
@@ -39,10 +36,7 @@ Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token t
 Token OpenBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token CloseBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
-
-
-
-/* error */
+/* Error */
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 #endif
