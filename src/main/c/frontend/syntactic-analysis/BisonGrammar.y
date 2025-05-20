@@ -186,14 +186,22 @@ slide_content:
 	;
 anchor_position:
 	TOP LEFT                       																{ $$ = POS_TOP_LEFT; }
-	| TOP RIGHT																					{ $$ = POS_TOP_RIGHT; }		
+	| LEFT TOP                       															{ $$ = POS_TOP_LEFT; }
+	| TOP RIGHT																					{ $$ = POS_TOP_RIGHT; }	
+	| RIGHT TOP 																				{ $$ = POS_TOP_RIGHT; }			
 	| BOTTOM LEFT																				{ $$ = POS_BOTTOM_LEFT; }
+	| LEFT BOTTOM 																				{ $$ = POS_BOTTOM_LEFT; }
 	| BOTTOM RIGHT														    					{ $$ = POS_BOTTOM_RIGHT; }
+	| RIGHT BOTTOM 														    					{ $$ = POS_BOTTOM_RIGHT; }
 	| CENTER LEFT												            					{ $$ = POS_CENTER_LEFT; }
+	| LEFT CENTER 												            					{ $$ = POS_CENTER_LEFT; }
+	| RIGHT CENTER 											                					{ $$ = POS_CENTER_RIGHT; }	
 	| CENTER RIGHT											                					{ $$ = POS_CENTER_RIGHT; }	
 	| CENTER                                                                					{ $$ = POS_CENTER; }
 	| CENTER TOP 														    					{ $$ = POS_CENTER_TOP; }	
+	| TOP CENTER  														    					{ $$ = POS_CENTER_TOP; }	
 	| CENTER BOTTOM                                                         					{ $$ = POS_CENTER_BOTTOM; }
+	| BOTTOM CENTER                                                          					{ $$ = POS_CENTER_BOTTOM; }
 	| TOP																						{ $$ = POS_CENTER_TOP; }
 	| BOTTOM																					{ $$ = POS_CENTER_BOTTOM; }
 	| LEFT																						{ $$ = POS_CENTER_LEFT; }
