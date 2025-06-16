@@ -1,10 +1,11 @@
 /**
- * Main entry point for the slide presentation
+ * Main entry point for the presentation framework
  */
 document.addEventListener('DOMContentLoaded', () => {
-    const controller = new SlideController();
-    setupKeyboardNavigation(controller);
-    setupImageErrorHandling();
+  PresentationCore.init({
+    defaultAnimation: 'appear',
+    defaultTransition: 'fade'
+  });
 });
 
 /**

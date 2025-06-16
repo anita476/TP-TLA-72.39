@@ -23,11 +23,6 @@ body {
     100% { opacity: 0; transform: translateY(-20px); }
 }
 
-@keyframes reappear {
-    0% { opacity: 0; transform: translateY(-20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
 @keyframes barrelRoll {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -63,7 +58,7 @@ body {
 }
 
 /* Element animations */
-.appear, .disappear, .reappear {
+.appear, .disappear {
     animation-timing-function: ease-out;
 }
 
@@ -73,11 +68,6 @@ body {
 
 .disappear { 
     animation-name: disappear;
-}
-
-.reappear {
-    animation-name: reappear;
-    animation-duration: 1s;
 }
 
 .barrel-roll, .barrel-roll-reverse {
