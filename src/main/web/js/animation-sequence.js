@@ -11,6 +11,8 @@ class AnimationSequence {
     this.currentIndex = 0;
     this.animatedElements = [];
     this.history = [];
+    this.currentAnimationIndex = new Map();
+    this.animationHistory = [];
   }
   
   /**
@@ -18,46 +20,121 @@ class AnimationSequence {
    * @returns {boolean} True if there are more elements
    */
   hasNext() {
-    return this.currentIndex < this.elements.length;
+    if (this.currentIndex < this.elements.length) return true;
+    if (this.history.length > 0) {
+      const lastItem = this.history[this.history.length - 1];
+      const element = lastItem.element;
+      const animations = this.parseAnimations(element);
+      const currentAnimIndex = this.currentAnimationIndex.get(element) || 0;
+      return currentAnimIndex < animations.length - 1;
+    }
+    
+    return false;
   }
   
   /**
    * Check if there are previous elements to reverse
-   * @returns {boolean} True if there are previous elements
+   * @returns {boolean} True if there are previous elements or animations
    */
   hasPrevious() {
-    return this.history.length > 0;
+    return this.animationHistory.length > 0;
   }
   
   /**
-   * Get the next element to animate
-   * @returns {Element} Next element
+   * Get the next element or animation to animate
+   * @returns {Object} Object containing element and animation info
    */
   next() {
-    if (!this.hasNext()) return null;
-    const element = this.elements[this.currentIndex];
+    if (this.currentIndex >= this.elements.length && !this.hasNext()) return null;
+    let element;
+    let animation;
+    let isNewElement = false;
+    if (this.history.length > 0) {
+      const lastItem = this.history[this.history.length - 1];
+      element = lastItem.element;
+      const animations = this.parseAnimations(element);
+      let currentAnimIndex = this.currentAnimationIndex.get(element) || 0;
+      if (currentAnimIndex < animations.length - 1) {
+        currentAnimIndex++;
+        this.currentAnimationIndex.set(element, currentAnimIndex);
+        animation = animations[currentAnimIndex];
+        this.history[this.history.length - 1].currentAnimation = animation;
+        this.history[this.history.length - 1].animationIndex = currentAnimIndex;
+        this.animationHistory.push({
+          element,
+          animation,
+          isNewElement: false
+        });
+        return {
+          element,
+          animation,
+          isNewElement: false
+        };
+      }
+    }
+    element = this.elements[this.currentIndex];
     this.animatedElements.push(element);
+    const animations = this.parseAnimations(element);
+    animation = animations[0];
+    this.currentAnimationIndex.set(element, 0);
     this.history.push({
       element,
       index: this.currentIndex,
-      animation: element.dataset.animation
+      animations: animations,
+      currentAnimation: animation,
+      animationIndex: 0
+    });
+    this.animationHistory.push({
+      element,
+      animation,
+      isNewElement: true
     });
     this.currentIndex++;
-    return element;
+    return {
+      element,
+      animation,
+      isNewElement: true
+    };
   }
   
   /**
-   * Get the previous element to reverse
-   * @returns {Element} Previous element
+   * Get the previous element or animation to reverse
+   * @returns {Object} Object containing element and animation info
    */
   previous() {
     if (!this.hasPrevious()) return null;
-    const lastItem = this.history.pop();
-    const element = lastItem.element;
-    const index = this.animatedElements.lastIndexOf(element);
-    if (index !== -1) this.animatedElements.splice(index, 1);
-    this.currentIndex = lastItem.index;
-    return element;
+    const lastAnimation = this.animationHistory.pop();
+    if (lastAnimation.isNewElement) {
+      const lastItem = this.history.pop();
+      const index = this.animatedElements.lastIndexOf(lastAnimation.element);
+      if (index !== -1) this.animatedElements.splice(index, 1);
+      this.currentIndex = lastItem.index;
+      if (this.history.length > 0) {
+        const prevItem = this.history[this.history.length - 1];
+        const prevElement = prevItem.element;
+        const prevAnimIndex = prevItem.animationIndex;
+        this.currentAnimationIndex.set(prevElement, prevAnimIndex);
+      }
+    } else {
+      const lastItem = this.history[this.history.length - 1];
+      const element = lastItem.element;
+      const currentAnimIndex = this.currentAnimationIndex.get(element);
+      this.currentAnimationIndex.set(element, currentAnimIndex - 1);
+      this.history[this.history.length - 1].currentAnimation = lastItem.animations[currentAnimIndex - 1];
+      this.history[this.history.length - 1].animationIndex = currentAnimIndex - 1;
+    }
+    
+    return lastAnimation;
+  }
+  
+  /**
+   * Parse animations from element
+   * @param {Element} element - Element with data-animation attribute
+   * @returns {Array} Array of animation names
+   */
+  parseAnimations(element) {
+    const animAttr = element.dataset.animation || '';
+    return animAttr.split(' ').filter(Boolean);
   }
   
   /**
@@ -67,6 +144,8 @@ class AnimationSequence {
     this.currentIndex = 0;
     this.animatedElements = [];
     this.history = [];
+    this.currentAnimationIndex = new Map();
+    this.animationHistory = [];
   }
   
   /**
@@ -114,7 +193,22 @@ class AnimationSequence {
         this.currentIndex = index;
         this.animatedElements.push(item.element);
         this.history.push({ ...item });
+        if (item.animationIndex !== undefined) {
+          this.currentAnimationIndex.set(item.element, item.animationIndex);
+        }
         this.currentIndex++;
+      }
+    });
+    this.history.forEach(item => {
+      const element = item.element;
+      const animations = item.animations;
+      const currentAnimIndex = item.animationIndex || 0;
+      for (let i = 0; i <= currentAnimIndex; i++) {
+        this.animationHistory.push({
+          element,
+          animation: animations[i],
+          isNewElement: i === 0
+        });
       }
     });
   }
@@ -122,4 +216,4 @@ class AnimationSequence {
 
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = AnimationSequence;
-} 
+}

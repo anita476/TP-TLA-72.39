@@ -60,41 +60,13 @@ const Animation = {
   },
   
   /**
-   * Animate an element
-   * @param {Element} element - Element to animate
-   * @param {boolean} isForward - Whether animation is forward
-   * @returns {Promise} Promise that resolves when animation completes
-   */
-  animate(element, isForward) {
-    return new Promise(resolve => {
-      const animName = element.dataset.animation || this.config.defaultAnimation;
-      const animation = this.get(animName);
-      const type = animation.type;
-      this.removeClasses(element);
-      if (type === 'show') element.style.opacity = isForward ? '0' : '1';
-      else if (type === 'hide') element.style.opacity = isForward ? '1' : '0';
-      else element.style.opacity = '1';
-      const className = this.getClass(animName, isForward);
-      setTimeout(() => {
-        element.classList.add(className);
-      }, 10);
-      element.addEventListener('animationend', () => {
-        if (type === 'show') element.style.opacity = isForward ? '1' : '0';
-        else if (type === 'hide') element.style.opacity = isForward ? '0' : '1';
-        resolve();
-      }, { once: true });
-    });
-  },
-  
-  /**
    * Initialize elements for animation
    * @param {Array} elements - Elements to initialize
    */
   initElements(elements) {
     if (!elements?.length) return;
-    
     elements.forEach(element => {
-      const animName = element.dataset.animation || this.config.defaultAnimation;
+      const animName = element.dataset.animation?.split(' ')[0] || this.config.defaultAnimation;
       const type = this.getType(animName);
       if (type === 'show') element.style.opacity = '0';
       else element.style.opacity = '1';
@@ -108,9 +80,8 @@ const Animation = {
    */
   makeElementsVisible(elements) {
     if (!elements?.length) return;
-    
     elements.forEach(element => {
-      const animName = element.dataset.animation || this.config.defaultAnimation;
+      const animName = element.dataset.animation?.split(' ')[0] || this.config.defaultAnimation;
       const type = this.getType(animName);
       if (type === 'hide') element.style.opacity = '0';
       else element.style.opacity = '1';

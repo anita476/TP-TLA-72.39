@@ -73,6 +73,15 @@ body {
 .barrel-roll, .barrel-roll-reverse {
     animation-timing-function: linear;
     transform-origin: center;
+    animation-duration: 1.5s;
+}
+
+.appear.barrel-roll,
+.disappear.barrel-roll,
+.appear.barrel-roll-reverse,
+.disappear.barrel-roll-reverse {
+    animation-name: appear, barrelRoll;
+    animation-duration: 0.8s, 1.5s;
 }
 
 .barrel-roll { animation-name: barrelRoll; }

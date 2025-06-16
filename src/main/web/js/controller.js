@@ -75,13 +75,44 @@ const Controller = {
   },
   
   /**
-   * Animate the next element
+   * Animate the next element or animation
    * @param {AnimationSequence} sequence - Animation sequence
    */
   async animateNext(sequence) {
-    const element = sequence.next();
-    if (!element) return;
-    await this.animation.animate(element, true);
+    const result = sequence.next();
+    if (!result) return;
+    const { element, animation, isNewElement } = result;
+    if (isNewElement) {
+      this.animation.removeClasses(element);
+      const primaryType = this.animation.getType(animation);
+      if (primaryType === 'show') element.style.opacity = '0';
+      else element.style.opacity = '1';
+    }
+    await this.animateSingleAnimation(element, animation, true);
+  },
+  
+  /**
+   * Animate a single animation on an element
+   * @param {Element} element - Element to animate
+   * @param {string} animationName - Animation name
+   * @param {boolean} isForward - Direction of animation
+   */
+  async animateSingleAnimation(element, animationName, isForward) {
+    return new Promise(resolve => {
+      const type = this.animation.getType(animationName);
+      if (type === 'show') element.style.opacity = isForward ? '0' : '1';
+      else if (type === 'hide') element.style.opacity = isForward ? '1' : '0';
+      const className = this.animation.getClass(animationName, isForward);
+      this.animation.removeClasses(element);
+      setTimeout(() => {
+        element.classList.add(className);
+      }, 10);
+      element.addEventListener('animationend', () => {
+        if (type === 'show') element.style.opacity = isForward ? '1' : '0';
+        else if (type === 'hide') element.style.opacity = isForward ? '0' : '1';
+        resolve();
+      }, { once: true });
+    });
   },
   
   /**
@@ -95,11 +126,8 @@ const Controller = {
     const toSlide = this.slides.current();
     const newIndex = this.slides.currentIndex;
     await this.transition.apply(fromSlide, toSlide, true);
-    if (this.slides.getState(newIndex)) {
-      this.restoreState(newIndex);
-    } else {
-      this.initNewSlide(newIndex);
-    }
+    if (this.slides.getState(newIndex)) this.restoreState(newIndex);
+    else this.initNewSlide(newIndex);
   },
   
   /**
@@ -123,15 +151,20 @@ const Controller = {
   },
   
   /**
-   * Animate the previous element
+   * Animate the previous element or animation
    * @param {AnimationSequence} sequence - Animation sequence
    */
   async animatePrevious(sequence) {
-    const element = sequence.previous();
-    if (!element) return;
-    this.animation.removeClasses(element);
-    await new Promise(resolve => setTimeout(resolve, 10));
-    await this.animation.animate(element, false);
+    const result = sequence.previous();
+    if (!result) return;
+    const { element, animation, isNewElement } = result;
+    await this.animateSingleAnimation(element, animation, false);
+    if (isNewElement) {
+      const type = this.animation.getType(animation);
+      if (type === 'show') element.style.opacity = '0';
+      else if (type === 'hide') element.style.opacity = '1';
+      this.animation.removeClasses(element);
+    }
   },
   
   /**
@@ -165,7 +198,7 @@ const Controller = {
     elements.forEach(element => {
       visibilityState.set(element, {
         isVisible: element.style.opacity === '1',
-        animation: element.dataset.animation
+        animations: sequence.parseAnimations(element)
       });
     });
     this.slides.saveState(index, {
