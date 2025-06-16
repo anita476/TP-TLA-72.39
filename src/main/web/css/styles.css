@@ -14,25 +14,13 @@ body {
 
 /* Animation keyframes */
 @keyframes appear {
-    0% { 
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% { 
-        opacity: 1;
-        transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes disappear {
-    0% { 
-        opacity: 1;
-        transform: translateY(0);
-    }
-    100% { 
-        opacity: 0;
-        transform: translateY(-20px);
-    }
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
 }
 
 @keyframes barrelRoll {
@@ -40,28 +28,65 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+@keyframes barrelRollReverse {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+/* Slide transition animations */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+@keyframes jumpIn {
+    0% { opacity: 0; transform: scale(0.3); }
+    50% { opacity: 1; transform: scale(1.1); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
 /* Animation classes */
 .anim {
     animation-duration: 0.8s;
     animation-fill-mode: forwards;
-    animation-timing-function: linear;
+}
+
+/* Element animations */
+.appear, .disappear {
+    animation-timing-function: ease-out;
 }
 
 .appear { 
     animation-name: appear;
-    animation-timing-function: ease-out;
 }
 
 .disappear { 
     animation-name: disappear;
-    animation-timing-function: ease-out;
 }
 
-.barrel-roll { 
-    animation-name: barrelRoll;
+.barrel-roll, .barrel-roll-reverse {
     animation-timing-function: linear;
     transform-origin: center;
 }
+
+.barrel-roll { animation-name: barrelRoll; }
+.barrel-roll-reverse { animation-name: barrelRollReverse; }
+
+/* Slide transition classes */
+.slide-transition {
+    animation-duration: 0.8s;
+    animation-fill-mode: forwards;
+}
+
+.fade-in { animation-name: fadeIn; }
+.fade-out { animation-name: fadeOut; }
+.jump-in { animation-name: jumpIn; }
 
 /* Slide container and slides */
 .slides-container {
@@ -83,6 +108,7 @@ body {
     background: white;
     text-align: center;
     pointer-events: none;
+    transition: opacity 0.3s ease;
 }
 
 .slide.active {
@@ -91,17 +117,13 @@ body {
 }
 
 /* Typography */
-h1 {
-    font-size: 3em;
+h1, h2 {
     margin-bottom: 0.5em;
     color: #2c3e50;
 }
 
-h2 {
-    font-size: 2.5em;
-    margin-bottom: 0.5em;
-    color: #2c3e50;
-}
+h1 { font-size: 3em; }
+h2 { font-size: 2.5em; }
 
 p {
     font-size: 1.5em;

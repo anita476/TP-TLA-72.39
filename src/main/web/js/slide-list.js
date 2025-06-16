@@ -8,12 +8,19 @@ class SlideList {
      * @param {Array} slides - Array of slide DOM elements
      */
     constructor(slides) {
-        this.slides = slides;
+        this.slides = slides || [];
         this.currentIndex = 0;
         this.visitedSlides = [0];
         this.animationLists = new Map();
         
-        slides.forEach((slide, index) => {
+        this.initializeAnimationLists();
+    }
+    
+    /**
+     * Initialize animation lists for all slides
+     */
+    initializeAnimationLists() {
+        this.slides.forEach((slide, index) => {
             const elements = Array.from(slide.querySelectorAll('.anim'));
             this.animationLists.set(index, new AnimationList(elements));
         });
@@ -25,6 +32,15 @@ class SlideList {
      */
     getCurrentSlide() {
         return this.slides[this.currentIndex];
+    }
+    
+    /**
+     * Get a slide by index
+     * @param {number} index - Index of the slide to get
+     * @returns {Element} The slide element at the specified index
+     */
+    getSlide(index) {
+        return this.slides[index];
     }
 
     /**
@@ -49,17 +65,13 @@ class SlideList {
      * @returns {boolean} True if moved to next slide, false if already at last slide
      */
     next() {
-        if (this.currentIndex < this.slides.length - 1) {
-            this.currentIndex++;
-            
-            // Add to visited slides only if it's a new position at the end
-            if (this.visitedSlides.indexOf(this.currentIndex) === -1 || 
-                this.visitedSlides[this.visitedSlides.length - 1] !== this.currentIndex) {
-                this.visitedSlides.push(this.currentIndex);
-            }
-            return true;
+        if (this.currentIndex >= this.slides.length - 1) return false;
+        this.currentIndex++;
+        if (this.visitedSlides.indexOf(this.currentIndex) === -1 || 
+            this.visitedSlides[this.visitedSlides.length - 1] !== this.currentIndex) {
+            this.visitedSlides.push(this.currentIndex);
         }
-        return false;
+        return true;
     }
 
     /**
@@ -67,15 +79,12 @@ class SlideList {
      * @returns {boolean} True if moved to previous slide, false if already at first slide
      */
     previous() {
-        if (this.visitedSlides.length > 1) {
-            if (this.visitedSlides[this.visitedSlides.length - 1] === this.currentIndex) {
-                this.visitedSlides.pop();
-            }
-            
-            this.currentIndex = this.visitedSlides[this.visitedSlides.length - 1];
-            return true;
+        if (this.visitedSlides.length <= 1) return false;
+        if (this.visitedSlides[this.visitedSlides.length - 1] === this.currentIndex) {
+            this.visitedSlides.pop();
         }
-        return false;
+        this.currentIndex = this.visitedSlides[this.visitedSlides.length - 1];
+        return true;
     }
 
     /**

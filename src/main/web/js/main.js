@@ -32,8 +32,8 @@ function setupImageErrorHandling() {
     document.querySelectorAll('img').forEach(img => {
         img.onerror = function() {
             this.style.display = 'none';
-            let errorText = document.createElement('p');
-            errorText.textContent = '(Place your image here: ' + this.getAttribute('src') + ')';
+            const errorText = document.createElement('p');
+            errorText.textContent = `(Place your image here: ${this.getAttribute('src')})`;
             errorText.style.color = '#666';
             errorText.style.fontStyle = 'italic';
             this.parentNode.insertBefore(errorText, this.nextSibling);

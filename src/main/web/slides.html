@@ -8,24 +8,24 @@
 </head>
 <body>
     <div class="slides-container">
-        <div class="slide active">
-            <h1 class="anim" data-animation="disappear">Welcome to the Presentation</h1>
-            <p class="anim" data-animation="barrel-roll">Use arrow keys to navigate</p>
+        <div class="slide active" data-transition="fade">
+            <h1 class="anim" data-animation="appear">Welcome to the Presentation</h1>
+            <p class="anim" data-animation="disappear">Use arrow keys to navigate</p>
             <img src="images/magnus.png" class="slide-image anim" data-animation="barrel-roll">
         </div>
 
-        <div class="slide">
+        <div class="slide" data-transition="jump">
             <h2 class="anim" data-animation="appear">Single Image Example</h2>
             <img src="images/siffrin.jpg" class="slide-image anim" data-animation="barrel-roll">
         </div>
 
-        <div class="slide">
+        <div class="slide" data-transition="jump">
             <h2 class="anim" data-animation="appear">Image with Text</h2>
             <p class="anim" data-animation="appear">You can combine images with text descriptions</p>
             <img src="images/magnus.png" class="slide-image anim" data-animation="barrel-roll">
         </div>
 
-        <div class="slide">
+        <div class="slide" data-transition="fade">
             <h2 class="anim" data-animation="appear">Thank You!</h2>
             <img src="images/magnus.png" class="slide-image anim" data-animation="barrel-roll">
             <p class="anim" data-animation="appear">Any questions?</p>
@@ -37,6 +37,7 @@
     <script src="js/animation-utils.js"></script>
     <script src="js/animation-list.js"></script>
     <script src="js/slide-list.js"></script>
+    <script src="js/slide-transition.js"></script>
     <script src="js/slide-controller.js"></script>
     <script src="js/main.js"></script>
 </body>

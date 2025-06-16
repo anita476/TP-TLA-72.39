@@ -26,8 +26,7 @@ class SlideController {
         });
 
         this.showSlide(this.slideList.getCurrentSlide());
-        const firstList = this.slideList.getCurrentAnimationList();
-        firstList.reset();
+        this.slideList.getCurrentAnimationList()?.reset();
     }
 
     /**
@@ -62,8 +61,8 @@ class SlideController {
             const isVisible = element.style.opacity === '1';
             const animation = element.dataset.animation || 'appear';
             visibilityState.set(element, {
-                isVisible: isVisible,
-                animation: animation,
+                isVisible,
+                animation,
                 isAnimated: animationList.getAnimatedElements().includes(element)
             });
         });
@@ -72,7 +71,7 @@ class SlideController {
             animatedElements: [...animationList.getAnimatedElements()],
             currentIndex: animationList.currentIndex,
             animationSequence: [...animationList.getAnimationSequence()],
-            visibilityState: visibilityState
+            visibilityState
         });
     }
 
@@ -94,14 +93,7 @@ class SlideController {
         
         if (state.visibilityState) {
             state.visibilityState.forEach((elementState, element) => {
-                if (elementState.isVisible) {
-                    element.style.opacity = '1';
-                    if (elementState.animation === 'barrel-roll') {
-                        element.classList.add('barrel-roll-completed');
-                    }
-                } else {
-                    element.style.opacity = '0';
-                }
+                element.style.opacity = elementState.isVisible ? '1' : '0';
             });
         } else {
             AnimationUtils.makeElementsVisible(state.animatedElements);
@@ -117,55 +109,64 @@ class SlideController {
         if (this.isAnimating) return;
         this.isAnimating = true;
 
-        const currentList = this.slideList.getCurrentAnimationList();
-        const currentSlideIndex = this.slideList.currentIndex;
-        
-        if (currentList.hasNext()) {
-            const element = currentList.next();
-            const animation = element.dataset.animation || 'appear';
+        try {
+            const currentList = this.slideList.getCurrentAnimationList();
+            const currentSlideIndex = this.slideList.currentIndex;
             
-            if (animation === 'disappear') {
-                await AnimationUtils.animateElement(element, false);
+            if (currentList?.hasNext()) {
+                await this.animateNextElement(currentList);
+                this.saveSlideState(currentSlideIndex);
             } else {
-                await AnimationUtils.animateElement(element, true);
+                await this.moveToNextSlide(currentSlideIndex);
             }
-            
-            this.saveSlideState(currentSlideIndex);
-        } else {
-            this.saveSlideState(currentSlideIndex);
-            
-            if (this.slideList.next()) {
-                const oldElements = currentList.getAllElements();
-                AnimationUtils.makeElementsInvisible(oldElements);
-                
-                this.showSlide(this.slideList.getCurrentSlide());
-                const newSlideIndex = this.slideList.currentIndex;
-                
-                if (this.slideStates.has(newSlideIndex)) {
-                    this.restoreSlideState(newSlideIndex);
-                } else {
-                    const newList = this.slideList.getCurrentAnimationList();
-                    const newElements = newList.getAllElements();
-                    
-                    newElements.forEach(element => {
-                        const animation = element.dataset.animation || 'appear';
-                        
-                        if (animation === 'barrel-roll') {
-                            element.style.opacity = '1';
-                            element.classList.add('barrel-roll-completed');
-                        } else if (animation === 'disappear') {
-                            element.style.opacity = '1';
-                        } else if (animation !== 'appear') {
-                            element.style.opacity = '1';
-                        } else {
-                            element.style.opacity = '0';
-                        }
-                    });
-                }
-            }
+        } finally {
+            this.isAnimating = false;
         }
-
-        this.isAnimating = false;
+    }
+    
+    /**
+     * Animate the next element in the current slide
+     * @param {AnimationList} currentList - The current animation list
+     */
+    async animateNextElement(currentList) {
+        const element = currentList.next();
+        if (!element) return;
+        await AnimationUtils.animateElement(element, true);
+    }
+    
+    /**
+     * Move to the next slide
+     * @param {number} currentSlideIndex - The current slide index
+     */
+    async moveToNextSlide(currentSlideIndex) {
+        this.saveSlideState(currentSlideIndex);
+        
+        if (!this.slideList.next()) return;
+        
+        const currentSlide = this.slideList.getSlide(currentSlideIndex);
+        const nextSlide = this.slideList.getCurrentSlide();
+        const newSlideIndex = this.slideList.currentIndex;
+        
+        await SlideTransition.transition(currentSlide, nextSlide, true);
+        
+        this.updateSlideNumber();
+        
+        if (this.slideStates.has(newSlideIndex)) {
+            this.restoreSlideState(newSlideIndex);
+        } else {
+            this.initializeNewSlide();
+        }
+    }
+    
+    /**
+     * Initialize a new slide that hasn't been visited before
+     */
+    initializeNewSlide() {
+        const newList = this.slideList.getCurrentAnimationList();
+        if (!newList) return;
+        
+        const newElements = newList.getAllElements();
+        AnimationUtils.initializeElements(newElements);
     }
 
     /**
@@ -175,44 +176,56 @@ class SlideController {
         if (this.isAnimating) return;
         this.isAnimating = true;
 
-        const currentList = this.slideList.getCurrentAnimationList();
-        
-        if (currentList.hasPrevious()) {
-            const elementToHide = currentList.previous();
-            const animation = elementToHide.dataset.animation || 'appear';
+        try {
+            const currentList = this.slideList.getCurrentAnimationList();
             
-            if (animation === 'disappear') {
-                await AnimationUtils.animateElement(elementToHide, true);
-            } else if (animation === 'barrel-roll') {
-                await AnimationUtils.animateElement(elementToHide, false);
-                elementToHide.style.opacity = '1';
+            if (currentList?.hasPrevious()) {
+                await this.animatePreviousElement(currentList);
+                this.saveSlideState(this.slideList.currentIndex);
             } else {
-                await AnimationUtils.animateElement(elementToHide, false);
+                await this.moveToPreviousSlide();
             }
-            
-            const currentSlideIndex = this.slideList.currentIndex;
-            this.saveSlideState(currentSlideIndex);
+        } finally {
+            this.isAnimating = false;
+        }
+    }
+    
+    /**
+     * Animate the previous element in the current slide
+     * @param {AnimationList} currentList - The current animation list
+     */
+    async animatePreviousElement(currentList) {
+        const elementToHide = currentList.previous();
+        if (!elementToHide) return;
+        
+        await AnimationUtils.animateElement(elementToHide, false);
+    }
+    
+    /**
+     * Move to the previous slide
+     */
+    async moveToPreviousSlide() {
+        const currentSlideIndex = this.slideList.currentIndex;
+        this.saveSlideState(currentSlideIndex);
+        
+        if (!this.slideList.previous()) return;
+        
+        const currentSlide = this.slideList.getSlide(currentSlideIndex);
+        const prevSlide = this.slideList.getCurrentSlide();
+        const previousSlideIndex = this.slideList.currentIndex;
+        
+        await SlideTransition.transition(currentSlide, prevSlide, false);
+        
+        this.updateSlideNumber();
+        
+        if (this.slideStates.has(previousSlideIndex)) {
+            this.restoreSlideState(previousSlideIndex);
         } else {
-            const currentSlideIndex = this.slideList.currentIndex;
-            this.saveSlideState(currentSlideIndex);
-            
-            if (this.slideList.previous()) {
-                const currentElements = currentList.getAllElements();
-                AnimationUtils.makeElementsInvisible(currentElements);
-                
-                this.showSlide(this.slideList.getCurrentSlide());
-                const previousSlideIndex = this.slideList.currentIndex;
-                
-                if (this.slideStates.has(previousSlideIndex)) {
-                    this.restoreSlideState(previousSlideIndex);
-                } else {
-                    const previousList = this.slideList.getCurrentAnimationList();
-                    const previousElements = previousList.getAllElements();
-                    AnimationUtils.makeElementsVisible(previousElements);
-                }
+            const previousList = this.slideList.getCurrentAnimationList();
+            const previousElements = previousList?.getAllElements();
+            if (previousElements) {
+                AnimationUtils.makeElementsVisible(previousElements);
             }
         }
-
-        this.isAnimating = false;
     }
 } 

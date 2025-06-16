@@ -8,10 +8,8 @@ class AnimationList {
      * @param {Array} elements - Array of DOM elements to animate
      */
     constructor(elements) {
-        this.elements = elements;
-        this.currentIndex = 0;
-        this.animatedElements = [];
-        this.animationSequence = [];
+        this.elements = elements || [];
+        this.reset();
     }
 
     /**
@@ -44,20 +42,17 @@ class AnimationList {
      * @returns {Element|null} The next element or null if none
      */
     next() {
-        if (this.hasNext()) {
-            const element = this.elements[this.currentIndex];
-            const animation = element.dataset.animation || 'appear';
-            
-            this.animatedElements.push(element);
-            this.animationSequence.push({
-                element: element,
-                index: this.currentIndex,
-                animation: animation
-            });
-            this.currentIndex++;
-            return element;
-        }
-        return null;
+        if (!this.hasNext()) return null;
+        const element = this.elements[this.currentIndex];
+        const animation = element.dataset.animation || 'appear';
+        this.animatedElements.push(element);
+        this.animationSequence.push({
+            element,
+            index: this.currentIndex,
+            animation
+        });
+        this.currentIndex++;
+        return element;
     }
 
     /**
@@ -65,19 +60,13 @@ class AnimationList {
      * @returns {Element|null} The previous element or null if none
      */
     previous() {
-        if (this.hasPrevious()) {
-            const lastAnimation = this.animationSequence.pop();
-            const element = lastAnimation.element;
-            
-            const lastIndex = this.animatedElements.lastIndexOf(element);
-            if (lastIndex !== -1) {
-                this.animatedElements.splice(lastIndex, 1);
-            }
-            
-            this.currentIndex = lastAnimation.index;
-            return element;
-        }
-        return null;
+        if (!this.hasPrevious()) return null;
+        const lastAnimation = this.animationSequence.pop();
+        const element = lastAnimation.element;
+        const lastIndex = this.animatedElements.lastIndexOf(element);
+        if (lastIndex !== -1) this.animatedElements.splice(lastIndex, 1);
+        this.currentIndex = lastAnimation.index;
+        return element;
     }
 
     /**
@@ -117,8 +106,8 @@ class AnimationList {
      * @param {Array} animationSequence - The animation sequence to restore
      */
     restoreAnimationState(animationSequence) {
+        if (!animationSequence?.length) return;
         this.reset();
-        
         animationSequence.forEach(animation => {
             const index = this.elements.indexOf(animation.element);
             if (index !== -1) {
