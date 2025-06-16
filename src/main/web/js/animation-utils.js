@@ -9,9 +9,12 @@ const AnimationUtils = {
     makeElementsVisible(elements) {
         if (!elements) return;
         elements.forEach(element => {
+            if (element.dataset.animation === 'disappear') {
+                return;
+            }
+            
             element.style.opacity = '1';
             element.classList.remove('appear', 'disappear', 'barrel-roll');
-            // Mark barrel-roll elements as completed
             if (element.dataset.animation === 'barrel-roll') {
                 element.classList.add('barrel-roll-completed');
             }
@@ -40,17 +43,14 @@ const AnimationUtils = {
         return new Promise(resolve => {
             const animation = element.dataset.animation || (isAppearing ? 'appear' : 'disappear');
             
-            // Remove all animation classes
             element.classList.remove('appear', 'disappear', 'barrel-roll', 'barrel-roll-completed');
             
-            // Special handling for barrel-roll
             if (animation === 'barrel-roll') {
                 if (isAppearing) {
-                    element.style.opacity = '1'; // Always visible for barrel-roll
+                    element.style.opacity = '1';
+                    element.classList.add('barrel-roll');
                 } else {
-                    // For disappearing, we need to reverse the barrel-roll
-                    // but keep the element visible
-                    element.style.opacity = '1'; // Keep visible
+                    element.style.opacity = '1';
                     element.style.transform = 'rotate(360deg)';
                     setTimeout(() => {
                         element.style.transition = 'transform 0.8s linear';
@@ -58,30 +58,42 @@ const AnimationUtils = {
                     }, 10);
                     
                     setTimeout(() => {
-                        // Don't change opacity, keep the element visible
                         element.style.transform = '';
                         element.style.transition = '';
                         resolve();
                     }, 810);
                     return;
                 }
-            } else if (isAppearing && (animation === 'appear' || !animation)) {
-                element.style.opacity = '0';
+            } else if (animation === 'disappear') {
+                if (isAppearing) {
+                    element.style.opacity = '0';
+                    setTimeout(() => {
+                        element.classList.add('appear');
+                    }, 10);
+                } else {
+                    element.style.opacity = '1';
+                    setTimeout(() => {
+                        element.classList.add('disappear');
+                    }, 10);
+                }
+            } else {
+                // Default handling for appear and other animations
+                if (isAppearing) {
+                    element.style.opacity = '0';
+                    element.classList.add('appear');
+                } else {
+                    element.style.opacity = '1';
+                    element.classList.add('disappear');
+                }
             }
             
-            // Add the appropriate animation class
-            element.classList.add(isAppearing ? animation : 'disappear');
-            
             element.addEventListener('animationend', () => {
-                // For non-barrel-roll animations, set opacity based on appearing/disappearing
                 if (animation !== 'barrel-roll') {
                     element.style.opacity = isAppearing ? '1' : '0';
                 } else {
-                    // For barrel-roll, always keep visible
                     element.style.opacity = '1';
                 }
                 
-                // For barrel-roll, mark as completed after animation
                 if (animation === 'barrel-roll' && isAppearing) {
                     element.classList.remove('barrel-roll');
                     element.classList.add('barrel-roll-completed');
@@ -98,9 +110,13 @@ const AnimationUtils = {
      */
     initializeElements(elements) {
         elements.forEach(element => {
-            if (element.dataset.animation === 'appear' || !element.dataset.animation) {
+            const animation = element.dataset.animation || 'appear';
+            
+            if (animation === 'appear' || !animation) {
                 element.style.opacity = '0';
-            } else if (element.dataset.animation === 'barrel-roll') {
+            } else if (animation === 'barrel-roll') {
+                element.style.opacity = '1';
+            } else if (animation === 'disappear') {
                 element.style.opacity = '1';
             }
         });

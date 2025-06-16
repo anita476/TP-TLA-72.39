@@ -68,12 +68,10 @@ class SlideList {
      */
     previous() {
         if (this.visitedSlides.length > 1) {
-            // Remove current position from visited slides
             if (this.visitedSlides[this.visitedSlides.length - 1] === this.currentIndex) {
                 this.visitedSlides.pop();
             }
             
-            // Move back to previous slide
             this.currentIndex = this.visitedSlides[this.visitedSlides.length - 1];
             return true;
         }

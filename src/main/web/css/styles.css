@@ -63,11 +63,6 @@ body {
     transform-origin: center;
 }
 
-/* Ensure barrel-roll elements stay visible */
-img.barrel-roll, .barrel-roll-completed {
-    opacity: 1 !important;
-}
-
 /* Slide container and slides */
 .slides-container {
     width: 100vw;

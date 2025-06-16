@@ -69,7 +69,6 @@ class AnimationList {
             const lastAnimation = this.animationSequence.pop();
             const element = lastAnimation.element;
             
-            // Remove from animated elements only if it's the last occurrence
             const lastIndex = this.animatedElements.lastIndexOf(element);
             if (lastIndex !== -1) {
                 this.animatedElements.splice(lastIndex, 1);

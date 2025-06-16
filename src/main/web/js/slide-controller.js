@@ -12,6 +12,7 @@ class SlideController {
         this.isAnimating = false;
         this.slideList = new SlideList(Array.from(this.slides));
         this.slideStates = new Map();
+
         this.initializeSlides();
     }
 
@@ -19,13 +20,11 @@ class SlideController {
      * Initialize the slides and their animations
      */
     initializeSlides() {
-        // Set initial opacity for animation elements
         this.slides.forEach(slide => {
             const elements = Array.from(slide.querySelectorAll('.anim'));
             AnimationUtils.initializeElements(elements);
         });
 
-        // Show the first slide
         this.showSlide(this.slideList.getCurrentSlide());
         const firstList = this.slideList.getCurrentAnimationList();
         firstList.reset();
@@ -56,10 +55,24 @@ class SlideController {
         const animationList = this.slideList.getAnimationList(slideIndex);
         if (!animationList) return;
         
+        const allElements = animationList.getAllElements();
+        const visibilityState = new Map();
+        
+        allElements.forEach(element => {
+            const isVisible = element.style.opacity === '1';
+            const animation = element.dataset.animation || 'appear';
+            visibilityState.set(element, {
+                isVisible: isVisible,
+                animation: animation,
+                isAnimated: animationList.getAnimatedElements().includes(element)
+            });
+        });
+        
         this.slideStates.set(slideIndex, {
             animatedElements: [...animationList.getAnimatedElements()],
             currentIndex: animationList.currentIndex,
-            animationSequence: [...animationList.getAnimationSequence()]
+            animationSequence: [...animationList.getAnimationSequence()],
+            visibilityState: visibilityState
         });
     }
 
@@ -76,12 +89,23 @@ class SlideController {
         
         animationList.reset();
         
-        // Make all elements initially invisible
         const allElements = animationList.getAllElements();
         AnimationUtils.makeElementsInvisible(allElements);
         
-        // Make previously animated elements visible
-        AnimationUtils.makeElementsVisible(state.animatedElements);
+        if (state.visibilityState) {
+            state.visibilityState.forEach((elementState, element) => {
+                if (elementState.isVisible) {
+                    element.style.opacity = '1';
+                    if (elementState.animation === 'barrel-roll') {
+                        element.classList.add('barrel-roll-completed');
+                    }
+                } else {
+                    element.style.opacity = '0';
+                }
+            });
+        } else {
+            AnimationUtils.makeElementsVisible(state.animatedElements);
+        }
         
         animationList.restoreAnimationState(state.animationSequence);
     }
@@ -97,39 +121,41 @@ class SlideController {
         const currentSlideIndex = this.slideList.currentIndex;
         
         if (currentList.hasNext()) {
-            // Animate the next element in the current slide
             const element = currentList.next();
-            await AnimationUtils.animateElement(element, true);
+            const animation = element.dataset.animation || 'appear';
             
-            // Save state after each animation
+            if (animation === 'disappear') {
+                await AnimationUtils.animateElement(element, false);
+            } else {
+                await AnimationUtils.animateElement(element, true);
+            }
+            
             this.saveSlideState(currentSlideIndex);
         } else {
-            // Save the state of the current slide before moving
             this.saveSlideState(currentSlideIndex);
             
-            // Move to the next slide if available
             if (this.slideList.next()) {
-                // Hide all elements in the current slide without animations
                 const oldElements = currentList.getAllElements();
                 AnimationUtils.makeElementsInvisible(oldElements);
                 
-                // Show the next slide
                 this.showSlide(this.slideList.getCurrentSlide());
                 const newSlideIndex = this.slideList.currentIndex;
                 
-                // If we've been to this slide before, restore its state
                 if (this.slideStates.has(newSlideIndex)) {
                     this.restoreSlideState(newSlideIndex);
                 } else {
-                    // Initialize new slide elements
                     const newList = this.slideList.getCurrentAnimationList();
                     const newElements = newList.getAllElements();
                     
                     newElements.forEach(element => {
-                        if (element.dataset.animation === 'barrel-roll') {
+                        const animation = element.dataset.animation || 'appear';
+                        
+                        if (animation === 'barrel-roll') {
                             element.style.opacity = '1';
                             element.classList.add('barrel-roll-completed');
-                        } else if (element.dataset.animation !== 'appear') {
+                        } else if (animation === 'disappear') {
+                            element.style.opacity = '1';
+                        } else if (animation !== 'appear') {
                             element.style.opacity = '1';
                         } else {
                             element.style.opacity = '0';
@@ -152,40 +178,34 @@ class SlideController {
         const currentList = this.slideList.getCurrentAnimationList();
         
         if (currentList.hasPrevious()) {
-            // Hide the last animated element in the current slide with reverse animation
             const elementToHide = currentList.previous();
-            const isBarrelRoll = elementToHide.dataset.animation === 'barrel-roll';
+            const animation = elementToHide.dataset.animation || 'appear';
             
-            await AnimationUtils.animateElement(elementToHide, false);
-            
-            // Ensure barrel-roll elements remain visible after reverse animation
-            if (isBarrelRoll) {
+            if (animation === 'disappear') {
+                await AnimationUtils.animateElement(elementToHide, true);
+            } else if (animation === 'barrel-roll') {
+                await AnimationUtils.animateElement(elementToHide, false);
                 elementToHide.style.opacity = '1';
+            } else {
+                await AnimationUtils.animateElement(elementToHide, false);
             }
             
-            // Save state after each animation reversal
             const currentSlideIndex = this.slideList.currentIndex;
             this.saveSlideState(currentSlideIndex);
         } else {
-            // Save the current state before moving back
             const currentSlideIndex = this.slideList.currentIndex;
             this.saveSlideState(currentSlideIndex);
             
-            // Move to the previous slide if available
             if (this.slideList.previous()) {
-                // Hide current slide elements without animations
                 const currentElements = currentList.getAllElements();
                 AnimationUtils.makeElementsInvisible(currentElements);
                 
-                // Show the previous slide
                 this.showSlide(this.slideList.getCurrentSlide());
                 const previousSlideIndex = this.slideList.currentIndex;
                 
-                // Restore the previous slide to its exact state when we left it
                 if (this.slideStates.has(previousSlideIndex)) {
                     this.restoreSlideState(previousSlideIndex);
                 } else {
-                    // If no saved state, show all elements (fallback)
                     const previousList = this.slideList.getCurrentAnimationList();
                     const previousElements = previousList.getAllElements();
                     AnimationUtils.makeElementsVisible(previousElements);
