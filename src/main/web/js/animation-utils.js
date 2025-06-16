@@ -3,13 +3,13 @@
  */
 const AnimationUtils = {
     ANIMATIONS: {
-        'appear': { type: 'show', class: 'appear' },
-        'disappear': { type: 'hide', class: 'disappear' },
+        'appear': { type: 'show', class: 'appear', reverseClass: 'disappear' },
+        'disappear': { type: 'hide', class: 'disappear', reverseClass: 'reappear' },
         'barrel-roll': { type: 'maintain', class: 'barrel-roll', reverseClass: 'barrel-roll-reverse' }
     },
     
     ANIMATION_CLASSES: [
-        'appear', 'disappear', 'barrel-roll', 'barrel-roll-reverse'
+        'appear', 'disappear', 'reappear', 'barrel-roll', 'barrel-roll-reverse'
     ],
     
     /**
@@ -28,7 +28,10 @@ const AnimationUtils = {
         if (!elements?.length) return;
         elements.forEach(element => {
             const animType = this.getAnimationType(element.dataset.animation);
-            if (animType === 'hide') return;
+            if (animType === 'hide') {
+                element.style.opacity = '0';
+                return;
+            }
             element.style.opacity = '1';
             this.removeAnimationClasses(element);
         });
@@ -41,6 +44,8 @@ const AnimationUtils = {
     makeElementsInvisible(elements) {
         if (!elements?.length) return;
         elements.forEach(element => {
+            const animType = this.getAnimationType(element.dataset.animation);
+            if (animType === 'show') return;
             element.style.opacity = '0';
             this.removeAnimationClasses(element);
         });
@@ -65,12 +70,16 @@ const AnimationUtils = {
     getAnimationClass(animationName, isAppearing) {
         const animation = this.ANIMATIONS[animationName];
         if (!animation) return isAppearing ? 'appear' : 'disappear';
-        const type = animation.type;
-        if (type === 'maintain') return isAppearing ? animation.class : (animation.reverseClass || animation.class);
-        if ((type === 'show' && isAppearing) || (type === 'hide' && !isAppearing)) return animation.class;
-        const oppositeType = type === 'show' ? 'hide' : 'show';
-        const oppositeAnim = Object.values(this.ANIMATIONS).find(a => a.type === oppositeType);
-        return oppositeAnim ? oppositeAnim.class : (type === 'show' ? 'disappear' : 'appear');
+        if (animation.type === 'hide') {
+            if (isAppearing) return animation.class;
+            else return animation.reverseClass;
+        }
+        if (animation.type === 'show') {
+            if (isAppearing) return animation.class;
+            else return animation.reverseClass;
+        }
+        if (isAppearing) return animation.class;
+        else return animation.reverseClass || animation.class;
     },
     
     /**
@@ -81,11 +90,8 @@ const AnimationUtils = {
      */
     getInitialOpacity(animationName, isAppearing) {
         const type = this.getAnimationType(animationName);
-        if (type === 'maintain') return '1';
-        if (type === 'show' && isAppearing) return '0';
-        if (type === 'hide' && !isAppearing) return '1';
-        if (type === 'show' && !isAppearing) return '1';
-        if (type === 'hide' && isAppearing) return '0';
+        if (type === 'hide') return isAppearing ? '1' : '0';
+        if (type === 'show') return isAppearing ? '0' : '1';
         return '1';
     },
     
@@ -97,11 +103,8 @@ const AnimationUtils = {
      */
     getFinalOpacity(animationName, isAppearing) {
         const type = this.getAnimationType(animationName);
-        if (type === 'maintain') return '1';
-        if (type === 'show' && isAppearing) return '1';
-        if (type === 'hide' && !isAppearing) return '0';
-        if (type === 'show' && !isAppearing) return '0';
-        if (type === 'hide' && isAppearing) return '1';
+        if (type === 'hide') return isAppearing ? '0' : '1';
+        if (type === 'show') return isAppearing ? '1' : '0';
         return '1';
     },
 
@@ -114,14 +117,12 @@ const AnimationUtils = {
     animateElement(element, isAppearing) {
         return new Promise(resolve => {
             const animationName = element.dataset.animation || (isAppearing ? 'appear' : 'disappear');
-            const type = this.getAnimationType(animationName);
-            const shouldUseOppositeAnimation = (type === 'show' && !isAppearing) || (type === 'hide' && isAppearing);
             this.removeAnimationClasses(element);
             element.style.opacity = this.getInitialOpacity(animationName, isAppearing);
             const animationClass = this.getAnimationClass(animationName, isAppearing);
             setTimeout(() => {
                 element.classList.add(animationClass);
-            }, 10);
+            }, 20);
             element.addEventListener('animationend', () => {
                 element.style.opacity = this.getFinalOpacity(animationName, isAppearing);
                 resolve();
@@ -138,8 +139,15 @@ const AnimationUtils = {
         elements.forEach(element => {
             const animationName = element.dataset.animation || 'appear';
             const type = this.getAnimationType(animationName);
-            if (type === 'show') element.style.opacity = '0';
-            else element.style.opacity = '1';
+            if (type === 'hide') {
+                element.style.opacity = '1';
+                return;
+            }
+            if (type === 'show') {
+                element.style.opacity = '0';
+                return;
+            }
+            element.style.opacity = '1';
         });
     }
 }; 

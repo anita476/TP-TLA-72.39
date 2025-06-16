@@ -197,7 +197,8 @@ class SlideController {
     async animatePreviousElement(currentList) {
         const elementToHide = currentList.previous();
         if (!elementToHide) return;
-        
+        AnimationUtils.removeAnimationClasses(elementToHide);
+        await new Promise(resolve => setTimeout(resolve, 10));
         await AnimationUtils.animateElement(elementToHide, false);
     }
     

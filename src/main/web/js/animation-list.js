@@ -82,7 +82,7 @@ class AnimationList {
      * @returns {Array} All animated elements
      */
     getAnimatedElements() {
-        return [...new Set(this.animatedElements)]; // Return unique elements
+        return [...new Set(this.animatedElements)];
     }
 
     /**
