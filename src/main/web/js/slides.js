@@ -17,7 +17,7 @@ const Slides = {
     this.animation = core.get('animation');
     this.slides = Array.from(document.querySelectorAll('.slide'));
     this.slides.forEach(slide => {
-      const elements = Array.from(slide.querySelectorAll('.anim'));
+      const elements = Array.from(slide.querySelectorAll('[data-animation]'));
       this.animation.initElements(elements);
     });
     if (this.slides.length > 0) {
@@ -83,7 +83,7 @@ const Slides = {
    */
   getAnimationElements(index = this.currentIndex) {
     const slide = this.slides[index];
-    return slide ? Array.from(slide.querySelectorAll('.anim')) : [];
+    return slide ? Array.from(slide.querySelectorAll('[data-animation]')) : [];
   },
   
   /**

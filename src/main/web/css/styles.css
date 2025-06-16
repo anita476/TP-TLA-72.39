@@ -52,7 +52,7 @@ body {
 }
 
 /* Animation classes */
-.anim {
+[data-animation] {
     animation-duration: 0.8s;
     animation-fill-mode: forwards;
 }
