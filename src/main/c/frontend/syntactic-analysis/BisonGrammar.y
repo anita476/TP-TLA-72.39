@@ -145,9 +145,9 @@ object_definitions:
 	;  
 
 object_definition:
-	SLIDE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 							{ $$ = ObjectDefinitionSemanticAction(OBJ_SLIDE, $2, $4); }
-	|TEXTBLOCK IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 					{ $$ = ObjectDefinitionSemanticAction(OBJ_TEXTBLOCK, $2, $4); }
-	|IMAGE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 						{ $$ = ObjectDefinitionSemanticAction(OBJ_IMAGE, $2, $4); }
+	SLIDE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 							{ $$ = ObjectDefinitionSemanticAction(currentCompilerState(), OBJ_SLIDE, $2, $4); }
+	|TEXTBLOCK IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 					{ $$ = ObjectDefinitionSemanticAction(currentCompilerState(), OBJ_TEXTBLOCK, $2, $4); }
+	|IMAGE IDENTIFIER OPEN_CURLY_BRACE css_properties CLOSE_CURLY_BRACE 						{ $$ = ObjectDefinitionSemanticAction(currentCompilerState(), OBJ_IMAGE, $2, $4); }
 	;
 css_properties:
 	%empty 																						{ $$ = NULL; }											
@@ -167,7 +167,7 @@ structure_definitions:
 	| structure_definitions structure_definition												{ $$ = StructureListSemanticAction($1, $2); }											
 	;
 structure_definition:
-	IDENTIFIER OPEN_CURLY_BRACE slide_contents CLOSE_CURLY_BRACE 								{ $$ = StructureDefinitionSemanticAction($1, $3); }
+	IDENTIFIER OPEN_CURLY_BRACE slide_contents CLOSE_CURLY_BRACE 								{ $$ = StructureDefinitionSemanticAction(currentCompilerState(),$1, $3); }
 	;
 
 slide_contents:
@@ -176,8 +176,8 @@ slide_contents:
 	;
 
 slide_content:
-	ADD IDENTIFIER SEMICOLON 																	{ $$ = AdditionSlideContent($2, NULL); }
-	| ADD IDENTIFIER WITH STRING SEMICOLON 														{ $$ = AdditionSlideContent($2, $4); }
+	ADD IDENTIFIER SEMICOLON 																	{ $$ = AdditionSlideContent(currentCompilerState(),$2, NULL); }
+	| ADD IDENTIFIER WITH STRING SEMICOLON 														{ $$ = AdditionSlideContent(currentCompilerState(),$2, $4); }
 	| ANCHOR anchor_position SEMICOLON															{ $$ = AnchorPositionSlideContent($2); }
 	| IDENTIFIER simple_position SEMICOLON  													{ $$ = RelativeSimplePositionSlideContent($1, $2); }
 	| IDENTIFIER compound_position SEMICOLON  													{ $$ = RelativeSimplePositionSlideContent($1, $2); }

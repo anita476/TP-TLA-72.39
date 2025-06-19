@@ -1,4 +1,3 @@
-
 #ifndef SYMBOL_TABLE_HEADER
 
 #define SYMBOL_TABLE_HEADER
@@ -19,12 +18,12 @@
  * Variable are stored in a hashtable, where the key is the identifier of the variable and the value is a type.
  * TODO maybe later on we will need to store more information about the variables ... 
  */
-typedef enum {
-    SYMBOL_TYPE_SLIDE,
-    SYMBOL_TYPE_TEXTBLOCK,
-    SYMBOL_TYPE_IMAGE,
-    SYMBOL_TYPE_UNKNOWN
-} SymbolType;
+
+typedef struct {
+    ObjectType type;        // Type of the symbol
+    int currentSlide;       // Name of the symbol
+} SymbolTableItem;
+
 
 typedef struct {
     GHashTable *table;       // The hashtable that contains the symbols
@@ -50,16 +49,32 @@ SymbolTable *initializeSymbolTable();
  * @param identifier The identifier of the symbol.
  * @param item The SymbolTableItem to add.
  */
-void addSymbol(SymbolTable *symbolTable, const char *identifier, SymbolType type);
+void addSymbol(SymbolTable *symbolTable, const char *identifier, ObjectType type);
+
 
 /**
  * Retrieves a symbol from the symbol table.
  * @param symbolTable The symbol table to retrieve the symbol from.
  * @param identifier The identifier of the symbol to retrieve.
- * @return The symbol type if found, NULL otherwise.
+ * @return The SymbolTableItem if found, NULL otherwise.
  */
-SymbolType getSymbolType(SymbolTable *symbolTable, const char *identifier);
+SymbolTableItem *getSymbol(SymbolTable *symbolTable, const char *identifier);
 
+/**
+ * Retrieves a symbol's type from the symbol table.
+ * @param symbolTable The symbol table to retrieve the symbol from.
+ * @param identifier The identifier of the symbol to retrieve.
+ * @return The object type if found, OBJ_UNKNOWN otherwise.
+ */
+ObjectType getSymbolType(SymbolTable *symbolTable, const char *identifier);
+
+/**
+ * Retrieves a symbol from the symbol table, checking if it is a slide.
+ * @param symbolTable The symbol table to retrieve the symbol from.
+ * @param identifier The identifier of the symbol to retrieve.
+ * @return The current slide  (0 if none)
+ */
+int getSymbolCurrentSlide(SymbolTable *symbolTable, const char *identifier);
 
 /**
  * Checks if a symbol exists in the symbol table.

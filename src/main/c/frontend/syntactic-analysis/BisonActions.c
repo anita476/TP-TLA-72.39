@@ -44,7 +44,7 @@ Program * ProgramSemanticAction(CompilerState * compilerState, char * presName, 
 		compilerState->succeed = false;
 	}
 	else if(compilerState-> errorCount > 0) {
-		logError(_logger, "There are %d errors in the syntactic analysis phase.", compilerState->errorCount);
+		logError(_logger, "There are %d semantic errors in the syntactic analysis phase.", compilerState->errorCount);
 		compilerState->succeed = false;
 
 	}
@@ -63,8 +63,18 @@ ObjectDefinition * ObjectListSemanticAction(ObjectDefinition * objectList, Objec
 	return newObject;
 } 
 
-ObjectDefinition * ObjectDefinitionSemanticAction(ObjectType type, char * identifier, CssProperty * cssProperties) {
+ObjectDefinition * ObjectDefinitionSemanticAction(CompilerState * CompilerState, ObjectType type, char * identifier, CssProperty * cssProperties) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	/* SEMANTICS CHECK */
+	if(CompilerState->symbolTable != NULL && symbolExists(CompilerState->symbolTable, identifier)) {
+		logError(_logger, "Duplicate object with identifier '%s' already exists.", identifier);
+		CompilerState->errorCount++;
+	}
+	else {
+		addSymbol(CompilerState->symbolTable, identifier, type);
+	}
+
 	ObjectDefinition * object = calloc(1, sizeof(ObjectDefinition));
 	object->type = type;
 	object->identifier = identifier;
@@ -116,8 +126,18 @@ StructureDefinition * StructureListSemanticAction(StructureDefinition * structur
 	return newStructure;
 }						
 
-StructureDefinition * StructureDefinitionSemanticAction(char * identifier, SlideContent * content) {
+StructureDefinition * StructureDefinitionSemanticAction(CompilerState * CompilerState, char * identifier, SlideContent * content) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+	/* SEMANTIC CHECK */
+	if(!symbolExists(CompilerState->symbolTable, identifier)){
+		logError(_logger, "Object with identifier '%s' does not exist.", identifier);
+		CompilerState->errorCount++;
+	}
+	else if(getSymbolType(CompilerState->symbolTable, identifier) != OBJ_SLIDE) {
+		logError(_logger, "Object with identifier '%s' is not a slide.", identifier);
+		CompilerState->errorCount++;
+	}
+	CompilerState->slideCounter++;
 	StructureDefinition * structure = calloc(1, sizeof(StructureDefinition));
 	structure->identifier = identifier;
 	structure->content = content;
@@ -133,8 +153,23 @@ SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, S
 	return newSlideContent;
 }
 
-SlideContent * AdditionSlideContent(char * identifier, char * content) {
+SlideContent * AdditionSlideContent(CompilerState * CompilerState, char * identifier, char * content) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+	/* SEMANTIC CHECK */
+	if(!symbolExists(CompilerState->symbolTable, identifier)) {
+		logError(_logger, "Object with identifier '%s' does not exist.", identifier);
+		CompilerState->errorCount++;
+	}
+	else{
+		SymbolTableItem * item = getSymbol(CompilerState->symbolTable, identifier);
+		if(item->currentSlide == -1){
+			item->currentSlide = CompilerState->slideCounter;
+		}
+		else if(item->currentSlide == CompilerState->slideCounter) {
+			logError(_logger, "Repeated object %s in a single slide", identifier);
+			CompilerState->errorCount++;
+		}
+	}
 	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
 	slideContent->type = SLIDE_CONTENT_ADD;
 	slideContent->add.identifier = identifier;

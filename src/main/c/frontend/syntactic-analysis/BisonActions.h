@@ -30,7 +30,7 @@ Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Express
 Program * ProgramSemanticAction(CompilerState * compilerState, char * presName, ObjectDefinition * objectList, StructureDefinition * structureList, AnimationDefinition * animationList);
 
 ObjectDefinition * ObjectListSemanticAction(ObjectDefinition * objectList, ObjectDefinition * newObject); 
-ObjectDefinition * ObjectDefinitionSemanticAction(ObjectType type, char * identifier, CssProperty * cssProperties); 
+ObjectDefinition * ObjectDefinitionSemanticAction(CompilerState * compilerState, ObjectType type, char * identifier, CssProperty * cssProperties); 
 
 CssProperty * PropertyListSemanticAction(CssProperty * propertyList, CssProperty * newProperty); 	
 
@@ -39,10 +39,10 @@ CssProperty * PropertyNumberSemanticAction(char * propertyName, int value);
 CssProperty * PropertyDecimalSemanticAction(char * propertyName, float value);
 
 StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure);										
-StructureDefinition * StructureDefinitionSemanticAction(char * identifier, SlideContent * content);
+StructureDefinition * StructureDefinitionSemanticAction(CompilerState * CompilerState, char * identifier, SlideContent * content);
 
 SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent);
-SlideContent * AdditionSlideContent(char * identifier, char * content); 
+SlideContent * AdditionSlideContent(CompilerState * compilerState, char * identifier, char * content); 
 SlideContent * AnchorPositionSlideContent(Position position);  
 SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position); 
 SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position); 

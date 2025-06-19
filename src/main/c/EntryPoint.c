@@ -35,7 +35,8 @@ const int main(const int count, const char ** arguments) {
 		.abstractSyntaxtTree = NULL,
 		.symbolTable = initializeSymbolTable(),
 		.succeed = false,
-		.value = 0
+		.value = 0,
+		.slideCounter = 0
 	};
 	const SyntacticAnalysisStatus syntacticAnalysisStatus = parse(&compilerState);
 	CompilationStatus compilationStatus = SUCCEED;
