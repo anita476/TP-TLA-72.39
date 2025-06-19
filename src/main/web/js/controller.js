@@ -14,6 +14,7 @@ const Controller = {
     this.slides = core.get('slides');
     this.animation = core.get('animation');
     this.transition = core.get('transition');
+    this.ui = core.get('ui');
     this.slides.slides.forEach((slide, index) => {
       const elements = this.slides.getAnimationElements(index);
       this.sequences.set(index, new AnimationSequence(elements));
@@ -128,6 +129,9 @@ const Controller = {
     await this.transition.apply(fromSlide, toSlide, true);
     if (this.slides.getState(newIndex)) this.restoreState(newIndex);
     else this.initNewSlide(newIndex);
+    if (this.ui && typeof this.ui.updateSlideNumber === 'function') {
+      this.ui.updateSlideNumber();
+    }
   },
   
   /**
@@ -183,6 +187,9 @@ const Controller = {
     } else {
       const elements = this.slides.getAnimationElements(newIndex);
       this.animation.makeElementsVisible(elements);
+    }
+    if (this.ui && typeof this.ui.updateSlideNumber === 'function') {
+      this.ui.updateSlideNumber();
     }
   },
   

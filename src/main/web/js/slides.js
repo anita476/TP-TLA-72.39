@@ -24,6 +24,7 @@ const Slides = {
       this.history = [0];
       this.showSlide(0);
     }
+    setTimeout(() => this.updateUI(), 100);
   },
   
   /**
@@ -52,7 +53,17 @@ const Slides = {
     this.slides.forEach(slide => slide.classList.remove('active'));
     this.slides[index].classList.add('active');
     this.currentIndex = index;
-    this.core.get('ui')?.updateSlideNumber();
+    this.updateUI();
+  },
+  
+  /**
+   * Update UI elements like slide number
+   */
+  updateUI() {
+    const ui = this.core.get('ui');
+    if (ui && typeof ui.updateSlideNumber === 'function') {
+      ui.updateSlideNumber();
+    }
   },
   
   /**
@@ -63,6 +74,7 @@ const Slides = {
     if (this.currentIndex >= this.slides.length - 1) return false;
     this.history.push(this.currentIndex + 1);
     this.currentIndex++;
+    this.updateUI();
     return true;
   },
   
@@ -74,6 +86,7 @@ const Slides = {
     if (this.history.length <= 1) return false;
     this.history.pop();
     this.currentIndex = this.history[this.history.length - 1];
+    this.updateUI();
     return true;
   },
   

@@ -10,11 +10,10 @@ const UI = {
    */
   init(core) {
     this.core = core;
-    this.slides = core.get('slides');
-        this.elements = {
+    this.elements = {
       slideNumber: document.querySelector('.slide-number')
     };
-    this.updateSlideNumber();
+    this.slides = core.get('slides');
   },
   
   /**
@@ -22,6 +21,8 @@ const UI = {
    */
   updateSlideNumber() {
     if (!this.elements.slideNumber) return;
+    if (!this.slides) this.slides = this.core.get('slides');
+    if (!this.slides) return;
     const current = this.slides.currentIndex + 1;
     const total = this.slides.count();
     this.elements.slideNumber.textContent = `${current} / ${total}`;

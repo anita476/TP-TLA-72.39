@@ -28,7 +28,7 @@ const PresentationCore = {
    * @param {Object} config - Configuration object
    */
   init(config = {}) {
-    const initOrder = ['config', 'animation', 'transition', 'slides', 'controller', 'ui'];
+    const initOrder = ['config', 'animation', 'transition', 'ui', 'slides', 'controller'];
     if (!this.modules.config) {
       this.register('config', {
         ...config,
