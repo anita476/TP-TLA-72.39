@@ -52,6 +52,15 @@ else ()
 
 endif ()
 
+# Find and configure GLib
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
+
+# Include GLib headers and link libraries
+include_directories(${GLIB_INCLUDE_DIRS})
+link_directories(${GLIB_LIBRARY_DIRS})
+add_definitions(${GLIB_CFLAGS_OTHER})
+
 # Defines the entry-point of the application, and the source-codes (*.c extension).
 # The header files (*.h extension), are automatically included from the source-codes.
 add_executable(Compiler
@@ -73,4 +82,4 @@ add_executable(Compiler
 )
 
 # Link final project and libraries.
-target_link_libraries(Compiler)
+target_link_libraries(Compiler ${GLIB_LIBRARIES})
