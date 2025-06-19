@@ -43,7 +43,13 @@ Program * ProgramSemanticAction(CompilerState * compilerState, char * presName, 
 		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
 		compilerState->succeed = false;
 	}
+	else if(compilerState-> errorCount > 0) {
+		logError(_logger, "There are %d errors in the syntactic analysis phase.", compilerState->errorCount);
+		compilerState->succeed = false;
+
+	}
 	else {
+		logDebugging(_logger, "Syntactic analysis phase is successful.");
 		compilerState->succeed = true;
 	}
 	return program;

@@ -8,6 +8,7 @@
 #include "shared/Environment.h"
 #include "shared/Logger.h"
 #include "shared/String.h"
+#include "shared/SymbolTable.h"
 
 /**
  * The main entry-point of the entire application. If you use "strtok" to
@@ -20,6 +21,7 @@ const int main(const int count, const char ** arguments) {
 	initializeBisonActionsModule();
 	initializeSyntacticAnalyzerModule();
 	initializeAbstractSyntaxTreeModule();
+	initializeSemanticsModule();
 	initializeCalculatorModule();
 	initializeGeneratorModule();
 
@@ -31,6 +33,7 @@ const int main(const int count, const char ** arguments) {
 	// Begin compilation process.
 	CompilerState compilerState = {
 		.abstractSyntaxtTree = NULL,
+		.symbolTable = initializeSymbolTable(),
 		.succeed = false,
 		.value = 0
 	};
@@ -61,9 +64,12 @@ const int main(const int count, const char ** arguments) {
 	}
 	logDebugging(logger, "Releasing AST resources...");
 	destroyProgram(program);
+	logDebugging(logger, "Releasing symbol table resources...");
+	destroySymbolTable(compilerState.symbolTable);
 	logDebugging(logger, "Releasing modules resources...");
 	shutdownGeneratorModule();
 	shutdownCalculatorModule();
+	shutdownSemanticsModule();
 	shutdownAbstractSyntaxTreeModule();
 	shutdownSyntacticAnalyzerModule();
 	shutdownBisonActionsModule();
