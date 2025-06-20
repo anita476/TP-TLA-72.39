@@ -125,71 +125,11 @@ body {
     pointer-events: all;
 }
 
-/* Anchor positioning classes */
-.anchor-left {
-    align-items: flex-start;
-    text-align: left;
-}
-
-.anchor-right {
-    align-items: flex-end;
-    text-align: right;
-}
-
-.anchor-top {
-    justify-content: flex-start;
-}
-
-.anchor-bottom {
-    justify-content: flex-end;
-}
-
-.anchor-center {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.anchor-top-left {
-    justify-content: flex-start;
-    align-items: flex-start;
-    text-align: left;
-}
-
-.anchor-top-right {
-    justify-content: flex-start;
-    align-items: flex-end;
-    text-align: right;
-}
-
-.anchor-bottom-left {
-    justify-content: flex-end;
-    align-items: flex-start;
-    text-align: left;
-}
-
-.anchor-bottom-right {
-    justify-content: flex-end;
-    align-items: flex-end;
-    text-align: right;
-}
-
 /* Element positioning */
 .element-container {
     width: 100%;
     display: flex;
     margin: 10px 0;
-}
-
-.element-container.left {
-    justify-content: flex-start;
-}
-
-.element-container.right {
-    justify-content: flex-end;
-}
-
-.element-container.center {
     justify-content: center;
 }
 
