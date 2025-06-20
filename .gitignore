@@ -5,6 +5,7 @@
 /.vscode/
 /bin/
 /build/
+/output/
 /cache/
 /log/
 /node_modules/
