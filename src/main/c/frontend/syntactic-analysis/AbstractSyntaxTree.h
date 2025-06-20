@@ -97,7 +97,8 @@ typedef struct SlideContent {
 // Struct for structure sentence
 typedef struct StructureDefinition {
     char *identifier;      
-    SlideContent *content;                  // Linked list of slide contents
+    SlideContent *content;        // Linked list of slide contents
+    SlideContent *positions;
     struct StructureDefinition *next;
 } StructureDefinition;
 

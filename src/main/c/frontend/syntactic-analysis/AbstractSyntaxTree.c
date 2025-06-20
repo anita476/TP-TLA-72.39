@@ -95,6 +95,7 @@ void releaseStructureSection(StructureDefinition * structureList) {
 	logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
 	if (structureList != NULL) {
 		releaseSlideContent(structureList->content);
+		releaseSlideContent(structureList->positions);
 		free(structureList->identifier);
 		releaseStructureSection(structureList->next);
 		free(structureList);

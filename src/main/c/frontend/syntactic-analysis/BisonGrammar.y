@@ -95,10 +95,11 @@
 /** Non-terminals. */
 %type <program> program
 
-%type <position> compound_position
 %type <position> simple_position
 %type <slide_content> slide_content
 %type <slide_content> slide_contents
+%type <slide_content> position_contents
+%type <slide_content> position_content
 
 %type <structure_definition> structure_definition
 %type <structure_definition> structure_definitions
@@ -165,7 +166,7 @@ structure_definitions:
 	| structure_definitions structure_definition												{ $$ = StructureListSemanticAction($1, $2); }											
 	;
 structure_definition:
-	IDENTIFIER OPEN_CURLY_BRACE slide_contents CLOSE_CURLY_BRACE 								{ $$ = StructureDefinitionSemanticAction(currentCompilerState(),$1, $3); }
+	IDENTIFIER OPEN_CURLY_BRACE slide_contents position_contents CLOSE_CURLY_BRACE 				{ $$ = StructureDefinitionSemanticAction(currentCompilerState(),$1, $3, $4); }
 	;
 
 slide_contents:
@@ -176,8 +177,15 @@ slide_contents:
 slide_content:
 	ADD IDENTIFIER SEMICOLON 																	{ $$ = AdditionSlideContent(currentCompilerState(),$2, NULL); }
 	| ADD IDENTIFIER WITH STRING SEMICOLON 														{ $$ = AdditionSlideContent(currentCompilerState(),$2, $4); }
-	| IDENTIFIER simple_position IDENTIFIER SEMICOLON  											{ $$ = RelativeDoublePositionSlideContent(currentCompilerState(),$1, $3, $2); }
-	| IDENTIFIER compound_position IDENTIFIER SEMICOLON  										{ $$ = RelativeDoublePositionSlideContent(currentCompilerState(),$1, $3, $2); }
+	;
+
+position_contents:
+	%empty 																						{ $$ = NULL; }											
+	| position_contents position_content														{ $$ = SlidePositionContentListSemanticAction($1,$2); }
+	;
+
+position_content:
+	IDENTIFIER simple_position IDENTIFIER SEMICOLON  											{ $$ = RelativeDoublePositionSlideContent(currentCompilerState(),$1, $3, $2); }
 	;
 
 simple_position:
@@ -185,12 +193,6 @@ simple_position:
 	| BELOW														            					{ $$ = POS_BOTTOM; }		
 	| LEFT              									                					{ $$ = POS_LEFT; }
 	| RIGHT                                                                 					{ $$ = POS_RIGHT; }
-	;
-compound_position:
-	  ABOVE LEFT									                        					{ $$ = POS_TOP_LEFT; }	
-	| ABOVE RIGHT                                                           					{ $$ = POS_TOP_RIGHT; }
-	| BELOW LEFT                                                            					{ $$ = POS_BOTTOM_LEFT; }
-	| BELOW RIGHT                                                           					{ $$ = POS_BOTTOM_RIGHT; }
 	;
 animation:
 	ANIMATION OPEN_CURLY_BRACE animation_definitions CLOSE_CURLY_BRACE 							{ $$ = $3; }

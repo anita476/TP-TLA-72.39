@@ -30,8 +30,9 @@ CssProperty * PropertyNumberSemanticAction(char * propertyName, int value);
 CssProperty * PropertyDecimalSemanticAction(char * propertyName, float value);
 
 StructureDefinition * StructureListSemanticAction(StructureDefinition * structureList, StructureDefinition * newStructure);										
-StructureDefinition * StructureDefinitionSemanticAction(CompilerState * CompilerState, char * identifier, SlideContent * content);
+StructureDefinition * StructureDefinitionSemanticAction(CompilerState * CompilerState, char * identifier, SlideContent * content, SlideContent * positions);
 
+SlideContent * SlidePositionContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent);
 SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent);
 SlideContent * AdditionSlideContent(CompilerState * compilerState, char * identifier, char * content); 
 //SlideContent * AnchorPositionSlideContent(Position position);  

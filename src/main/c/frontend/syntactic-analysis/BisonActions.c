@@ -126,7 +126,7 @@ StructureDefinition * StructureListSemanticAction(StructureDefinition * structur
 	return newStructure;
 }						
 
-StructureDefinition * StructureDefinitionSemanticAction(CompilerState * CompilerState, char * identifier, SlideContent * content) {
+StructureDefinition * StructureDefinitionSemanticAction(CompilerState * CompilerState, char * identifier, SlideContent * content, SlideContent * positionsContent) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	/* SEMANTIC CHECK */
 	if(!symbolExists(CompilerState->symbolTable, identifier)){
@@ -150,12 +150,21 @@ StructureDefinition * StructureDefinitionSemanticAction(CompilerState * Compiler
 	StructureDefinition * structure = calloc(1, sizeof(StructureDefinition));
 	structure->identifier = identifier;
 	structure->content = content;
+	structure->positions = positionsContent;
 	structure->next = NULL; 
 	return structure;
 }
 
 SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+	if (slideContentList != NULL) {
+		newSlideContent->next = slideContentList;
+	}
+	return newSlideContent;
+}
+
+SlideContent * SlidePositionContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent) {
+		_logSyntacticAnalyzerAction(__FUNCTION__);
 	if (slideContentList != NULL) {
 		newSlideContent->next = slideContentList;
 	}
