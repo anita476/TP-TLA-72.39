@@ -34,9 +34,9 @@ StructureDefinition * StructureDefinitionSemanticAction(CompilerState * Compiler
 
 SlideContent * SlideContentListSemanticAction(SlideContent * slideContentList, SlideContent * newSlideContent);
 SlideContent * AdditionSlideContent(CompilerState * compilerState, char * identifier, char * content); 
-SlideContent * AnchorPositionSlideContent(Position position);  
-SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position); 
-SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position); 
+//SlideContent * AnchorPositionSlideContent(Position position);  
+//SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position); 
+SlideContent * RelativeDoublePositionSlideContent(CompilerState * compilerState, char * relative, char * fixed, Position position); 
 
 AnimationDefinition * AnimationListSemanticAction(AnimationDefinition * animationList, AnimationDefinition * newAnimation); 
 AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, AnimationType type);
