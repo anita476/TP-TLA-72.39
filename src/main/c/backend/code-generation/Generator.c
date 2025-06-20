@@ -181,21 +181,27 @@ static void _output(const unsigned int indentationLevel, const char * const form
 }
 */
 /** PUBLIC FUNCTIONS */
+void callToPrint(){
+	logDebugging(_logger, "Calling to print the presentation...");
+	fprintf(_outputFile, "<h1>Welcome to the generated presentation!</h1>\n");
+	fprintf(_outputFile, "<p>This is a placeholder for the content of the presentation.</p>\n");
+	fprintf(_outputFile, "<p>More content will be added here...</p>\n");
+	fprintf(_outputFile, "</body>\n</html>\n");
+}
+
+
 
 void generate(CompilerState * compilerState) {
 	logDebugging(_logger, "Generating final output...");
 	int mkdirStatus = mkdir("output", 0755);
-	if(mkdirStatus != 0) {
-		logError(_logger, "Could not create output directory: %s", strerror(errno));
-		return;
-	}
-	_outputFile = fopen("output/presentation.html", "w");
+	// In append mode to write to the end of the file, create otherwise
+	_outputFile = fopen("output/presentation.html", "a");
 	if (_outputFile == NULL ) {
 		logError(_logger, "Cannot open output file for writing");
 		return;
 	}
 	fprintf(_outputFile, "<!DOCTYPE html>\n<html>\n<head>\n<title>Generated Presentation!</title>\n</head>\n<body>\n");
-
+	callToPrint();
 	//_generatePrologue();
 	//_generateProgram(compilerState->abstractSyntaxtTree);
 	//_generateEpilogue(compilerState->value);
