@@ -4,7 +4,17 @@ class AnimationSequence {
    * @param {Array} elements - Elements to animate
    */
   constructor(elements = []) {
-    this.elements = elements;
+    this.elements = elements.filter(el => {
+      const animations = this.parseAnimations(el);
+      return animations.length > 0;
+    });
+    this.reset();
+  }
+  
+  /**
+   * Reset the sequence
+   */
+  reset() {
     this.currentIndex = 0;
     this.animatedElements = [];
     this.history = [];
@@ -13,11 +23,22 @@ class AnimationSequence {
   }
   
   /**
+   * Parse animations from element
+   * @param {Element} element - Element with data-animation attribute
+   * @returns {Array} Array of animation names
+   */
+  parseAnimations(element) {
+    const animAttr = element.dataset.animation || '';
+    return animAttr.split(' ').filter(Boolean);
+  }
+  
+  /**
    * Check if there are more elements to animate
    * @returns {boolean} True if there are more elements
    */
   hasNext() {
     if (this.currentIndex < this.elements.length) return true;
+    
     if (this.history.length > 0) {
       const lastItem = this.history[this.history.length - 1];
       const element = lastItem.element;
@@ -25,6 +46,7 @@ class AnimationSequence {
       const currentAnimIndex = this.currentAnimationIndex.get(element) || 0;
       return currentAnimIndex < animations.length - 1;
     }
+    
     return false;
   }
   
@@ -41,56 +63,63 @@ class AnimationSequence {
    * @returns {Object} Object containing element and animation info
    */
   next() {
-    if (this.currentIndex >= this.elements.length && !this.hasNext()) return null;
-    let element;
-    let animation;
-    let isNewElement = false;
+    if (!this.hasNext()) return null;
+    
     if (this.history.length > 0) {
       const lastItem = this.history[this.history.length - 1];
-      element = lastItem.element;
+      const element = lastItem.element;
       const animations = this.parseAnimations(element);
       let currentAnimIndex = this.currentAnimationIndex.get(element) || 0;
+      
       if (currentAnimIndex < animations.length - 1) {
         currentAnimIndex++;
         this.currentAnimationIndex.set(element, currentAnimIndex);
-        animation = animations[currentAnimIndex];
-        this.history[this.history.length - 1].currentAnimation = animation;
-        this.history[this.history.length - 1].animationIndex = currentAnimIndex;
+        const animation = animations[currentAnimIndex];
+        
+        lastItem.currentAnimation = animation;
+        lastItem.animationIndex = currentAnimIndex;
+        
         this.animationHistory.push({
           element,
           animation,
           isNewElement: false
         });
-        return {
-          element,
-          animation,
-          isNewElement: false
-        };
+        
+        return { element, animation, isNewElement: false };
       }
     }
-    element = this.elements[this.currentIndex];
+    
+    const element = this.elements[this.currentIndex];
+    if (!element) return null;
+    
     this.animatedElements.push(element);
+    
     const animations = this.parseAnimations(element);
-    animation = animations[0];
+    if (!animations.length) {
+      this.currentIndex++;
+      return this.next();
+    }
+    
+    const animation = animations[0];
+    
     this.currentAnimationIndex.set(element, 0);
     this.history.push({
       element,
       index: this.currentIndex,
-      animations: animations,
+      animations,
       currentAnimation: animation,
       animationIndex: 0
     });
+    
     this.animationHistory.push({
       element,
       animation,
       isNewElement: true
     });
+    
     this.currentIndex++;
-    return {
-      element,
-      animation,
-      isNewElement: true
-    };
+    
+    return { element, animation, isNewElement: true };
   }
   
   /**
@@ -99,48 +128,32 @@ class AnimationSequence {
    */
   previous() {
     if (!this.hasPrevious()) return null;
+    
     const lastAnimation = this.animationHistory.pop();
+    
     if (lastAnimation.isNewElement) {
       const lastItem = this.history.pop();
+      
       const index = this.animatedElements.lastIndexOf(lastAnimation.element);
       if (index !== -1) this.animatedElements.splice(index, 1);
+      
       this.currentIndex = lastItem.index;
+      
       if (this.history.length > 0) {
         const prevItem = this.history[this.history.length - 1];
-        const prevElement = prevItem.element;
-        const prevAnimIndex = prevItem.animationIndex;
-        this.currentAnimationIndex.set(prevElement, prevAnimIndex);
+        this.currentAnimationIndex.set(prevItem.element, prevItem.animationIndex);
       }
     } else {
       const lastItem = this.history[this.history.length - 1];
       const element = lastItem.element;
       const currentAnimIndex = this.currentAnimationIndex.get(element);
+      
       this.currentAnimationIndex.set(element, currentAnimIndex - 1);
-      this.history[this.history.length - 1].currentAnimation = lastItem.animations[currentAnimIndex - 1];
-      this.history[this.history.length - 1].animationIndex = currentAnimIndex - 1;
+      lastItem.currentAnimation = lastItem.animations[currentAnimIndex - 1];
+      lastItem.animationIndex = currentAnimIndex - 1;
     }
+    
     return lastAnimation;
-  }
-  
-  /**
-   * Parse animations from element
-   * @param {Element} element - Element with data-animation attribute
-   * @returns {Array} Array of animation names
-   */
-  parseAnimations(element) {
-    const animAttr = element.dataset.animation || '';
-    return animAttr.split(' ').filter(Boolean);
-  }
-  
-  /**
-   * Reset the sequence
-   */
-  reset() {
-    this.currentIndex = 0;
-    this.animatedElements = [];
-    this.history = [];
-    this.currentAnimationIndex = new Map();
-    this.animationHistory = [];
   }
   
   /**
@@ -181,23 +194,29 @@ class AnimationSequence {
    */
   restore(history) {
     if (!history?.length) return;
+    
     this.reset();
+    
     history.forEach(item => {
       const index = this.elements.indexOf(item.element);
       if (index !== -1) {
         this.currentIndex = index;
         this.animatedElements.push(item.element);
         this.history.push({ ...item });
+        
         if (item.animationIndex !== undefined) {
           this.currentAnimationIndex.set(item.element, item.animationIndex);
         }
+        
         this.currentIndex++;
       }
     });
+    
     this.history.forEach(item => {
       const element = item.element;
       const animations = item.animations;
       const currentAnimIndex = item.animationIndex || 0;
+      
       for (let i = 0; i <= currentAnimIndex; i++) {
         this.animationHistory.push({
           element,

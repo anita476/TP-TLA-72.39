@@ -27,31 +27,31 @@ const Animation = {
   /**
    * Get animation configuration
    * @param {string} name - Animation name
-   * @returns {Object} Animation configuration
+   * @returns {Object} Animation configuration or null if not found
    */
   get(name) {
-    return this.animations[name] || this.animations[this.config.defaultAnimation];
+    return this.animations[name] || null;
   },
   
   /**
    * Get animation type (show, hide, maintain)
    * @param {string} name - Animation name
-   * @returns {string} Animation type
+   * @returns {string} Animation type or null if not found
    */
   getType(name) {
     const animation = this.get(name);
-    return animation ? animation.type : 'show';
+    return animation ? animation.type : null;
   },
   
   /**
    * Get animation class based on direction
    * @param {string} name - Animation name
    * @param {boolean} isForward - Whether animation is forward
-   * @returns {string} CSS class name
+   * @returns {string} CSS class name or empty string if not found
    */
   getClass(name, isForward) {
     const animation = this.get(name);
-    if (!animation) return isForward ? 'appear' : 'disappear';
+    if (!animation) return '';
     if (isForward) return animation.class;
     return animation.reverseClass || animation.class;
   },
@@ -63,7 +63,13 @@ const Animation = {
   initElements(elements) {
     if (!elements?.length) return;
     elements.forEach(element => {
-      const animName = element.dataset.animation?.split(' ')[0] || this.config.defaultAnimation;
+      const animations = this.parseAnimations(element);
+      if (!animations.length) {
+        element.style.opacity = '1';
+        return;
+      }
+      
+      const animName = animations[0];
       const type = this.getType(animName);
       if (type === 'show') element.style.opacity = '0';
       else element.style.opacity = '1';
@@ -78,7 +84,13 @@ const Animation = {
   makeElementsVisible(elements) {
     if (!elements?.length) return;
     elements.forEach(element => {
-      const animName = element.dataset.animation?.split(' ')[0] || this.config.defaultAnimation;
+      const animations = this.parseAnimations(element);
+      if (!animations.length) {
+        element.style.opacity = '1';
+        return;
+      }
+      
+      const animName = animations[0];
       const type = this.getType(animName);
       if (type === 'hide') element.style.opacity = '0';
       else element.style.opacity = '1';
@@ -95,6 +107,58 @@ const Animation = {
       [anim.class, anim.reverseClass].filter(Boolean)
     );
     element.classList.remove(...allClasses);
+  },
+  
+  /**
+   * Parse animations from element
+   * @param {Element} element - Element with data-animation attribute
+   * @returns {Array} Array of animation names
+   */
+  parseAnimations(element) {
+    const animAttr = element.dataset.animation || '';
+    return animAttr.split(' ').filter(Boolean);
+  },
+  
+  /**
+   * Animate a single animation on an element
+   * @param {Element} element - Element to animate
+   * @param {string} animationName - Animation name
+   * @param {boolean} isForward - Direction of animation
+   * @returns {Promise} Promise that resolves when animation completes
+   */
+  animateElement(element, animationName, isForward) {
+    return new Promise(resolve => {
+      const animation = this.get(animationName);
+      if (!animation) {
+        element.style.opacity = '1';
+        resolve();
+        return;
+      }
+      
+      const type = animation.type;
+      if (type === 'show') element.style.opacity = isForward ? '0' : '1';
+      else if (type === 'hide') element.style.opacity = isForward ? '1' : '0';
+      
+      const className = this.getClass(animationName, isForward);
+      this.removeClasses(element);
+      
+      if (!className) {
+        if (type === 'show') element.style.opacity = isForward ? '1' : '0';
+        else if (type === 'hide') element.style.opacity = isForward ? '0' : '1';
+        resolve();
+        return;
+      }
+      
+      setTimeout(() => {
+        element.classList.add(className);
+      }, 10);
+      
+      element.addEventListener('animationend', () => {
+        if (type === 'show') element.style.opacity = isForward ? '1' : '0';
+        else if (type === 'hide') element.style.opacity = isForward ? '0' : '1';
+        resolve();
+      }, { once: true });
+    });
   }
 };
 

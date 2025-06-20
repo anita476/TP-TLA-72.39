@@ -39,10 +39,10 @@ const Transition = {
   /**
    * Get transition configuration
    * @param {string} name - Transition name
-   * @returns {Object} Transition configuration
+   * @returns {Object} Transition configuration or null if not found
    */
   get(name) {
-    return this.transitions[name] || this.transitions[this.config.defaultTransition];
+    return this.transitions[name] || null;
   },
   
   /**
@@ -53,21 +53,34 @@ const Transition = {
    * @returns {Promise} Promise that resolves when transition completes
    */
   apply(from, to, isForward) {
-    const transitionName = to.dataset.transition || this.config.defaultTransition;
+    const transitionName = to.dataset.transition || null;
     const config = this.get(transitionName);
+    
     this.removeClasses(from);
     this.removeClasses(to);
+    
+    if (!config) {
+      from.classList.remove('active');
+      to.classList.add('active');
+      return Promise.resolve();
+    }
+    
     from.classList.add('slide-transition');
     to.classList.add('slide-transition');
+    
     const exitClass = typeof config.exit === 'function' ? config.exit(isForward) : config.exit;
     const enterClass = typeof config.enter === 'function' ? config.enter(isForward) : config.enter;
+    
     from.classList.add(exitClass);
     to.classList.add(enterClass);
+    
     if (config.customExit) config.customExit(from, isForward);
     if (config.customEnter) config.customEnter(to, isForward);
+    
     to.style.zIndex = '1';
     from.style.zIndex = '2';
     to.classList.add('active');
+    
     return new Promise(resolve => {
       setTimeout(() => {
         from.classList.remove('active');
