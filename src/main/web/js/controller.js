@@ -1,6 +1,7 @@
 const Controller = {
   isAnimating: false,
   sequences: new Map(),
+  repeatCount: new Map(),
   
   /**
    * Initialize the controller
@@ -16,6 +17,7 @@ const Controller = {
     this.slides.slides.forEach((slide, index) => {
       const elements = this.slides.getAnimationElements(index);
       this.sequences.set(index, new AnimationSequence(elements));
+      this.repeatCount.set(index, 1);
     });
     
     document.addEventListener('keydown', this.handleKeydown.bind(this));
@@ -69,7 +71,21 @@ const Controller = {
         await this.animateNext(sequence);
         this.saveState(currentIndex);
       } else {
-        await this.moveToNextSlide();
+        const maxRepeats = this.slides.getRepeats(currentIndex);
+        const currentRepeat = this.repeatCount.get(currentIndex) || 1;
+        
+        if (currentRepeat < maxRepeats) {
+          this.repeatCount.set(currentIndex, currentRepeat + 1);
+          
+          sequence.reset();
+          this.animation.resetElements(this.slides.getAnimationElements(currentIndex));
+          
+          await this.animateNext(sequence);
+          this.saveState(currentIndex);
+        } else {
+          this.repeatCount.set(currentIndex, 1);
+          await this.moveToNextSlide();
+        }
       }
     } finally {
       this.isAnimating = false;
@@ -135,7 +151,32 @@ const Controller = {
         await this.animatePrevious(sequence);
         this.saveState(currentIndex);
       } else {
-        await this.moveToPreviousSlide();
+        const currentRepeat = this.repeatCount.get(currentIndex) || 1;
+        
+        if (currentRepeat > 1) {
+          this.repeatCount.set(currentIndex, currentRepeat - 1);
+          
+          const elements = this.slides.getAnimationElements(currentIndex);
+          
+          sequence.reset();
+          
+          this.animation.makeElementsVisible(elements);
+          
+          const maxRepeats = this.slides.getRepeats(currentIndex);
+          
+          for (let i = 0; i < elements.length; i++) {
+            const element = elements[i];
+            const animations = this.animation.parseAnimations(element);
+            
+            for (let j = 0; j < animations.length; j++) {
+              sequence.next();
+            }
+          }
+          
+          this.saveState(currentIndex);
+        } else {
+          await this.moveToPreviousSlide();
+        }
       }
     } finally {
       this.isAnimating = false;
@@ -207,7 +248,8 @@ const Controller = {
     
     this.slides.saveState(index, {
       history: sequence.getHistory(),
-      visibilityState
+      visibilityState,
+      repeatCount: this.repeatCount.get(index) || 1
     });
   },
   
@@ -233,6 +275,10 @@ const Controller = {
     }
     
     sequence.restore(state.history);
+    
+    if (state.repeatCount) {
+      this.repeatCount.set(index, state.repeatCount);
+    }
   },
   
   /**
@@ -245,6 +291,8 @@ const Controller = {
     
     const elements = sequence.getAll();
     this.animation.initElements(elements);
+
+    this.repeatCount.set(index, 1);
   }
 };
 

@@ -78,6 +78,27 @@ const Animation = {
   },
   
   /**
+   * Reset elements for repeating animations
+   * @param {Array} elements - Elements to reset
+   */
+  resetElements(elements) {
+    if (!elements?.length) return;
+    elements.forEach(element => {
+      const animations = this.parseAnimations(element);
+      if (!animations.length) {
+        element.style.opacity = '1';
+        return;
+      }
+      
+      const animName = animations[0];
+      const type = this.getType(animName);
+      if (type === 'show') element.style.opacity = '0';
+      else element.style.opacity = '1';
+      this.removeClasses(element);
+    });
+  },
+  
+  /**
    * Make elements visible (without animation)
    * @param {Array} elements - Elements to make visible
    */

@@ -106,6 +106,18 @@ const Slides = {
   },
   
   /**
+   * Get the number of repeats for a slide
+   * @param {number} index - Slide index
+   * @returns {number} Number of repeats (default: 1)
+   */
+  getRepeats(index = this.currentIndex) {
+    const slide = this.slides[index];
+    if (!slide) return 1;
+    const repeats = parseInt(slide.dataset.repeats, 10);
+    return isNaN(repeats) || repeats < 1 ? 1 : repeats;
+  },
+  
+  /**
    * Save the current state of a slide
    * @param {number} index - Slide index
    * @param {Object} state - State to save
