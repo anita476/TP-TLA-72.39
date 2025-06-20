@@ -28,7 +28,7 @@ const int main(const int count, const char ** arguments) {
 
 	// Logs the arguments of the application.
 	for (int k = 0; k < count; ++k) {
-		fprintf(stdout,"%s",arguments[k]);
+		logInformation(logger,arguments[k]);
 		if(!strcasecmp(arguments[k], "-v")){
 			logTo = DEBUGGING;
 		}
