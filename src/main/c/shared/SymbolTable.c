@@ -18,6 +18,7 @@ void shutdownSemanticsModule(){
 static void freeSymbolTableItem(gpointer item) {
     if (item != NULL) {
         SymbolTableItem *symbolItem = (SymbolTableItem *)item;
+        g_array_free(symbolItem->appearsIn, true); 
         free(symbolItem);
     }
 }
@@ -61,6 +62,7 @@ void addSymbol(SymbolTable *symbolTable, const char *identifier, ObjectType type
     if (item != NULL) {
         item->type = type;
         item->currentSlide = -1; // Initialize currentSlide to -1 (not assigned)
+        item->appearsIn = g_array_new(false, true, sizeof(int)); 
         g_hash_table_insert(symbolTable->table, g_strdup(identifier), item);
     } else {
         logError(_logger, "Failed to allocate memory for SymbolTableItem");

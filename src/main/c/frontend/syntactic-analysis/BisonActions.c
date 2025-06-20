@@ -137,7 +137,16 @@ StructureDefinition * StructureDefinitionSemanticAction(CompilerState * Compiler
 		logError(_logger, "Object with identifier '%s' is not a slide.", identifier);
 		CompilerState->errorCount++;
 	}
+	/**
+	 * Counter incremented AFTER the counter assignment in slide beecause the parser is ascending
+	 * */
+	SymbolTableItem * item = getSymbol(CompilerState->symbolTable, identifier);
+	if(item->currentSlide == (-1)){
+		item->currentSlide = CompilerState->slideCounter;
+	}
 	CompilerState->slideCounter++;
+	
+
 	StructureDefinition * structure = calloc(1, sizeof(StructureDefinition));
 	structure->identifier = identifier;
 	structure->content = content;
@@ -162,8 +171,12 @@ SlideContent * AdditionSlideContent(CompilerState * CompilerState, char * identi
 	}
 	else{
 		SymbolTableItem * item = getSymbol(CompilerState->symbolTable, identifier);
-		if(item->currentSlide == -1){
+		if(item->currentSlide == (-1)){
 			item->currentSlide = CompilerState->slideCounter;
+			//item->appearsIn = g_array_append_val(item->appearsIn, CompilerState->slideCounter);
+			/* Less efficient in space complexity but much better for time complexity in the long run  */
+			g_array_insert_val(item->appearsIn, CompilerState->slideCounter, CompilerState->slideCounter);
+
 		}
 		else if(item->currentSlide == CompilerState->slideCounter) {
 			logError(_logger, "Repeated object %s in a single slide", identifier);
@@ -225,8 +238,37 @@ AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, Anima
 	return animation;
 }
 
-AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifier ,AnimationStep * steps, int repeat) {
+AnimationDefinition * AnimationDefinitionSequenceSemanticAction(CompilerState * compilerState, char * identifier ,AnimationStep * steps, int repeat) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	/* SEMANTIC CHECKS */
+	SymbolTableItem * slideItem = getSymbol(compilerState->symbolTable, identifier);
+	if(slideItem == NULL || slideItem->type != OBJ_SLIDE){
+		logError(_logger, "Object with identifier '%s' does not exist or is not a slide.", identifier);
+		compilerState->errorCount++;	
+	}
+
+	if(steps != NULL && slideItem != NULL) {
+		/* If item is not a slide or doesnt exist we cant check this because theres no slide to compare it to */
+		for(AnimationStep * step = steps; step != NULL; step = step->next) {
+			SymbolTableItem * stepItem = getSymbol(compilerState->symbolTable, step->identifier);
+
+			gboolean error = FALSE;
+			if (stepItem == NULL) {
+				error = TRUE;
+			} else {
+				// Safely check if the object appears in the slide using your sparse array logic
+				if (!(stepItem->appearsIn->len > slideItem->currentSlide && g_array_index(stepItem->appearsIn, int, slideItem->currentSlide) == slideItem->currentSlide)) {
+					error = TRUE;
+				}
+			}
+			if (error) {
+				logError(_logger, "Object with identifier '%s' does not exist or is not part of slide %d.", step->identifier, slideItem->currentSlide);
+				compilerState->errorCount++;
+			}
+		}
+	}
+
 	AnimationDefinition * animation = calloc(1, sizeof(AnimationDefinition));
 	animation->kind = ANIM_DEF_SEQUENCE;
 	animation->sequence.identifier = identifier;
@@ -235,8 +277,19 @@ AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifie
 	return animation;
 }
 
-AnimationDefinition * AnimationDefinitionPairSemanticAction(char * identifier1, char * identifier2, AnimationType type) {
+AnimationDefinition * AnimationDefinitionPairSemanticAction(CompilerState * CompilerState, char * identifier1, char * identifier2, AnimationType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+	/* SEMANTIC CHECKS */
+	SymbolTableItem * slideItem1 = getSymbol(CompilerState->symbolTable, identifier1);
+	SymbolTableItem * slideItem2 = getSymbol(CompilerState->symbolTable, identifier2);
+	if(slideItem1 == NULL || slideItem1->type != OBJ_SLIDE) {
+		logError(_logger, "Object with identifier '%s' does not exist or is not a slide.", identifier1);
+		CompilerState->errorCount++;
+	}
+	if(slideItem2 == NULL || slideItem2->type != OBJ_SLIDE) {
+		logError(_logger, "Object with identifier '%s' does not exist or is not a slide.", identifier2);
+		CompilerState->errorCount++;
+	}
 	AnimationDefinition * animation = calloc(1, sizeof(AnimationDefinition));
 	animation->kind = ANIM_DEF_PAIR;
 	animation->pair.identifier1 = identifier1;
@@ -253,11 +306,22 @@ AnimationStep * AnimationSequenceSemanticAction(AnimationStep * steps, Animation
 	return new;
 }
 
-AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type) {
+AnimationStep * AnimationStepSemanticAction(CompilerState *CompilerState, char * identifier, AnimationType type) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+	/* SEMANTIC  CHECKS */
+	SymbolTableItem * item = getSymbol(CompilerState->symbolTable, identifier);
+	if(item == NULL) {
+		logError(_logger, "Object with identifier '%s' does not exist.", identifier);
+		CompilerState->errorCount++;
+	}
+	else if(item->type == OBJ_SLIDE) {
+		logError(_logger, "Object with identifier '%s' is a slide!!", identifier);
+		CompilerState->errorCount++;
+	}
+
 	AnimationStep * step = calloc(1, sizeof(AnimationStep));
 	step->identifier = identifier;
 	step->type = type;
 	step->next = NULL; 
 	return step;
-} 	
+} 

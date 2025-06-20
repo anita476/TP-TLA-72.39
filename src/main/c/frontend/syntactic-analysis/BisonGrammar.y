@@ -229,16 +229,16 @@ animation_definitions:
 	;
 animation_definition:
 	IDENTIFIER animation_type SEMICOLON								        					{ $$ = AnimationDefinitionSemanticAction($1, $2); }
-	| IDENTIFIER animation_type_slides IDENTIFIER SEMICOLON										{ $$ = AnimationDefinitionPairSemanticAction($1, $3, $2); }
-	| IDENTIFIER START animation_sequence END SEMICOLON											{ $$ = AnimationDefinitionSequenceSemanticAction($1, $3, 1); }
-	| IDENTIFIER START animation_sequence END REPEAT INTEGER SEMICOLON							{ $$ = AnimationDefinitionSequenceSemanticAction($1, $3, $6); }
+	| IDENTIFIER animation_type_slides IDENTIFIER SEMICOLON										{ $$ = AnimationDefinitionPairSemanticAction(currentCompilerState(), $1, $3, $2); }
+	| IDENTIFIER START animation_sequence END SEMICOLON											{ $$ = AnimationDefinitionSequenceSemanticAction(currentCompilerState(),$1, $3, 1); }
+	| IDENTIFIER START animation_sequence END REPEAT INTEGER SEMICOLON							{ $$ = AnimationDefinitionSequenceSemanticAction(currentCompilerState(),$1, $3, $6); }
 	;
 animation_sequence:
 	%empty 																						{ $$ = NULL; }											
 	| animation_sequence animation_step  														{ $$ = AnimationSequenceSemanticAction($1, $2); }	
 	;
 animation_step:
-	THEN IDENTIFIER animation_type							               						{ $$ = AnimationStepSemanticAction($2, $3); }		
+	THEN IDENTIFIER animation_type							               						{ $$ = AnimationStepSemanticAction(currentCompilerState(),$2, $3); }		
 	;
 animation_type:
 	APPEAR																						{ $$ = ANIM_APPEAR; }

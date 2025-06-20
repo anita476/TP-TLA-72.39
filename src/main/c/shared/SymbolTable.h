@@ -21,7 +21,8 @@
 
 typedef struct {
     ObjectType type;        // Type of the symbol
-    int currentSlide;       // Name of the symbol
+    int currentSlide;      
+    GArray * appearsIn;     // list of slides where it appears ( for semantics in animation for animations)
 } SymbolTableItem;
 
 

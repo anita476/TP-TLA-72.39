@@ -49,10 +49,10 @@ SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed,
 
 AnimationDefinition * AnimationListSemanticAction(AnimationDefinition * animationList, AnimationDefinition * newAnimation); 
 AnimationDefinition * AnimationDefinitionSemanticAction(char * identifier, AnimationType type);
-AnimationDefinition * AnimationDefinitionSequenceSemanticAction(char * identifier, AnimationStep * steps, int repeat);
-AnimationDefinition * AnimationDefinitionPairSemanticAction(char * identifier1, char * identifier2, AnimationType type);
+AnimationDefinition * AnimationDefinitionSequenceSemanticAction(CompilerState * compilerState, char * identifier, AnimationStep * steps, int repeat);
+AnimationDefinition * AnimationDefinitionPairSemanticAction(CompilerState * CompilerState, char * identifier1, char * identifier2, AnimationType type);
 
 AnimationStep * AnimationSequenceSemanticAction(AnimationStep * new, AnimationStep * steps); 
-AnimationStep * AnimationStepSemanticAction(char* identifier, AnimationType type); 		
+AnimationStep * AnimationStepSemanticAction(CompilerState * compilerState, char* identifier, AnimationType type); 		
 
 #endif

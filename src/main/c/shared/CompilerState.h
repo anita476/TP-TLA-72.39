@@ -21,8 +21,10 @@ typedef struct {
 
 	// A flag that indicates the current state of the compilation so far.
 	boolean succeed;
+
 	int errorCount; // track errors during syntactic analysis 
 	int slideCounter; // "scope" counter (stack unnecesary for now)
+
 	SymbolTable * symbolTable;	// TODO: Add a symbol table.
 
 	// TODO: Add an stack to handle nested scopes.
