@@ -80,7 +80,7 @@ typedef struct SlideContent {
             char *with_string;              // NULL if none
         } add;
 
-        Position anchor;
+        //Position anchor;
 		struct {
 			char * child;
 			Position pos;

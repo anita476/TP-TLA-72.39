@@ -3,6 +3,9 @@
 #include "FlexActions.h"
 
 %}
+/* Anchor is no more
+* "anchor"                                { return KeywordLexemeAction(createLexicalAnalyzerContext(), ANCHOR); }
+*/
 
 /**
  * Enable start condition manipulation functions.
@@ -80,8 +83,6 @@
 "left"                                  { return KeywordLexemeAction(createLexicalAnalyzerContext(), LEFT); }
 "right"                                 { return KeywordLexemeAction(createLexicalAnalyzerContext(), RIGHT); }
 "center"                                {return KeywordLexemeAction(createLexicalAnalyzerContext(), CENTER); }
-
-"anchor"                                { return KeywordLexemeAction(createLexicalAnalyzerContext(), ANCHOR); }
 
 \"[^\"]*\"                              { return StringLexemeAction(createLexicalAnalyzerContext()); }
 [a-zA-Z_][a-zA-Z0-9_]*                  { return IdentifierLexemeAction(createLexicalAnalyzerContext()); }

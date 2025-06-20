@@ -8,10 +8,7 @@ Presentation presentation {
 
     Structure {
         slide1 { 
-            add heading1 with "hola";
-            add heading2 with "chau";
-            anchor top;
-            heading2 below heading1;
+            heading2 top;
         }
     }
 }

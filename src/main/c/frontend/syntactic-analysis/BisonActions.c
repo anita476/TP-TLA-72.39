@@ -191,24 +191,6 @@ SlideContent * AdditionSlideContent(CompilerState * CompilerState, char * identi
 	return slideContent;
 }
 
-SlideContent * AnchorPositionSlideContent(Position position) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
-	slideContent->type = SLIDE_CONTENT_ANCHOR;
-	slideContent->anchor = position;
-	slideContent->next = NULL; 
-	return slideContent;
-}
-
-SlideContent * RelativeSimplePositionSlideContent(char * relative , Position position) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
-	slideContent->type = SLIDE_CONTENT_SIMPLE_POS;
-	slideContent->position_item.identifier = relative;
-	slideContent->position_item.pos = position;
-	slideContent->next = NULL; 
-	return slideContent;
-}
 
 SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);

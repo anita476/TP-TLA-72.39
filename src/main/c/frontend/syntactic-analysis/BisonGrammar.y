@@ -62,7 +62,6 @@
 
 /* Actions */
 %token <token> ADD
-%token <token> ANCHOR
 %token <token> WITH
 %token <token> TOP
 %token <token> BOTTOM
@@ -98,7 +97,6 @@
 
 %type <position> compound_position
 %type <position> simple_position
-%type <position> anchor_position
 %type <slide_content> slide_content
 %type <slide_content> slide_contents
 
@@ -178,35 +176,10 @@ slide_contents:
 slide_content:
 	ADD IDENTIFIER SEMICOLON 																	{ $$ = AdditionSlideContent(currentCompilerState(),$2, NULL); }
 	| ADD IDENTIFIER WITH STRING SEMICOLON 														{ $$ = AdditionSlideContent(currentCompilerState(),$2, $4); }
-	| ANCHOR anchor_position SEMICOLON															{ $$ = AnchorPositionSlideContent($2); }
-	| IDENTIFIER simple_position SEMICOLON  													{ $$ = RelativeSimplePositionSlideContent($1, $2); }
-	| IDENTIFIER compound_position SEMICOLON  													{ $$ = RelativeSimplePositionSlideContent($1, $2); }
 	| IDENTIFIER simple_position IDENTIFIER SEMICOLON  											{ $$ = RelativeDoublePositionSlideContent($1, $3, $2); }
 	| IDENTIFIER compound_position IDENTIFIER SEMICOLON  										{ $$ = RelativeDoublePositionSlideContent($1, $3, $2); }
 	;
-anchor_position:
-	TOP LEFT                       																{ $$ = POS_TOP_LEFT; }
-	| LEFT TOP                       															{ $$ = POS_TOP_LEFT; }
-	| TOP RIGHT																					{ $$ = POS_TOP_RIGHT; }	
-	| RIGHT TOP 																				{ $$ = POS_TOP_RIGHT; }			
-	| BOTTOM LEFT																				{ $$ = POS_BOTTOM_LEFT; }
-	| LEFT BOTTOM 																				{ $$ = POS_BOTTOM_LEFT; }
-	| BOTTOM RIGHT														    					{ $$ = POS_BOTTOM_RIGHT; }
-	| RIGHT BOTTOM 														    					{ $$ = POS_BOTTOM_RIGHT; }
-	| CENTER LEFT												            					{ $$ = POS_CENTER_LEFT; }
-	| LEFT CENTER 												            					{ $$ = POS_CENTER_LEFT; }
-	| RIGHT CENTER 											                					{ $$ = POS_CENTER_RIGHT; }	
-	| CENTER RIGHT											                					{ $$ = POS_CENTER_RIGHT; }	
-	| CENTER                                                                					{ $$ = POS_CENTER; }
-	| CENTER TOP 														    					{ $$ = POS_CENTER_TOP; }	
-	| TOP CENTER  														    					{ $$ = POS_CENTER_TOP; }	
-	| CENTER BOTTOM                                                         					{ $$ = POS_CENTER_BOTTOM; }
-	| BOTTOM CENTER                                                          					{ $$ = POS_CENTER_BOTTOM; }
-	| TOP																						{ $$ = POS_CENTER_TOP; }
-	| BOTTOM																					{ $$ = POS_CENTER_BOTTOM; }
-	| LEFT																						{ $$ = POS_CENTER_LEFT; }
-	| RIGHT																						{ $$ = POS_CENTER_RIGHT; }
-	;
+
 simple_position:
 	ABOVE																						{ $$ = POS_TOP; }
 	| BELOW														            					{ $$ = POS_BOTTOM; }		
