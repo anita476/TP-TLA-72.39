@@ -1,6 +1,3 @@
-/**
- * UI module for the presentation framework
- */
 const UI = {
   elements: {},
   

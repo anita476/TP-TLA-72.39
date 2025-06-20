@@ -1,6 +1,3 @@
-/**
- * Slides module for the presentation framework
- */
 const Slides = {
   slides: [],
   currentIndex: 0,
@@ -16,14 +13,23 @@ const Slides = {
     this.config = core.get('config');
     this.animation = core.get('animation');
     this.slides = Array.from(document.querySelectorAll('.slide'));
+    
     this.slides.forEach(slide => {
       const elements = Array.from(slide.querySelectorAll('[data-animation]'));
       this.animation.initElements(elements);
+      
+      Array.from(slide.children).forEach(element => {
+        if (!element.hasAttribute('data-animation')) {
+          element.style.opacity = '1';
+        }
+      });
     });
+    
     if (this.slides.length > 0) {
       this.history = [0];
       this.showSlide(0);
     }
+    
     setTimeout(() => this.updateUI(), 100);
   },
   

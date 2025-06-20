@@ -8,19 +8,22 @@
 </head>
 <body>
     <div class="slides-container">
+        <!-- Slide 1: Welcome -->
         <div class="slide active" data-transition="fade">
-            <h1 data-animation="appear">Welcome to the Presentation</h1>
-            <p data-animation="disappear">Use arrow keys to navigate</p>
-            <img src="images/magnus.png" class="slide-image" data-animation="appear barrel-roll disappear">
+            <h1>Welcome to the Presentation</h1>
+            <p>Use arrow keys to navigate</p>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear barrel-roll">
         </div>
 
+        <!-- Slide 2: Left Anchor -->
         <div class="slide anchor-left" data-transition="jump">
             <h2 data-animation="appear">Left Anchor Example</h2>
-            <p data-animation="appear">This slide is anchored to the left side</p>
+            <p>This slide is anchored to the left side</p>
             <img src="images/siffrin.jpg" class="slide-image" data-animation="appear">
             <p data-animation="appear">Elements are aligned to the left side of the slide</p>
         </div>
 
+        <!-- Slide 3: Right Anchor -->
         <div class="slide anchor-right" data-transition="fade">
             <h2 data-animation="appear">Right Anchor Example</h2>
             <p data-animation="appear">This slide is anchored to the right side</p>
@@ -28,6 +31,7 @@
             <p data-animation="appear">Elements are aligned to the right side of the slide</p>
         </div>
 
+        <!-- Slide 4: Top Anchor -->
         <div class="slide anchor-top" data-transition="jump">
             <h2 data-animation="appear">Top Anchor Example</h2>
             <p data-animation="appear">This slide is anchored to the top</p>
@@ -35,6 +39,7 @@
             <p data-animation="appear">Elements start from the top of the slide</p>
         </div>
 
+        <!-- Slide 5: Bottom Anchor -->
         <div class="slide anchor-bottom" data-transition="fade">
             <h2 data-animation="appear">Bottom Anchor Example</h2>
             <p data-animation="appear">This slide is anchored to the bottom</p>
@@ -42,6 +47,7 @@
             <p data-animation="appear">Elements are positioned at the bottom of the slide</p>
         </div>
 
+        <!-- Slide 6: Center Anchor -->
         <div class="slide anchor-center" data-transition="jump">
             <h2 data-animation="appear">Center Anchor Example</h2>
             <p data-animation="appear">This is the default center anchor</p>
@@ -49,6 +55,7 @@
             <p data-animation="appear">Elements are centered both horizontally and vertically</p>
         </div>
 
+        <!-- Slide 7: Top-Left Anchor -->
         <div class="slide anchor-top-left" data-transition="fade">
             <h2 data-animation="appear">Top-Left Anchor Example</h2>
             <p data-animation="appear">This slide is anchored to the top-left corner</p>
@@ -56,6 +63,7 @@
             <p data-animation="appear">Elements start from the top-left corner</p>
         </div>
 
+        <!-- Slide 8: Top-Right Anchor -->
         <div class="slide anchor-top-right" data-transition="jump">
             <h2 data-animation="appear">Top-Right Anchor Example</h2>
             <p data-animation="appear">This slide is anchored to the top-right corner</p>
@@ -63,6 +71,7 @@
             <p data-animation="appear">Elements start from the top-right corner</p>
         </div>
 
+        <!-- Slide 9: Bottom-Left Anchor -->
         <div class="slide anchor-bottom-left" data-transition="fade">
             <h2 data-animation="appear">Bottom-Left Anchor Example</h2>
             <p data-animation="appear">This slide is anchored to the bottom-left corner</p>
@@ -70,6 +79,7 @@
             <p data-animation="appear">Elements start from the bottom-left corner</p>
         </div>
 
+        <!-- Slide 10: Bottom-Right Anchor -->
         <div class="slide anchor-bottom-right" data-transition="jump">
             <h2 data-animation="appear">Bottom-Right Anchor Example</h2>
             <p data-animation="appear">This slide is anchored to the bottom-right corner</p>
@@ -77,28 +87,41 @@
             <p data-animation="appear">Elements start from the bottom-right corner</p>
         </div>
 
+        <!-- Slide 11: Sequential Animations -->
         <div class="slide" data-transition="jump">
             <h2 data-animation="appear">Sequential Animations</h2>
             <p data-animation="appear">Press right arrow to see each animation</p>
             <img src="images/siffrin.jpg" class="slide-image" data-animation="appear barrel-roll">
-            <p data-animation="appear disappear">Press left arrow to go back</p>
+            <p data-animation="appear">Press left arrow to go back</p>
         </div>
 
+        <!-- Slide 12: Image with Text -->
         <div class="slide" data-transition="jump">
             <h2 data-animation="appear">Image with Text</h2>
             <p data-animation="appear">You can combine images with text descriptions</p>
             <img src="images/magnus.png" class="slide-image" data-animation="appear barrel-roll">
         </div>
 
-        <div class="slide" data-transition="fade">
+        <!-- Slide 13: Thank You (No Transition) -->
+        <div class="slide">
             <h2 data-animation="appear">Thank You!</h2>
-            <img src="images/magnus.png" class="slide-image" data-animation="barrel-roll">
+            <img src="images/magnus.png" class="slide-image" data-animation="appear barrel-roll">
             <p data-animation="appear">Any questions?</p>
+        </div>
+        
+        <!-- Slide 14: No Animations Example -->
+        <div class="slide">
+            <h2>No Animations Example</h2>
+            <p>This slide has no animations</p>
+            <img src="images/siffrin.jpg" class="slide-image">
+            <p>Elements are visible immediately</p>
         </div>
     </div>
 
+    <!-- Slide number indicator -->
     <div class="slide-number"></div>
 
+    <!-- Core scripts -->
     <script src="js/core.js"></script>
     <script src="js/animation.js"></script>
     <script src="js/transition.js"></script>

@@ -1,6 +1,3 @@
-/**
- * Core module system for the presentation framework
- */
 const PresentationCore = {
   modules: {},
   
@@ -29,19 +26,20 @@ const PresentationCore = {
    */
   init(config = {}) {
     const initOrder = ['config', 'animation', 'transition', 'ui', 'slides', 'controller'];
+    
     if (!this.modules.config) {
       this.register('config', {
-        ...config,
-        defaultTransition: 'fade',
-        defaultAnimation: 'appear'
+        ...config
       });
     }
+    
     initOrder.forEach(moduleName => {
       const module = this.modules[moduleName];
       if (module && typeof module.init === 'function') {
         module.init(this);
       }
     });
+    
     return this;
   }
 };
