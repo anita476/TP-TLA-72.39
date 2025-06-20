@@ -141,7 +141,7 @@ StructureDefinition * StructureDefinitionSemanticAction(CompilerState * Compiler
 	 * Counter incremented AFTER the counter assignment in slide beecause the parser is ascending
 	 * */
 	SymbolTableItem * item = getSymbol(CompilerState->symbolTable, identifier);
-	if(item->currentSlide == (-1)){
+	if(item != NULL && item->currentSlide == (-1)){
 		item->currentSlide = CompilerState->slideCounter;
 	}
 	CompilerState->slideCounter++;
