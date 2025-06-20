@@ -80,6 +80,10 @@ ObjectDefinition * ObjectDefinitionSemanticAction(CompilerState * CompilerState,
 	object->identifier = identifier;
 	object->css_properties = cssProperties;
 	object->next = NULL; 
+	if(cssProperties != NULL){
+		SymbolTableItem * item = getSymbol(CompilerState->symbolTable, identifier);
+		item->properties = cssProperties; 
+	}
 	return object;
 } 
 

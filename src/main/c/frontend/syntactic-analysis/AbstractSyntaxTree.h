@@ -15,27 +15,8 @@ void shutdownAbstractSyntaxTreeModule();
  * Node types for the Abstract Syntax Tree (AST).
 */
 
-// Enum for object types in Type.h because it is shared(slide, textblock, image)
+// Enum for object types and properties in Type.h because it is shared(slide, textblock, image)
 
-
-// Property value types 
-typedef enum {
-    PROP_VAL_IDENTIFIER,
-    PROP_VAL_INTEGER,
-    PROP_VAL_DECIMAL
-} PropertyValueType;
-
-// Struct for a CSS property: property name and value 
-typedef struct CssProperty {
-    char *property_name;                // PROPERTY token text
-    PropertyValueType value_type;
-    union value {
-        char *identifier;
-        int integer;
-        float decimal;
-    } value;
-    struct CssProperty *next;  
-} CssProperty;
 
 // Struct for object definition (slide, textblock, image)
 typedef struct ObjectDefinition {
