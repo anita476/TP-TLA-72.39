@@ -128,7 +128,7 @@ StructureDefinition * StructureListSemanticAction(StructureDefinition * structur
 
 StructureDefinition * StructureDefinitionSemanticAction(CompilerState * CompilerState, char * identifier, SlideContent * content, SlideContent * positionsContent) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
-	/* SEMANTIC CHECK */
+	/* SEMANTIC CHECKS */
 	if(!symbolExists(CompilerState->symbolTable, identifier)){
 		logError(_logger, "Object with identifier '%s' does not exist.", identifier);
 		CompilerState->errorCount++;
@@ -143,9 +143,29 @@ StructureDefinition * StructureDefinitionSemanticAction(CompilerState * Compiler
 	SymbolTableItem * item = getSymbol(CompilerState->symbolTable, identifier);
 	if(item != NULL && item->currentSlide == (-1)){
 		item->currentSlide = CompilerState->slideCounter;
+		// Check that all position directives are defined in the slide structure
+		// Its costly to parse the list but we are avoiding unnecesary checks in code generation stage later
+		for(SlideContent * content = positionsContent; content != NULL; content = content->next){
+			SymbolTableItem * item1 = getSymbol(CompilerState->symbolTable,content->position_items.child);
+			SymbolTableItem * item2 = getSymbol(CompilerState->symbolTable,content->position_items.parent);
+			if(item1 == NULL || item2 == NULL){
+				logError(_logger, "Positioning not allowed because one or more objects do not exist");
+				CompilerState->errorCount++;
+			}
+			else {
+				if(item1->appearsIn->len <= item->currentSlide || g_array_index(item1->appearsIn,int,item->currentSlide)!= item->currentSlide ){
+				logError(_logger,"Invalid positioning of item %s, item is not present in slide %d",content->position_items.child, item->currentSlide);
+				CompilerState->errorCount++;
+				}
+				if(item1->appearsIn->len <= item->currentSlide || g_array_index(item2->appearsIn,int,item->currentSlide)!= item->currentSlide ){
+				logError(_logger,"Invalid positioning of item %s, item is not present in slide %d",content->position_items.parent, item->currentSlide);
+				CompilerState->errorCount++;
+				}
+			}
+		}
 	}
 	CompilerState->slideCounter++;
-	
+
 
 	StructureDefinition * structure = calloc(1, sizeof(StructureDefinition));
 	structure->identifier = identifier;
