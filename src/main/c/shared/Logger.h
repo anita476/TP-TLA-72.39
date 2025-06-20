@@ -82,6 +82,10 @@ typedef struct {
 Logger * createLogger(char * name);
 
 /**
+ * Same but with a specific logging level.
+ */
+Logger * createLoggerLevelSpecified(char * name, LoggingLevel loggingLevel);
+/**
  * Destroy a logger and its resources.
  */
 void destroyLogger(Logger * logger);
@@ -100,5 +104,8 @@ void logInformation(const Logger * logger, const char * const format, ...);
 
 /** Logs at WARNING level. */
 void logWarning(const Logger * logger, const char * const format, ...);
+
+
+void setGlobalLoggingLevel(LoggingLevel level);
 
 #endif

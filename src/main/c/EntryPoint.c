@@ -16,6 +16,7 @@
  * find you, and I will kill you (Bryan Mills; "Taken", 2008).
  */
 const int main(const int count, const char ** arguments) {
+	LoggingLevel logTo = INFORMATION;
 	Logger * logger = createLogger("EntryPoint");
 	initializeFlexActionsModule();
 	initializeBisonActionsModule();
@@ -27,8 +28,12 @@ const int main(const int count, const char ** arguments) {
 
 	// Logs the arguments of the application.
 	for (int k = 0; k < count; ++k) {
-		logDebugging(logger, "Argument %d: \"%s\"", k, arguments[k]);
+		fprintf(stdout,"%s",arguments[k]);
+		if(!strcasecmp(arguments[k], "-v")){
+			logTo = DEBUGGING;
+		}
 	}
+	setGlobalLoggingLevel(logTo);
 
 	// Begin compilation process.
 	CompilerState compilerState = {
@@ -46,7 +51,6 @@ const int main(const int count, const char ** arguments) {
 		// Beginning of the Backend... ------------------------------------------------------------
 		generate(&compilerState);
 
-		
 		// ...end of the Backend. -----------------------------------------------------------------
 		// ----------------------------------------------------------------------------------------
 	}
