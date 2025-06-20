@@ -176,8 +176,8 @@ slide_contents:
 slide_content:
 	ADD IDENTIFIER SEMICOLON 																	{ $$ = AdditionSlideContent(currentCompilerState(),$2, NULL); }
 	| ADD IDENTIFIER WITH STRING SEMICOLON 														{ $$ = AdditionSlideContent(currentCompilerState(),$2, $4); }
-	| IDENTIFIER simple_position IDENTIFIER SEMICOLON  											{ $$ = RelativeDoublePositionSlideContent($1, $3, $2); }
-	| IDENTIFIER compound_position IDENTIFIER SEMICOLON  										{ $$ = RelativeDoublePositionSlideContent($1, $3, $2); }
+	| IDENTIFIER simple_position IDENTIFIER SEMICOLON  											{ $$ = RelativeDoublePositionSlideContent(currentCompilerState(),$1, $3, $2); }
+	| IDENTIFIER compound_position IDENTIFIER SEMICOLON  										{ $$ = RelativeDoublePositionSlideContent(currentCompilerState(),$1, $3, $2); }
 	;
 
 simple_position:

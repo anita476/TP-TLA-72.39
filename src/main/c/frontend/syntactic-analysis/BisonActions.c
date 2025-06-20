@@ -192,8 +192,22 @@ SlideContent * AdditionSlideContent(CompilerState * CompilerState, char * identi
 }
 
 
-SlideContent * RelativeDoublePositionSlideContent(char * relative, char * fixed, Position position) {
+SlideContent * RelativeDoublePositionSlideContent(CompilerState * compilerState, char * relative, char * fixed, Position position) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
+
+	/* SEMANTIC CHECKS */
+	SymbolTableItem * relativeItem = getSymbol(compilerState->symbolTable, relative);
+	SymbolTableItem * fixedItem = getSymbol(compilerState->symbolTable, fixed);
+	if(relativeItem == NULL || relativeItem->type == OBJ_SLIDE) {
+		logError(_logger, "Object with identifier '%s' does not exist or is a slide", relative);
+		compilerState->errorCount++;
+	}
+	if(fixedItem == NULL || fixedItem->type == OBJ_SLIDE) {
+		logError(_logger, "Object with identifier '%s' does not exist or is a slide", fixed);
+		compilerState->errorCount++;
+	}
+	/* In domain specific the rest of the semantic checks to see if positioning is valid */
+
 	SlideContent * slideContent = calloc(1, sizeof(SlideContent));
 	slideContent->type = SLIDE_CONTENT_DOUBLE_POS;
 	slideContent->position_items.child = relative;
