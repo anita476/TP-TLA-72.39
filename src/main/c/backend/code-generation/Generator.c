@@ -1,7 +1,8 @@
 #include "Generator.h"
+#include <sys/stat.h>
 
 /* MODULE INTERNAL STATE */
-
+FILE * _outputFile = NULL;
 const char _indentationCharacter = ' ';
 const char _indentationSize = 4;
 static Logger * _logger = NULL;
@@ -164,6 +165,9 @@ static char * _indentation(const unsigned int level) {
  * buffering.
  */
 /*
+
+*/
+/*
 static void _output(const unsigned int indentationLevel, const char * const format, ...) {
 	va_list arguments;
 	va_start(arguments, format);
@@ -180,8 +184,21 @@ static void _output(const unsigned int indentationLevel, const char * const form
 
 void generate(CompilerState * compilerState) {
 	logDebugging(_logger, "Generating final output...");
+	int mkdirStatus = mkdir("output", 0755);
+	if(mkdirStatus != 0) {
+		logError(_logger, "Could not create output directory: %s", strerror(errno));
+		return;
+	}
+	_outputFile = fopen("output/presentation.html", "w");
+	if (_outputFile == NULL ) {
+		logError(_logger, "Cannot open output file for writing");
+		return;
+	}
+	fprintf(_outputFile, "<!DOCTYPE html>\n<html>\n<head>\n<title>Generated Presentation!</title>\n</head>\n<body>\n");
+
 	//_generatePrologue();
 	//_generateProgram(compilerState->abstractSyntaxtTree);
 	//_generateEpilogue(compilerState->value);
+	fclose(_outputFile);
 	logDebugging(_logger, "Generation is done.");
 }
