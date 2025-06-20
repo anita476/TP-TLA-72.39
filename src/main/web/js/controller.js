@@ -1,6 +1,3 @@
-/**
- * Controller module for the presentation framework
- */
 const Controller = {
   isAnimating: false,
   sequences: new Map(),

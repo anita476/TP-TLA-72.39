@@ -1,6 +1,3 @@
-/**
- * Animation module for the presentation framework
- */
 const Animation = {
   animations: {
     'appear': { type: 'show', class: 'appear', reverseClass: 'disappear' },

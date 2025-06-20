@@ -1,6 +1,3 @@
-/**
- * Animation sequence module for the presentation framework
- */
 class AnimationSequence {
   /**
    * Create a new animation sequence
@@ -28,7 +25,6 @@ class AnimationSequence {
       const currentAnimIndex = this.currentAnimationIndex.get(element) || 0;
       return currentAnimIndex < animations.length - 1;
     }
-    
     return false;
   }
   
@@ -123,7 +119,6 @@ class AnimationSequence {
       this.history[this.history.length - 1].currentAnimation = lastItem.animations[currentAnimIndex - 1];
       this.history[this.history.length - 1].animationIndex = currentAnimIndex - 1;
     }
-    
     return lastAnimation;
   }
   

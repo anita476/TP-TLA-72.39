@@ -1,6 +1,3 @@
-/**
- * Slides module for the presentation framework
- */
 const Slides = {
   slides: [],
   currentIndex: 0,

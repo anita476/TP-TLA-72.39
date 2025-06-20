@@ -1,6 +1,3 @@
-/**
- * Main entry point for the presentation framework
- */
 document.addEventListener('DOMContentLoaded', () => {
   PresentationCore.init({
     defaultAnimation: 'appear',
@@ -23,21 +20,5 @@ function setupKeyboardNavigation(controller) {
                 controller.handleBackward();
                 break;
         }
-    });
-}
-
-/**
- * Set up image error handling
- */
-function setupImageErrorHandling() {
-    document.querySelectorAll('img').forEach(img => {
-        img.onerror = function() {
-            this.style.display = 'none';
-            const errorText = document.createElement('p');
-            errorText.textContent = `(Place your image here: ${this.getAttribute('src')})`;
-            errorText.style.color = '#666';
-            errorText.style.fontStyle = 'italic';
-            this.parentNode.insertBefore(errorText, this.nextSibling);
-        };
     });
 }

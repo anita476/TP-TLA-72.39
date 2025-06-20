@@ -1,6 +1,3 @@
-/**
- * Transition module for the presentation framework
- */
 const Transition = {
   transitions: {
     fade: {

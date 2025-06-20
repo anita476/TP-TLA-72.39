@@ -1,6 +1,3 @@
-/**
- * Core module system for the presentation framework
- */
 const PresentationCore = {
   modules: {},
   
