@@ -1,0 +1,15 @@
+Presentation presentation {
+    
+    Objects {
+        Slide repeatedIdentifier { }
+        Image repeatedIdentifier {
+            width:200;
+         }
+    }   
+
+    Structure {
+        slide1 { 
+            add image with "local/image/path";
+        }
+    }
+}

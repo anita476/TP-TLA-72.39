@@ -2,6 +2,7 @@
 #define ABSTRACT_SYNTAX_TREE_HEADER
 
 #include "../../shared/Logger.h"
+#include "../../shared/Type.h"
 #include <stdlib.h>
 
 /* Initialize module's internal state. */
@@ -14,12 +15,8 @@ void shutdownAbstractSyntaxTreeModule();
  * Node types for the Abstract Syntax Tree (AST).
 */
 
-// Enum for object types (slide, textblock, image)
-typedef enum {
-    OBJ_SLIDE,
-    OBJ_TEXTBLOCK,
-    OBJ_IMAGE,
-} ObjectType;
+// Enum for object types in Type.h because it is shared(slide, textblock, image)
+
 
 // Property value types 
 typedef enum {
