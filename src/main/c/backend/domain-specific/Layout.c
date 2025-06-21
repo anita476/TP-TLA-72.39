@@ -175,10 +175,32 @@ void apply_relative_positions(Slide *slide, SlideContent *positions) {
 }
 
 /* Generate the slide object lists */
-SlideList *generateObjects(CompilerState *compilerState) { return NULL; }
+SlideList *generateObjects(CompilerState *compilerState) {
+    /* I iterate through all slides.. */
+    SlideList *list = calloc(1, sizeof(SlideList));
+    list->head = NULL;
+    list->tail = NULL;
+    Slide *currentSlide = NULL;
+    for (StructureDefinition *structure; structure != NULL; structure = structure->next) {
+        if (structure->content == NULL)
+            continue;
 
-/**************************************** DESTRUCTORS*
- * ********************************************/
+        // Create a new slide
+        Slide *slide = create_slide();
+        if (list->head == NULL) {
+            list->head = slide;
+            list->tail = slide;
+        } else {
+            list->tail->next = slide;
+            list->tail = slide;
+        }
+        populate_slide_with_content(slide, structure->content);
+        apply_relative_positions(slide, structure->positions);
+    }
+    return list;
+}
+
+/**************************************** DESTRUCTORS *********************************************/
 void destroySlides(Slide *slide) {
     if (!slide)
         return;
@@ -207,4 +229,5 @@ void destroyObjects(SlideList *list) {
 
     list->head = NULL;
     list->tail = NULL;
+    free(list);
 }
