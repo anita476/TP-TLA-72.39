@@ -17,14 +17,13 @@
 /**
  * Variable are stored in a hashtable, where the key is the identifier of the variable and the value
  * is a type.
- * TODO maybe later on we will need to store more information about the variables ...
  */
 
 typedef struct {
     ObjectType type; // Type of the symbol
     int currentSlide;
-    GArray
-        *appearsIn; // list of slides where it appears ( for semantics in animation for animations)
+    GArray *appearsIn; /* list of slides where it appears ( for semantics in animation for
+                          animations) */
     CssProperty *properties;
 } SymbolTableItem;
 
