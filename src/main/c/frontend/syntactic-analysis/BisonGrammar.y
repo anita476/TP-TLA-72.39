@@ -212,8 +212,7 @@ animation_definitions:
 	| animation_definitions animation_definition												{ $$ = AnimationListSemanticAction($1,$2); }
 	;
 animation_definition:
-	IDENTIFIER animation_type SEMICOLON								        					{ $$ = AnimationDefinitionSemanticAction($1, $2); }
-	| animation_type_slides IDENTIFIER SEMICOLON												{ $$ = AnimationDefinitionPairSemanticAction(currentCompilerState(), $2, $1); }
+	animation_type_slides IDENTIFIER SEMICOLON												{ $$ = AnimationDefinitionPairSemanticAction(currentCompilerState(), $2, $1); }
 	| IDENTIFIER START animation_sequence END SEMICOLON											{ $$ = AnimationDefinitionSequenceSemanticAction(currentCompilerState(),$1, $3, 1); }
 	| IDENTIFIER START animation_sequence END REPEAT INTEGER SEMICOLON							{ $$ = AnimationDefinitionSequenceSemanticAction(currentCompilerState(),$1, $3, $6); }
 	;
