@@ -70,7 +70,8 @@ typedef enum {
     ANIM_DISAPPEAR,
     ANIM_ROTATE,
     ANIM_FADE_INTO,
-    ANIM_JUMP_INTO
+    ANIM_JUMP_INTO,
+    ANIM_NO_ANIM
 } AnimationType;
 
 typedef enum {
@@ -96,13 +97,12 @@ typedef struct AnimationDefinition {
             AnimationType type;
         } single;
         struct {
-            char *identifier; // Identifier of SLIDE (validate identifier types later in backend)
+            char *identifier;
             AnimationStep *steps; // Linked list of steps
             int repeat_count;     // 1 if no repeat, otherwise repeat times
         } sequence;
         struct {
             char *identifier1;
-            char *identifier2;
             AnimationType type;
         } pair;
     };

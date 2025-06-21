@@ -21,6 +21,8 @@ static void generateEpilogue();
 
 static void generateSlide(Slide *slide);
 static void generateSlides(CompilerState *compilerState);
+static AnimationType findAnimationTransition(Slide *slide, Program *program);
+
 /** PUBLIC FUNCTIONS */
 void generate(CompilerState *compilerState) {
     logDebugging(_logger, "Generating final output...");
@@ -37,6 +39,7 @@ void generate(CompilerState *compilerState) {
         return;
     }
     generatePrologue(title);
+    // TODO generate css classes for objects
     generateSlides(compilerState);
     generateEpilogue();
     fclose(_outputFile);
@@ -80,11 +83,29 @@ static void generateSlides(CompilerState *compilerState) {
     // iterate through the slides and print them (to file)
     int i = 0;
     for (Slide *slide = compilerState->slides->head; slide != NULL; slide = slide->next, i++) {
+        AnimationType anim = findAnimationTransition(slide, program);
+        char *animS;
+        switch (anim) {
+        case ANIM_FADE_INTO:
+            animS = "data-transition='fade'";
+            break;
+        case ANIM_JUMP_INTO:
+            animS = "data-transition='jump'";
+            break;
+        default:
+            animS = "";
+            break;
+        }
+        logInformation(_logger, "Slide %s with animation type %s %d", slide->identifier, animS,
+                       anim);
+
         if (i != 0) {
-            fprintf(_outputFile, "<div class='slide' data-repeats='1'>\n");
+            fprintf(_outputFile, "<div class='slide %s' %s data-repeats='1'>\n", slide->identifier,
+                    animS);
 
         } else {
-            fprintf(_outputFile, "<div class='slide active' data-repeats='1'>\n");
+            fprintf(_outputFile, "<div class='slide %s active' %s data-repeats='1'>\n",
+                    slide->identifier, animS);
         }
         generateSlide(slide);
         fprintf(_outputFile, "</div>\n");
@@ -123,4 +144,17 @@ static void generateEpilogue() {
     fprintf(_outputFile, "<script src='../src/main/web/js/main.js'></script>");
     fprintf(_outputFile, "</body>\n");
     fprintf(_outputFile, "</html>\n");
+}
+
+// TODO modify ast so that the slide animations are in a different slide (more efficient for many
+// slides)
+static AnimationType findAnimationTransition(Slide *slide, Program *program) {
+    for (AnimationDefinition *animations = program->animation_definitions; animations != NULL;
+         animations = animations->next) {
+        if (animations->kind == ANIM_DEF_PAIR &&
+            (strcasecmp(animations->pair.identifier1, slide->identifier))) {
+            return animations->pair.type;
+        }
+    }
+    return ANIM_NO_ANIM;
 }

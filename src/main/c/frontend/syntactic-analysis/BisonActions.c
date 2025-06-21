@@ -328,26 +328,18 @@ AnimationDefinition *AnimationDefinitionSequenceSemanticAction(CompilerState *co
 }
 
 AnimationDefinition *AnimationDefinitionPairSemanticAction(CompilerState *CompilerState,
-                                                           char *identifier1, char *identifier2,
-                                                           AnimationType type) {
+                                                           char *identifier1, AnimationType type) {
     _logSyntacticAnalyzerAction(__FUNCTION__);
     /* SEMANTIC CHECKS */
     SymbolTableItem *slideItem1 = getSymbol(CompilerState->symbolTable, identifier1);
-    SymbolTableItem *slideItem2 = getSymbol(CompilerState->symbolTable, identifier2);
     if (slideItem1 == NULL || slideItem1->type != OBJ_SLIDE) {
         logError(_logger, "Object with identifier '%s' does not exist or is not a slide.",
                  identifier1);
         CompilerState->errorCount++;
     }
-    if (slideItem2 == NULL || slideItem2->type != OBJ_SLIDE) {
-        logError(_logger, "Object with identifier '%s' does not exist or is not a slide.",
-                 identifier2);
-        CompilerState->errorCount++;
-    }
     AnimationDefinition *animation = calloc(1, sizeof(AnimationDefinition));
     animation->kind = ANIM_DEF_PAIR;
     animation->pair.identifier1 = identifier1;
-    animation->pair.identifier2 = identifier2;
     animation->pair.type = type;
     return animation;
 }

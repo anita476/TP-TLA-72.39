@@ -11,7 +11,7 @@ Presentation presentation {
     }
 
     Animations {
-        slide1 fade into slide2;
+        fade into slide2;
     }
 
 }

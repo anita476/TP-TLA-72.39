@@ -33,4 +33,7 @@ Presentation manyPositioningManySlides {
             heading1 above left heading2;
         }
     }
+     Animations {
+        jump into slide2;
+    }
 }
