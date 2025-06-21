@@ -39,7 +39,6 @@ const int main(const int count, const char **arguments) {
     CompilerState compilerState = {.abstractSyntaxtTree = NULL,
                                    .symbolTable = initializeSymbolTable(),
                                    .succeed = false,
-                                   .value = 0,
                                    .slideCounter = 0,
                                    .slides = NULL};
     const SyntacticAnalysisStatus syntacticAnalysisStatus = parse(&compilerState);

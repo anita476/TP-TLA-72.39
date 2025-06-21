@@ -27,9 +27,6 @@ typedef struct {
     // One slot for each slide
     SlideList *slides;
 
-    // TODO: take out the value from calculator
-    // The computed value of the entire program (only for the calculator).
-    int value;
 } CompilerState;
 
 #endif
