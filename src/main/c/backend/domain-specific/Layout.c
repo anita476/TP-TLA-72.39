@@ -22,7 +22,7 @@ static guint int_hash(gconstpointer v) { return GPOINTER_TO_INT(v); }
 static gboolean int_equal(gconstpointer v1, gconstpointer v2) { return v1 == v2; }
 
 // Convert int to pointer for hash table keys
-static gpointer int_key(int value) { return GINT_TO_POINTER(value); }
+gpointer int_key(int value) { return GINT_TO_POINTER(value); }
 
 static void destroy_positioned_object(gpointer data) {
     PositionedObject *obj = data;
@@ -249,6 +249,10 @@ void apply_relative_positions(Slide *slide, SlideContent *positions) {
             g_hash_table_insert(slide->rows, int_key(obj->row), rowPtr);
         }
         g_hash_table_insert(rowPtr->columns, int_key(obj->col), obj);
+        if (obj->col < rowPtr->minCol)
+            rowPtr->minCol = obj->col;
+        if (obj->col > rowPtr->maxCol)
+            rowPtr->maxCol = obj->col;
     }
     g_list_free(all_objects);
 
@@ -293,10 +297,10 @@ static gboolean resolve_object_position(PositionedObject *obj, GHashTable *dep_g
     info->final_col = parent_col;
     switch (info->pos_type) {
     case POS_TOP:
-        info->final_row -= 1;
+        info->final_row += 1;
         break;
     case POS_BOTTOM:
-        info->final_row += 1;
+        info->final_row -= 1;
         break;
     case POS_LEFT:
         info->final_col -= 1;
@@ -305,19 +309,19 @@ static gboolean resolve_object_position(PositionedObject *obj, GHashTable *dep_g
         info->final_col += 1;
         break;
     case POS_TOP_LEFT:
-        info->final_row -= 1;
+        info->final_row += 1;
         info->final_col -= 1;
         break;
     case POS_TOP_RIGHT:
-        info->final_row -= 1;
+        info->final_row += 1;
         info->final_col += 1;
         break;
     case POS_BOTTOM_LEFT:
-        info->final_row += 1;
+        info->final_row -= 1;
         info->final_col -= 1;
         break;
     case POS_BOTTOM_RIGHT:
-        info->final_row += 1;
+        info->final_row -= 1;
         info->final_col += 1;
         break;
     }

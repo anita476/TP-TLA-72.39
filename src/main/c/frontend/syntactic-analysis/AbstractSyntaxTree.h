@@ -25,24 +25,6 @@ typedef struct ObjectDefinition {
     struct ObjectDefinition *next;
 } ObjectDefinition;
 
-// Enum for all positions (centralize them all for simplicity, but in each case we accept only a
-// subset)
-typedef enum {
-    POS_TOP_LEFT,
-    POS_TOP_RIGHT,
-    POS_BOTTOM_LEFT,
-    POS_BOTTOM_RIGHT,
-    POS_CENTER_LEFT,
-    POS_CENTER_RIGHT,
-    POS_CENTER,
-    POS_CENTER_TOP,
-    POS_CENTER_BOTTOM,
-    POS_TOP,
-    POS_BOTTOM,
-    POS_LEFT,
-    POS_RIGHT
-} Position;
-
 // Slide content types
 typedef enum {
     SLIDE_CONTENT_ADD,

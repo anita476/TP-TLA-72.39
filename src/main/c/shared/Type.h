@@ -35,12 +35,12 @@ typedef struct Row {
 
 typedef struct Slide {
     char *identifier; // To then gather the properties
-    GHashTable *rows; // key: int* -> row index, value: Row*
+    GHashTable *rows; // key: row index, value: Row*
     int minRow;
     int maxRow;
     int minCol;
     int maxCol;
-    GHashTable *symbolToObject; // key: char* (identifier), value: PositionedObject*
+    GHashTable *symbolToObject; // key: identifier, value: PositionedObject*
     struct Slide *next;
 } Slide;
 
@@ -50,5 +50,20 @@ typedef struct {
 } SlideList;
 
 typedef int Token;
+
+typedef enum {
+    POS_TOP,
+    POS_BOTTOM,
+    POS_LEFT,
+    POS_RIGHT,
+    POS_TOP_LEFT,
+    POS_TOP_RIGHT,
+    POS_BOTTOM_LEFT,
+    POS_BOTTOM_RIGHT,
+} Position;
+
+typedef enum {
+    ADD_NODE,
+} ActionType;
 
 #endif

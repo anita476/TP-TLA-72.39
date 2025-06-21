@@ -20,7 +20,7 @@ Presentation presentation {
             add heading5 with "Hiii 5";
             add heading6 with "Hiii 6";
             heading3 below heading2;
-            heading1 above left heading2;
+            heading1 left heading2;
         }
         slide2 {
             add heading1 with "Hello!";

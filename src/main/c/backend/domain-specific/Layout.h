@@ -18,4 +18,7 @@ void shutdownObjectsModule();
 SlideList *generateObjects(Program *program);
 void destroyObjects(SlideList *slides);
 
+/* Helper */
+gpointer int_key(int value);
+
 #endif

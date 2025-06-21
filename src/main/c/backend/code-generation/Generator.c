@@ -2,209 +2,78 @@
 #include <sys/stat.h>
 
 /* MODULE INTERNAL STATE */
-FILE * _outputFile = NULL;
+FILE *_outputFile = NULL;
 const char _indentationCharacter = ' ';
 const char _indentationSize = 4;
-static Logger * _logger = NULL;
+static Logger *_logger = NULL;
 
-void initializeGeneratorModule() {
-	_logger = createLogger("Generator");
-}
+void initializeGeneratorModule() { _logger = createLogger("Generator"); }
 
 void shutdownGeneratorModule() {
-	if (_logger != NULL) {
-		destroyLogger(_logger);
-	}
+    if (_logger != NULL) {
+        destroyLogger(_logger);
+    }
 }
 
 /** PRIVATE FUNCTIONS */
-/*
-static const char _expressionTypeToCharacter(const ExpressionType type);
-static void _generateConstant(const unsigned int indentationLevel, Constant * constant);
-static void _generateEpilogue(const int value);
-static void _generateExpression(const unsigned int indentationLevel, Expression * expression);
-static void _generateFactor(const unsigned int indentationLevel, Factor * factor);
-static void _generateProgram(Program * program);
-static void _generatePrologue(void);
-static char * _indentation(const unsigned int indentationLevel);
-static void _output(const unsigned int indentationLevel, const char * const format, ...);
-*/
-/**
- * Converts and expression type to the proper character of the operation
- * involved, or returns '\0' if that's not possible.
- */
-/*
-static const char _expressionTypeToCharacter(const ExpressionType type) {
-	switch (type) {
-		case ADDITION: return '+';
-		case DIVISION: return '/';
-		case MULTIPLICATION: return '*';
-		case SUBTRACTION: return '-';
-		default:
-			logError(_logger, "The specified expression type cannot be converted into character: %d", type);
-			return '\0';
-	}
-}
-*/
-/**
- * Generates the output of a constant.
- */
-/*
-static void _generateConstant(const unsigned int indentationLevel, Constant * constant) {
-	_output(indentationLevel, "%s", "[ $C$, circle, draw, black!20\n");
-	_output(1 + indentationLevel, "%s%d%s", "[ $", constant->value, "$, circle, draw ]\n");
-	_output(indentationLevel, "%s", "]\n");
-}
-*/
-/**
- * Creates the epilogue of the generated output, that is, the final lines that
- * completes a valid Latex document.
- */
-/*
-static void _generateEpilogue(const int value) {
-	_output(0, "%s%d%s",
-		"            [ $", value, "$, circle, draw, blue ]\n"
-		"        ]\n"
-		"    \\end{forest}\n"
-		"\\end{document}\n\n"
-	);
-}
-*/
-/**
- * Generates the output of an expression.
- */
-/*
-static void _generateExpression(const unsigned int indentationLevel, Expression * expression) {
-	_output(indentationLevel, "%s", "[ $E$, circle, draw, black!20\n");
-	switch (expression->type) {
-		case ADDITION:
-		case DIVISION:
-		case MULTIPLICATION:
-		case SUBTRACTION:
-			_generateExpression(1 + indentationLevel, expression->leftExpression);
-			_output(1 + indentationLevel, "%s%c%s", "[ $", _expressionTypeToCharacter(expression->type), "$, circle, draw, purple ]\n");
-			_generateExpression(1 + indentationLevel, expression->rightExpression);
-			break;
-		case FACTOR:
-			_generateFactor(1 + indentationLevel, expression->factor);
-			break;
-		default:
-			logError(_logger, "The specified expression type is unknown: %d", expression->type);
-			break;
-	}
-	_output(indentationLevel, "%s", "]\n");
-}
-*/
 
-/**
- * Generates the output of a factor.
- */
-/*
-static void _generateFactor(const unsigned int indentationLevel, Factor * factor) {
-	_output(indentationLevel, "%s", "[ $F$, circle, draw, black!20\n");
-	switch (factor->type) {
-		case CONSTANT:
-			_generateConstant(1 + indentationLevel, factor->constant);
-			break;
-		case EXPRESSION:
-			_output(1 + indentationLevel, "%s", "[ $($, circle, draw, purple ]\n");
-			_generateExpression(1 + indentationLevel, factor->expression);
-			_output(1 + indentationLevel, "%s", "[ $)$, circle, draw, purple ]\n");
-			break;
-		default:
-			logError(_logger, "The specified factor type is unknown: %d", factor->type);
-			break;
-	}
-	_output(indentationLevel, "%s", "]\n");
+static void printEachSlide(CompilerState *compilerState) {
+    logDebugging(_logger, "Printing each slide in the presentation...");
+    if (_outputFile == NULL) {
+        logError(_logger, "Cannot open output file for writing");
+        return;
+    }
+    fprintf(_outputFile, "<h1>Slides Overview</h1>\n");
+    // Here we would iterate through the slides and print them (to file)
+    for (Slide *slide = compilerState->slides->head; slide != NULL; slide = slide->next) {
+        fprintf(_outputFile, "<h2>Slide: %s</h2>\n", slide->identifier);
+        for (int i = slide->maxRow; i >= slide->minRow; i--) {
+            Row *row = g_hash_table_lookup(slide->rows, int_key(i));
+            if (row) {
+                fprintf(_outputFile, "<div class='row'>\n");
+                logInformation(_logger, "Min column: %d, Max column: %d for row %d in slide %s",
+                               row->minCol, row->maxCol, i, slide->identifier);
+                for (int j = row->minCol; j <= row->maxCol; j++) {
+                    logInformation(_logger, "Printing column %d for row %d in slide %s", j, i,
+                                   slide->identifier);
+                    PositionedObject *obj = g_hash_table_lookup(row->columns, int_key(j));
+                    if (obj) {
+                        fprintf(_outputFile, "<span class='object'>%s</span>\n", obj->identifier);
+                    } else {
+                        logWarning(_logger, "Column %d not found in row %d of slide %s", j, i,
+                                   slide->identifier);
+                    }
+                }
+            }
+            fprintf(_outputFile, "</div>\n");
+        }
+    }
+    fprintf(_outputFile, "<p>End of slides overview.</p>\n");
+    logDebugging(_logger, "Finished printing each slide.");
 }
-*/
-/**
- * Generates the output of the program.
- */
-/*
-static void _generateProgram(Program * program) {
-	_generateExpression(3, program->expression);
-}
-*/
 
-/**
- * Creates the prologue of the generated output, a Latex document that renders
- * a tree thanks to the Forest package.
- *
- * @see https://ctan.dcc.uchile.cl/graphics/pgf/contrib/forest/forest-doc.pdf
- */
-/*
-static void _generatePrologue(void) {
-	_output(0, "%s",
-		"\\documentclass{standalone}\n\n"
-		"\\usepackage[utf8]{inputenc}\n"
-		"\\usepackage[T1]{fontenc}\n"
-		"\\usepackage{amsmath}\n"
-		"\\usepackage{forest}\n"
-		"\\usepackage{microtype}\n\n"
-		"\\begin{document}\n"
-		"    \\centering\n"
-		"    \\begin{forest}\n"
-		"        [ \\text{$=$}, circle, draw, purple\n"
-	);
-}
-*/
-
-/**
- * Generates an indentation string for the specified level.
- */
-/*
-static char * _indentation(const unsigned int level) {
-	return indentation(_indentationCharacter, level, _indentationSize);
-}
-	*/
-
-/**
- * Outputs a formatted string to standard output. The "fflush" instruction
- * allows to see the output even close to a failure, because it drops the
- * buffering.
- */
-/*
-
-*/
-/*
-static void _output(const unsigned int indentationLevel, const char * const format, ...) {
-	va_list arguments;
-	va_start(arguments, format);
-	char * indentation = _indentation(indentationLevel);
-	char * effectiveFormat = concatenate(2, indentation, format);
-	vfprintf(stdout, effectiveFormat, arguments);
-	fflush(stdout);
-	free(effectiveFormat);
-	free(indentation);
-	va_end(arguments);
-}
-*/
 /** PUBLIC FUNCTIONS */
-void callToPrint(){
-	logDebugging(_logger, "Calling to print the presentation...");
-	fprintf(_outputFile, "<h1>Welcome to the generated presentation!</h1>\n");
-	fprintf(_outputFile, "<p>This is a placeholder for the content of the presentation.</p>\n");
-	fprintf(_outputFile, "<p>More content will be added here...</p>\n");
-	fprintf(_outputFile, "</body>\n</html>\n");
+void callToPrint() {
+    logDebugging(_logger, "Calling to print the presentation...");
+    fprintf(_outputFile, "<h1>Welcome to the generated presentation!</h1>\n");
+    fprintf(_outputFile, "<p>This is a placeholder for the content of the presentation.</p>\n");
+    fprintf(_outputFile, "<p>More content will be added here...</p>\n");
+    fprintf(_outputFile, "</body>\n</html>\n");
 }
 
-
-
-void generate(CompilerState * compilerState) {
-	logDebugging(_logger, "Generating final output...");
-	int mkdirStatus = mkdir("output", 0755);
-	// In append mode to write to the end of the file, create otherwise
-	_outputFile = fopen("output/presentation.html", "a");
-	if (_outputFile == NULL ) {
-		logError(_logger, "Cannot open output file for writing");
-		return;
-	}
-	fprintf(_outputFile, "<!DOCTYPE html>\n<html>\n<head>\n<title>Generated Presentation!</title>\n</head>\n<body>\n");
-	callToPrint();
-	//_generatePrologue();
-	//_generateProgram(compilerState->abstractSyntaxtTree);
-	//_generateEpilogue(compilerState->value);
-	fclose(_outputFile);
-	logDebugging(_logger, "Generation is done.");
+void generate(CompilerState *compilerState) {
+    logDebugging(_logger, "Generating final output...");
+    int mkdirStatus = mkdir("output", 0755);
+    // In append mode to write to the end of the file, create otherwise
+    _outputFile = fopen("output/presentation.html", "a");
+    if (_outputFile == NULL) {
+        logError(_logger, "Cannot open output file for writing");
+        return;
+    }
+    printEachSlide(compilerState);
+    //_generatePrologue();
+    //_generateProgram(compilerState->abstractSyntaxtTree);
+    //_generateEpilogue(compilerState->value);
+    fclose(_outputFile);
+    logDebugging(_logger, "Generation is done.");
 }
