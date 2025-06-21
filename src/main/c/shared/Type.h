@@ -34,6 +34,7 @@ typedef struct Row {
 } Row;
 
 typedef struct Slide {
+    char *identifier; // To then gather the properties
     GHashTable *rows; // key: int* -> row index, value: Row*
     int minRow;
     int maxRow;

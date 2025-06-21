@@ -15,8 +15,7 @@
 void initializeObjectsModule();
 void shutdownObjectsModule();
 
-SlideList *generateObjects(CompilerState *compilerState);
-
+SlideList *generateObjects(Program *program);
 void destroyObjects(SlideList *slides);
 
 #endif

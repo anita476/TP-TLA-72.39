@@ -96,6 +96,7 @@
 %type <program> program
 
 %type <position> simple_position
+%type <position> compound_position
 %type <slide_content> slide_content
 %type <slide_content> slide_contents
 %type <slide_content> position_contents
@@ -186,6 +187,8 @@ position_contents:
 
 position_content:
 	IDENTIFIER simple_position IDENTIFIER SEMICOLON  											{ $$ = RelativeDoublePositionSlideContent(currentCompilerState(),$1, $3, $2); }
+	| IDENTIFIER compound_position IDENTIFIER SEMICOLON  										{ $$ = RelativeDoublePositionSlideContent(currentCompilerState(),$1, $3, $2); }
+
 	;
 
 simple_position:
@@ -193,6 +196,12 @@ simple_position:
 	| BELOW														            					{ $$ = POS_BOTTOM; }		
 	| LEFT              									                					{ $$ = POS_LEFT; }
 	| RIGHT                                                                 					{ $$ = POS_RIGHT; }
+	;
+compound_position:
+	  ABOVE LEFT									                        					{ $$ = POS_TOP_LEFT; }	
+	| ABOVE RIGHT                                                           					{ $$ = POS_TOP_RIGHT; }
+	| BELOW LEFT                                                            					{ $$ = POS_BOTTOM_LEFT; }
+	| BELOW RIGHT                                                           					{ $$ = POS_BOTTOM_RIGHT; }
 	;
 animation:
 	ANIMATION OPEN_CURLY_BRACE animation_definitions CLOSE_CURLY_BRACE 							{ $$ = $3; }

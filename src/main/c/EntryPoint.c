@@ -48,7 +48,9 @@ const int main(const int count, const char **arguments) {
     if (syntacticAnalysisStatus == ACCEPT) {
         // ----------------------------------------------------------------------------------------
         // Beginning of the Backend... ------------------------------------------------------------
-        compilerState.slides = generateObjects(&compilerState);
+        logDebugging(logger, "Generating layout maps...");
+
+        compilerState.slides = generateObjects(program);
         if (compilerState.slides == NULL) {
             logWarning(logger, "No slides found");
             compilationStatus = ACCEPT;
