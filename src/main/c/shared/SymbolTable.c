@@ -111,7 +111,7 @@ boolean symbolExists(SymbolTable *symbolTable, const char *identifier) {
 }
 
 void destroySymbolTable(SymbolTable *symbolTable){
-    logDebugging(_logger, "Destroying symbol table");
+    logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
     if (symbolTable != NULL) {
         g_hash_table_destroy(symbolTable->table);
         free(symbolTable);

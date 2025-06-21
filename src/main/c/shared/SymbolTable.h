@@ -2,35 +2,35 @@
 
 #define SYMBOL_TABLE_HEADER
 
+#include "Logger.h"
+#include "String.h"
+#include "Type.h"
 #include <glib.h>
 #include <stdlib.h>
-#include "Type.h"
-#include "String.h"
-#include "Logger.h"
-
 
 /**
- * For simplicity of implementation, we use glib implementation of hashtables to store the key-values of the symbol table 
- * We hide the implementation details of the symbol table using a struct
+ * For simplicity of implementation, we use glib implementation of hashtables to store the
+ *key-values of the symbol table We hide the implementation details of the symbol table using a
+ *struct
  **/
 
 /**
- * Variable are stored in a hashtable, where the key is the identifier of the variable and the value is a type.
- * TODO maybe later on we will need to store more information about the variables ... 
+ * Variable are stored in a hashtable, where the key is the identifier of the variable and the value
+ * is a type.
+ * TODO maybe later on we will need to store more information about the variables ...
  */
 
 typedef struct {
-    ObjectType type;        // Type of the symbol
-    int currentSlide;      
-    GArray * appearsIn;     // list of slides where it appears ( for semantics in animation for animations)
-    CssProperty * properties; 
+    ObjectType type; // Type of the symbol
+    int currentSlide;
+    GArray
+        *appearsIn; // list of slides where it appears ( for semantics in animation for animations)
+    CssProperty *properties;
 } SymbolTableItem;
 
-
 typedef struct {
-    GHashTable *table;       // The hashtable that contains the symbols
+    GHashTable *table; // The hashtable that contains the symbols
 } SymbolTable;
-
 
 /* To log semantic errors as suck  */
 /** Initialize module's internal state. */
@@ -52,7 +52,6 @@ SymbolTable *initializeSymbolTable();
  * @param item The SymbolTableItem to add.
  */
 void addSymbol(SymbolTable *symbolTable, const char *identifier, ObjectType type);
-
 
 /**
  * Retrieves a symbol from the symbol table.
@@ -92,10 +91,4 @@ boolean symbolExists(SymbolTable *symbolTable, const char *identifier);
  */
 void destroySymbolTable(SymbolTable *symbolTable);
 
-
 #endif
-
-
-
-
-
