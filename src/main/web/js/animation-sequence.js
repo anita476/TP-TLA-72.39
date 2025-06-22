@@ -36,15 +36,19 @@ class AnimationSequence {
    * @returns {Array} Array of orders for each animation
    */
   parseAnimationOrders(element, animations) {
-    if (element.dataset.animOrders) {
-      const orders = element.dataset.animOrders.split(',').map(o => parseInt(o.trim(), 10));
-      if (orders.length === animations.length) {
-        return orders;
+    if (element.dataset.animOrder) {
+      if (element.dataset.animOrder.includes(',')) {
+        const orders = element.dataset.animOrder.split(',').map(o => parseInt(o.trim(), 10));
+        if (orders.length === animations.length) {
+          return orders;
+        }
+      } else {
+        const baseOrder = parseInt(element.dataset.animOrder, 10);
+        return animations.map((_, index) => baseOrder + index);
       }
     }
-
-    const baseOrder = parseInt(element.dataset.animOrder || '999', 10);
-    return animations.map((_, index) => baseOrder + index);
+    
+    return animations.map((_, index) => 999 + index);
   }
   
   /**
