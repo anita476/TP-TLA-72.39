@@ -6,7 +6,7 @@
 #include "../../shared/Logger.h"
 #include "../../shared/String.h"
 #include "../domain-specific/Layout.h"
-#include "PropertiesFilesGeneration.h"
+#include "../domain-specific/Properties.h"
 #include <stdarg.h>
 #include <stdio.h>
 

@@ -17,8 +17,9 @@ void shutdownGeneratorModule() {
     }
 }
 /* helpers */
-static void generatePrologue(char *presName);
+static void generatePrologue(CompilerState *compilerState);
 static void generateEpilogue();
+static void outputProperties(CompilerState *compilerState);
 
 static void generateSlide(Slide *slide, AnimationDefinition *sequence, SymbolTable *symbolTable);
 static void generateSlides(CompilerState *compilerState);
@@ -43,7 +44,7 @@ void generate(CompilerState *compilerState) {
         logError(_logger, "Cannot open output file for writing");
         return;
     }
-    generatePrologue(title);
+    generatePrologue(compilerState);
     // TODO generate css classes for objects
     generateSlides(compilerState);
     generateEpilogue();
@@ -133,15 +134,19 @@ static void generateSlides(CompilerState *compilerState) {
     logDebugging(_logger, "Finished printing each slide.");
 }
 
-static void generatePrologue(char *presName) {
+static void generatePrologue(CompilerState *CompilerState) {
+    Program *program = CompilerState->abstractSyntaxtTree;
     fprintf(_outputFile, "<!DOCTYPE html>\n");
     fprintf(_outputFile, "<html lang='en'>\n");
     fprintf(_outputFile, "<head>\n");
     fprintf(_outputFile, "<meta charset='UTF-8'>\n");
     fprintf(_outputFile,
             "<meta name='viewport' content='width=device-width, initial-scale=1.0'>\n");
-    fprintf(_outputFile, "<title>%s</title>\n", presName);
+    fprintf(_outputFile, "<title>%s</title>\n", program->presentation_identifier);
     fprintf(_outputFile, "<link rel='stylesheet' href='../src/main/web/css/styles.css'>\n");
+    fprintf(_outputFile, "<style>\n");
+    outputProperties(CompilerState);
+    fprintf(_outputFile, "</style>\n");
     fprintf(_outputFile, "</head>\n");
     fprintf(_outputFile, "<body>\n");
     fprintf(_outputFile, "<div class='class-container'>\n");
@@ -339,5 +344,66 @@ static void generateItem(SymbolTableItem *object, char *identifier, char *animat
         break;
     default:
         break;
+    }
+}
+
+static void outputProperties(CompilerState *compilerState) {
+    SymbolTable *SymbolTable = compilerState->symbolTable;
+
+    if (SymbolTable == NULL || SymbolTable->table == NULL) {
+        return;
+    }
+
+    // Debug: Verify enum values
+    logInformation(_logger,
+                   "Enum values: OBJ_SLIDE=%d, OBJ_TEXTBLOCK=%d, OBJ_IMAGE=%d, OBJ_UNKNOWN=%d",
+                   OBJ_SLIDE, OBJ_TEXTBLOCK, OBJ_IMAGE, OBJ_UNKNOWN);
+
+    // iterate through all symbols
+    GHashTableIter iter;
+    gpointer key, value;
+
+    g_hash_table_iter_init(&iter, SymbolTable->table);
+
+    while (g_hash_table_iter_next(&iter, &key, &value)) {
+        char *identifier = (char *)key;
+        SymbolTableItem *item = (SymbolTableItem *)value;
+
+        // only output for those with properties defined
+        if (item == NULL || item->properties == NULL) {
+            logInformation(_logger, "Skipping item %s - item is NULL or has no properties",
+                           identifier);
+            continue;
+        }
+
+        char *cssProperties = NULL;
+        logInformation(
+            _logger,
+            "Processing item %s with type %d (OBJ_SLIDE=%d, OBJ_TEXTBLOCK=%d, OBJ_IMAGE=%d)",
+            identifier, item->type, OBJ_SLIDE, OBJ_TEXTBLOCK, OBJ_IMAGE);
+
+        switch (item->type) {
+        case OBJ_IMAGE:
+            logInformation(_logger, "Calling parseImageProperties for %s", identifier);
+            cssProperties = parseImageProperties(item->properties);
+            break;
+        case OBJ_TEXTBLOCK:
+            logInformation(_logger, "Calling parseTextblockProperties for %s", identifier);
+            cssProperties = parseTextblockProperties(item->properties);
+            break;
+        case OBJ_SLIDE:
+            logInformation(_logger, "Calling parseSlideProperties for %s", identifier);
+            cssProperties = parseSlideProperties(item->properties);
+            break;
+        default:
+            logInformation(_logger, "Unknown object type %d for %s", item->type, identifier);
+            continue;
+        }
+
+        // dont output if there were no valid props
+        if (cssProperties != NULL && strlen(cssProperties) > 0) {
+            fprintf(_outputFile, ".%s {\n%s }\n", identifier, cssProperties);
+            free(cssProperties);
+        }
     }
 }

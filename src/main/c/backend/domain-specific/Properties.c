@@ -6,6 +6,7 @@ typedef enum {
     IMG_MAX_HEIGHT,
     IMG_MAX_WIDTH,
     IMG_BORDER_RADIUS,
+    IMG_BORDER_STYLE,
     IMG_UNKNOWN
 } ImageProperty;
 ImageProperty getImagePropertyKey(const char *name);
@@ -23,64 +24,300 @@ typedef enum { SLD_BACKGROUND_COLOR, SLD_FONT_FAMILY, SLD_UNKNOWN } SlidePropert
 SlideProperty getSlidePropertyKey(const char *name);
 
 char *parseImageProperties(CssProperty *properties) {
-    for (CssProperty *props = properties; props != NULL; props = props->next) {
-        ImageProperty type = getImagePropertyKey(props->property_name);
-        switch (type) {
-        case IMG_BORDER_SIZE:
-            break;
-        case IMG_BORDER_COLOR:
-            break;
-        case IMG_MAX_HEIGHT:
-            break;
-        case IMG_MAX_WIDTH:
-            break;
-        case IMG_BORDER_RADIUS:
-            break;
-        default:
-            break;
-        }
+    if (properties == NULL) {
+        printf("DEBUG: parseImageProperties returning empty string (properties is NULL)\n");
+        return "";
     }
 
-    return "";
+    printf("DEBUG: parseImageProperties processing properties\n");
+
+    char *result = malloc(1);
+    if (!result) {
+        return "";
+    }
+    result[0] = '\0';
+    int currentSize = 1;
+
+    for (CssProperty *props = properties; props != NULL;) {
+        if (props == NULL) {
+            break;
+        }
+
+        if (props->property_name == NULL) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+        char *value = NULL;
+
+        // value based on the property type
+        switch (props->value_type) {
+        case PROP_VAL_IDENTIFIER:
+            if (props->value.identifier != NULL) {
+                value = props->value.identifier;
+            } else {
+                value = "";
+            }
+            break;
+        case PROP_VAL_INTEGER:
+            value = malloc(32);
+            if (value) {
+                snprintf(value, 32, "%d", props->value.integer);
+            }
+            break;
+        case PROP_VAL_DECIMAL:
+            value = malloc(32);
+            if (value) {
+                snprintf(value, 32, "%.2f", props->value.decimal);
+            }
+            break;
+        default:
+            value = "";
+            break;
+        }
+
+        if (!value) {
+            value = "";
+        }
+        if (props->property_name == NULL) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+
+        ImageProperty type = getImagePropertyKey(props->property_name);
+        if (type == IMG_UNKNOWN) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+        int propNameLen = strlen(props->property_name);
+        int valueLen = strlen(value);
+        int requiredSize = propNameLen + valueLen + 10;
+
+        char *cssProperty = malloc(requiredSize);
+        if (cssProperty) {
+            snprintf(cssProperty, requiredSize, "%s: %s;\n", props->property_name, value);
+
+            int newSize = currentSize + strlen(cssProperty);
+            char *newResult = realloc(result, newSize);
+            if (newResult) {
+                result = newResult;
+                strcat(result, cssProperty);
+                currentSize = newSize;
+            }
+            free(cssProperty);
+        }
+        if (props->value_type == PROP_VAL_INTEGER || props->value_type == PROP_VAL_DECIMAL) {
+            free(value);
+        }
+        CssProperty *next = props->next;
+        props = next;
+    }
+
+    return result;
 }
 char *parseTextblockProperties(CssProperty *properties) {
-    for (CssProperty *props = properties; props != NULL; props = props->next) {
-        TextblockProperty type = getTextblockPropertyKey(props->property_name);
-        switch (type) {
-        case TXT_BACKGROUND_COLOR:
-            break;
-        case TXT_FONT_COLOR:
-            break;
-        case TXT_FONT_FAMILY:
-            break;
-        case TXT_FONT_SIZE:
-            break;
-        default:
-            break;
-        }
+    if (properties == NULL) {
+        return "";
     }
 
-    return "";
+    char *result = malloc(1);
+    if (!result) {
+        return "";
+    }
+    result[0] = '\0';
+    int currentSize = 1;
+
+    for (CssProperty *props = properties; props != NULL;) {
+        if (props == NULL) {
+            break;
+        }
+
+        if (props->property_name == NULL) {
+            // Safely advance to next
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+
+        char *value = NULL;
+
+        switch (props->value_type) {
+        case PROP_VAL_IDENTIFIER:
+            if (props->value.identifier != NULL) {
+                value = props->value.identifier;
+            } else {
+                value = "";
+            }
+            break;
+        case PROP_VAL_INTEGER:
+            value = malloc(32);
+            if (value) {
+                snprintf(value, 32, "%d", props->value.integer);
+            }
+            break;
+        case PROP_VAL_DECIMAL:
+            value = malloc(32);
+            if (value) {
+                snprintf(value, 32, "%.2f", props->value.decimal);
+            }
+            break;
+        default:
+            value = "";
+            break;
+        }
+
+        if (!value) {
+            value = "";
+        }
+        if (props->property_name == NULL) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+
+        TextblockProperty type = getTextblockPropertyKey(props->property_name);
+        if (type == TXT_UNKNOWN) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+
+        int propNameLen = strlen(props->property_name);
+        int valueLen = strlen(value);
+        int requiredSize = propNameLen + valueLen + 10; // ": ;\n" + safety margin
+
+        char *cssProperty = malloc(requiredSize);
+        if (cssProperty) {
+            snprintf(cssProperty, requiredSize, "%s: %s;\n", props->property_name, value);
+            int newSize = currentSize + strlen(cssProperty);
+            char *newResult = realloc(result, newSize);
+            if (newResult) {
+                result = newResult;
+                strcat(result, cssProperty);
+                currentSize = newSize;
+            }
+            free(cssProperty);
+        }
+
+        if (props->value_type == PROP_VAL_INTEGER || props->value_type == PROP_VAL_DECIMAL) {
+            free(value);
+        }
+        CssProperty *next = props->next;
+        props = next;
+    }
+
+    return result;
 }
 char *parseSlideProperties(CssProperty *properties) {
-    for (CssProperty *props = properties; props != NULL; props = props->next) {
-        SlideProperty type = getSlidePropertyKey(props->property_name);
-        switch (type) {
-        case SLD_FONT_FAMILY:
-            break;
-        case SLD_BACKGROUND_COLOR:
-            break;
-        default:
-            break;
-        }
+
+    if (properties == NULL) {
+        printf("DEBUG: parseSlideProperties returning empty string (properties is NULL)\n");
+        return "";
     }
 
-    return "";
+    printf("DEBUG: parseSlideProperties processing properties\n");
+
+    char *result = malloc(1);
+    if (!result) {
+        return "";
+    }
+    result[0] = '\0';
+    int currentSize = 1;
+
+    for (CssProperty *props = properties; props != NULL;) {
+        // validate current property node
+        if (props == NULL) {
+            break;
+        }
+
+        if (props->property_name == NULL) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+
+        char *value = NULL;
+
+        switch (props->value_type) {
+        case PROP_VAL_IDENTIFIER:
+            if (props->value.identifier != NULL) {
+                value = props->value.identifier;
+            } else {
+                value = "";
+            }
+            break;
+        case PROP_VAL_INTEGER:
+            value = malloc(32);
+            if (value) {
+                snprintf(value, 32, "%d", props->value.integer);
+            }
+            break;
+        case PROP_VAL_DECIMAL:
+            value = malloc(32);
+            if (value) {
+                snprintf(value, 32, "%.2f", props->value.decimal);
+            }
+            break;
+        default:
+            value = "";
+            break;
+        }
+
+        if (!value) {
+            value = "";
+        }
+
+        if (props->property_name == NULL) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+
+        SlideProperty type = getSlidePropertyKey(props->property_name);
+        if (type == SLD_UNKNOWN) {
+            CssProperty *next = props->next;
+            props = next;
+            continue;
+        }
+
+        int propNameLen = strlen(props->property_name);
+        int valueLen = strlen(value);
+        int requiredSize = propNameLen + valueLen + 10;
+
+        char *cssProperty = malloc(requiredSize);
+        if (cssProperty) {
+            snprintf(cssProperty, requiredSize, "%s: %s;\n", props->property_name, value);
+
+            int newSize = currentSize + strlen(cssProperty);
+            char *newResult = realloc(result, newSize);
+            if (newResult) {
+                result = newResult;
+                strcat(result, cssProperty);
+                currentSize = newSize;
+            }
+            free(cssProperty);
+        }
+
+        if (props->value_type == PROP_VAL_INTEGER || props->value_type == PROP_VAL_DECIMAL) {
+            free(value);
+        }
+
+        CssProperty *next = props->next;
+        props = next;
+    }
+
+    return result;
 }
 
 /*******************************Helpers****************************************/
 
 ImageProperty getImagePropertyKey(const char *name) {
+    if (name == NULL) {
+        return IMG_UNKNOWN;
+    }
+
     if (strcmp(name, "border-radius") == 0) {
         return IMG_BORDER_RADIUS;
     }
@@ -96,10 +333,17 @@ ImageProperty getImagePropertyKey(const char *name) {
     if (strcmp(name, "max-height") == 0) {
         return IMG_MAX_HEIGHT;
     }
+    if (strcmp(name, "border-style") == 0) {
+        return IMG_BORDER_STYLE;
+    }
     return IMG_UNKNOWN;
 }
 
 TextblockProperty getTextblockPropertyKey(const char *name) {
+    if (name == NULL) {
+        return TXT_UNKNOWN;
+    }
+
     if (strcmp(name, "background-color") == 0) {
         return TXT_BACKGROUND_COLOR;
     }
@@ -115,6 +359,10 @@ TextblockProperty getTextblockPropertyKey(const char *name) {
     return TXT_UNKNOWN;
 }
 SlideProperty getSlidePropertyKey(const char *name) {
+    if (name == NULL) {
+        return SLD_UNKNOWN;
+    }
+
     if (strcmp(name, "background-color") == 0) {
         return SLD_BACKGROUND_COLOR;
     }

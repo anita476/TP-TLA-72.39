@@ -3,13 +3,30 @@ Presentation manyPositioningManySlides {
     Objects {
         Slide slide1 {}
         Slide slide2 {}
-        Image image {}
-        Textblock heading1 {}
-        Textblock heading2 {}
-        Textblock heading3 {}
-        Textblock heading4 {}
-        Textblock heading5 {}
-        Textblock heading6 {}
+        Image image { 
+            border-width:5px;
+            border-color:rgb(218, 25, 25);
+            border-style: solid;
+            border-radius: 500px;
+        }
+        Textblock heading1 {
+            background-color: rgb(36, 188, 230);
+            font-size: 50px;
+        }
+        Textblock heading2 {
+                        background-color: rgb(177, 157, 45);
+
+        }
+        Textblock heading3 {
+                        background-color: rgb(120, 24, 56);
+
+        }
+        Textblock heading4 {            background-color: rgb(22, 157, 31);
+}
+        Textblock heading5 {            background-color: rgb(74, 26, 90);
+}
+        Textblock heading6 {            background-color: rgb(28, 38, 41);
+}
     }
 
     Structure {

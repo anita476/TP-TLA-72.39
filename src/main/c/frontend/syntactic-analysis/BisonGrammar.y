@@ -34,7 +34,6 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Destructor-Decl.html
  */
-%destructor { releaseObjectsSection($$); } objects
 %destructor { releaseStructureSection($$); } structure
 %destructor { releaseAnimationsSection($$); } animation
 
