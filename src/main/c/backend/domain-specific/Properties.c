@@ -15,21 +15,68 @@ typedef enum {
     TXT_FONT_SIZE,
     TXT_FONT_COLOR,
     TXT_FONT_FAMILY,
-
+    TXT_UNKNOWN
 } TextblockProperty;
 TextblockProperty getTextblockPropertyKey(const char *name);
 
-typedef enum { SLD_BACKGROUND_COLOR, SLD_FONT_FAMILY } SlideProperty;
+typedef enum { SLD_BACKGROUND_COLOR, SLD_FONT_FAMILY, SLD_UNKNOWN } SlideProperty;
 SlideProperty getSlidePropertyKey(const char *name);
 
 char *parseImageProperties(CssProperty *properties) {
     for (CssProperty *props = properties; props != NULL; props = props->next) {
+        ImageProperty type = getImagePropertyKey(props->property_name);
+        switch (type) {
+        case IMG_BORDER_SIZE:
+            break;
+        case IMG_BORDER_COLOR:
+            break;
+        case IMG_MAX_HEIGHT:
+            break;
+        case IMG_MAX_WIDTH:
+            break;
+        case IMG_BORDER_RADIUS:
+            break;
+        default:
+            break;
+        }
     }
 
     return "";
 }
-char *parseTextblockProperties(CssProperty *properties) { return ""; }
-char *parseSlideProperties(CssProperty *properties) { return ""; }
+char *parseTextblockProperties(CssProperty *properties) {
+    for (CssProperty *props = properties; props != NULL; props = props->next) {
+        TextblockProperty type = getTextblockPropertyKey(props->property_name);
+        switch (type) {
+        case TXT_BACKGROUND_COLOR:
+            break;
+        case TXT_FONT_COLOR:
+            break;
+        case TXT_FONT_FAMILY:
+            break;
+        case TXT_FONT_SIZE:
+            break;
+        default:
+            break;
+        }
+    }
+
+    return "";
+}
+char *parseSlideProperties(CssProperty *properties) {
+    for (CssProperty *props = properties; props != NULL; props = props->next) {
+        SlideProperty type = getSlidePropertyKey(props->property_name);
+        switch (type) {
+        case SLD_FONT_FAMILY:
+            break;
+        case SLD_BACKGROUND_COLOR:
+            break;
+        default:
+            break;
+        }
+    }
+
+    return "";
+}
 
 /*******************************Helpers****************************************/
 
@@ -49,6 +96,7 @@ ImageProperty getImagePropertyKey(const char *name) {
     if (strcmp(name, "max-height") == 0) {
         return IMG_MAX_HEIGHT;
     }
+    return IMG_UNKNOWN;
 }
 
 TextblockProperty getTextblockPropertyKey(const char *name) {
@@ -64,6 +112,7 @@ TextblockProperty getTextblockPropertyKey(const char *name) {
     if (strcmp(name, "font-size") == 0) {
         return TXT_FONT_SIZE;
     }
+    return TXT_UNKNOWN;
 }
 SlideProperty getSlidePropertyKey(const char *name) {
     if (strcmp(name, "background-color") == 0) {
@@ -72,4 +121,5 @@ SlideProperty getSlidePropertyKey(const char *name) {
     if (strcmp(name, "font-family") == 0) {
         return SLD_FONT_FAMILY;
     }
+    return SLD_UNKNOWN;
 }

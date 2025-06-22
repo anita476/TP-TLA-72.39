@@ -100,18 +100,16 @@ Token SemiColonLexemeAction(LexicalAnalyzerContext *lexicalAnalyzerContext, Toke
 Token StringLexemeAction(LexicalAnalyzerContext *lexicalAnalyzerContext) {
     _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 
-    // strip quotes from the beginning and end of the string
+    // Strip quotes from the beginning and end of the string
     char *lexeme = lexicalAnalyzerContext->lexeme;
     int length = lexicalAnalyzerContext->length;
 
     if (length >= 2 && lexeme[0] == '"' && lexeme[length - 1] == '"') {
-        // Create a new string without the quotes
         char *strippedString =
             malloc(length - 1); // -1 for null terminator, +1 for content, -2 for quotes
         if (strippedString) {
-            strncpy(strippedString, lexeme + 1,
-                    length - 2);               // Skip first quote, copy content, exclude last quote
-            strippedString[length - 2] = '\0'; // Null terminate
+            strncpy(strippedString, lexeme + 1, length - 2);
+            strippedString[length - 2] = '\0';
             lexicalAnalyzerContext->semanticValue->string = strippedString;
         } else {
             lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
@@ -134,29 +132,7 @@ Token IdentifierLexemeAction(LexicalAnalyzerContext *lexicalAnalyzerContext) {
 
 Token PropertyLexemeAction(LexicalAnalyzerContext *lexicalAnalyzerContext) {
     _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-
-    // Check if the lexeme starts and ends with quotes (for quoted strings)
-    char *lexeme = lexicalAnalyzerContext->lexeme;
-    int length = lexicalAnalyzerContext->length;
-
-    if (length >= 2 && lexeme[0] == '"' && lexeme[length - 1] == '"') {
-        // Strip quotes from the beginning and end of the string
-        char *strippedString =
-            malloc(length - 1); // -1 for null terminator, +1 for content, -2 for quotes
-        if (strippedString) {
-            strncpy(strippedString, lexeme + 1,
-                    length - 2);               // Skip first quote, copy content, exclude last quote
-            strippedString[length - 2] = '\0'; // Null terminate
-            lexicalAnalyzerContext->semanticValue->string = strippedString;
-        } else {
-            // Fallback to original behavior if memory allocation fails
-            lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
-        }
-    } else {
-        // If no quotes, use the original string
-        lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
-    }
-
+    lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
     destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
     return PROPERTY;
 }
