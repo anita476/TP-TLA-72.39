@@ -66,6 +66,7 @@ add_definitions(${GLIB_CFLAGS_OTHER})
 add_executable(Compiler
 	src/main/c/backend/code-generation/Generator.c
 	src/main/c/backend/domain-specific/Layout.c
+	src/main/c/backend/domain-specific/Properties.c
 	src/main/c/EntryPoint.c
 	src/main/c/frontend/lexical-analysis/FlexActions.c
 	src/main/c/frontend/lexical-analysis/FlexScanner.c
