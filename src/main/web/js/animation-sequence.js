@@ -8,17 +8,52 @@ class AnimationSequence {
       const animations = this.parseAnimations(el);
       return animations.length > 0;
     });
+    
+    this.animationSteps = [];
+    this.elements.forEach(element => {
+      const animations = this.parseAnimations(element);
+      const animOrders = this.parseAnimationOrders(element, animations);
+      
+      animations.forEach((animation, index) => {
+        this.animationSteps.push({
+          element,
+          animation,
+          order: animOrders[index],
+          animIndex: index
+        });
+      });
+    });
+    
+    this.animationSteps.sort((a, b) => a.order - b.order);
+    
     this.reset();
+  }
+  
+  /**
+   * Parse animation orders from element
+   * @param {Element} element - Element with data-animation attribute
+   * @param {Array} animations - Array of animation names
+   * @returns {Array} Array of orders for each animation
+   */
+  parseAnimationOrders(element, animations) {
+    if (element.dataset.animOrders) {
+      const orders = element.dataset.animOrders.split(',').map(o => parseInt(o.trim(), 10));
+      if (orders.length === animations.length) {
+        return orders;
+      }
+    }
+
+    const baseOrder = parseInt(element.dataset.animOrder || '999', 10);
+    return animations.map((_, index) => baseOrder + index);
   }
   
   /**
    * Reset the sequence
    */
   reset() {
-    this.currentIndex = 0;
+    this.currentStepIndex = 0;
     this.animatedElements = [];
     this.history = [];
-    this.currentAnimationIndex = new Map();
     this.animationHistory = [];
   }
   
@@ -33,125 +68,71 @@ class AnimationSequence {
   }
   
   /**
-   * Check if there are more elements to animate
-   * @returns {boolean} True if there are more elements
+   * Check if there are more steps to animate
+   * @returns {boolean} True if there are more steps
    */
   hasNext() {
-    if (this.currentIndex < this.elements.length) return true;
-    
-    if (this.history.length > 0) {
-      const lastItem = this.history[this.history.length - 1];
-      const element = lastItem.element;
-      const animations = this.parseAnimations(element);
-      const currentAnimIndex = this.currentAnimationIndex.get(element) || 0;
-      return currentAnimIndex < animations.length - 1;
-    }
-    
-    return false;
+    return this.currentStepIndex < this.animationSteps.length;
   }
   
   /**
-   * Check if there are previous elements to reverse
-   * @returns {boolean} True if there are previous elements or animations
+   * Check if there are previous steps to reverse
+   * @returns {boolean} True if there are previous steps
    */
   hasPrevious() {
     return this.animationHistory.length > 0;
   }
   
   /**
-   * Get the next element or animation to animate
+   * Get the next animation step
    * @returns {Object} Object containing element and animation info
    */
   next() {
     if (!this.hasNext()) return null;
     
-    if (this.history.length > 0) {
-      const lastItem = this.history[this.history.length - 1];
-      const element = lastItem.element;
-      const animations = this.parseAnimations(element);
-      let currentAnimIndex = this.currentAnimationIndex.get(element) || 0;
-      
-      if (currentAnimIndex < animations.length - 1) {
-        currentAnimIndex++;
-        this.currentAnimationIndex.set(element, currentAnimIndex);
-        const animation = animations[currentAnimIndex];
-        
-        lastItem.currentAnimation = animation;
-        lastItem.animationIndex = currentAnimIndex;
-        
-        this.animationHistory.push({
-          element,
-          animation,
-          isNewElement: false
-        });
-        
-        return { element, animation, isNewElement: false };
-      }
+    const step = this.animationSteps[this.currentStepIndex];
+    const { element, animation, animIndex } = step;
+    
+    const isNewElement = !this.animatedElements.includes(element);
+    if (isNewElement) {
+      this.animatedElements.push(element);
     }
     
-    const element = this.elements[this.currentIndex];
-    if (!element) return null;
-    
-    this.animatedElements.push(element);
-    
-    const animations = this.parseAnimations(element);
-    if (!animations.length) {
-      this.currentIndex++;
-      return this.next();
-    }
-    
-    const animation = animations[0];
-    
-    this.currentAnimationIndex.set(element, 0);
     this.history.push({
       element,
-      index: this.currentIndex,
-      animations,
-      currentAnimation: animation,
-      animationIndex: 0
+      animation,
+      animIndex,
+      stepIndex: this.currentStepIndex,
+      isNewElement
     });
     
     this.animationHistory.push({
       element,
       animation,
-      isNewElement: true
+      isNewElement
     });
     
-    this.currentIndex++;
+    this.currentStepIndex++;
     
-    return { element, animation, isNewElement: true };
+    return { element, animation, isNewElement };
   }
   
   /**
-   * Get the previous element or animation to reverse
+   * Get the previous animation step to reverse
    * @returns {Object} Object containing element and animation info
    */
   previous() {
     if (!this.hasPrevious()) return null;
     
     const lastAnimation = this.animationHistory.pop();
+    const lastHistoryItem = this.history.pop();
     
-    if (lastAnimation.isNewElement) {
-      const lastItem = this.history.pop();
-      
+    if (lastHistoryItem.isNewElement) {
       const index = this.animatedElements.lastIndexOf(lastAnimation.element);
       if (index !== -1) this.animatedElements.splice(index, 1);
-      
-      this.currentIndex = lastItem.index;
-      
-      if (this.history.length > 0) {
-        const prevItem = this.history[this.history.length - 1];
-        this.currentAnimationIndex.set(prevItem.element, prevItem.animationIndex);
-      }
-    } else {
-      const lastItem = this.history[this.history.length - 1];
-      const element = lastItem.element;
-      const currentAnimIndex = this.currentAnimationIndex.get(element);
-      
-      this.currentAnimationIndex.set(element, currentAnimIndex - 1);
-      lastItem.currentAnimation = lastItem.animations[currentAnimIndex - 1];
-      lastItem.animationIndex = currentAnimIndex - 1;
     }
+    
+    this.currentStepIndex = lastHistoryItem.stepIndex;
     
     return lastAnimation;
   }
@@ -161,7 +142,7 @@ class AnimationSequence {
    * @returns {Array} All elements
    */
   getAll() {
-    return this.elements;
+    return [...new Set(this.elements)];
   }
   
   /**
@@ -198,31 +179,22 @@ class AnimationSequence {
     this.reset();
     
     history.forEach(item => {
-      const index = this.elements.indexOf(item.element);
-      if (index !== -1) {
-        this.currentIndex = index;
-        this.animatedElements.push(item.element);
-        this.history.push({ ...item });
-        
-        if (item.animationIndex !== undefined) {
-          this.currentAnimationIndex.set(item.element, item.animationIndex);
-        }
-        
-        this.currentIndex++;
-      }
-    });
-    
-    this.history.forEach(item => {
-      const element = item.element;
-      const animations = item.animations;
-      const currentAnimIndex = item.animationIndex || 0;
+      const { element, animation, stepIndex, isNewElement } = item;
       
-      for (let i = 0; i <= currentAnimIndex; i++) {
-        this.animationHistory.push({
-          element,
-          animation: animations[i],
-          isNewElement: i === 0
-        });
+      if (isNewElement && !this.animatedElements.includes(element)) {
+        this.animatedElements.push(element);
+      }
+      
+      this.history.push({ ...item });
+      
+      this.animationHistory.push({
+        element,
+        animation,
+        isNewElement
+      });
+      
+      if (stepIndex >= this.currentStepIndex) {
+        this.currentStepIndex = stepIndex + 1;
       }
     });
   }

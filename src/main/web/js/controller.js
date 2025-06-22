@@ -157,20 +157,12 @@ const Controller = {
           this.repeatCount.set(currentIndex, currentRepeat - 1);
           
           const elements = this.slides.getAnimationElements(currentIndex);
-          
           sequence.reset();
-          
           this.animation.makeElementsVisible(elements);
           
-          const maxRepeats = this.slides.getRepeats(currentIndex);
-          
-          for (let i = 0; i < elements.length; i++) {
-            const element = elements[i];
-            const animations = this.animation.parseAnimations(element);
-            
-            for (let j = 0; j < animations.length; j++) {
-              sequence.next();
-            }
+          const steps = sequence.animationSteps;
+          for (let i = 0; i < steps.length; i++) {
+            sequence.next();
           }
           
           this.saveState(currentIndex);
