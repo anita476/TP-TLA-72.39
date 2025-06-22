@@ -401,8 +401,10 @@ static void outputProperties(CompilerState *compilerState) {
         }
 
         // dont output if there were no valid props
-        if (cssProperties != NULL && strlen(cssProperties) > 0) {
-            fprintf(_outputFile, ".%s {\n%s }\n", identifier, cssProperties);
+        if (cssProperties != NULL) {
+            if (strlen(cssProperties) > 0) {
+                fprintf(_outputFile, ".%s {\n%s }\n", identifier, cssProperties);
+            }
             free(cssProperties);
         }
     }
