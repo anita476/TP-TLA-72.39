@@ -33,6 +33,11 @@ Para compilar un programa de Pressed:
 ./script/ubuntu/start.sh pathAlPrograma
 ```
 
+Opcionalmente, se puede agregar -v para modo verboso:
+```bash
+./script/ubuntu/start.sh pathAlPrograma -v
+```
+
 Para correr el HTML resultante, desde fuera del contenedor:
 ```bash
 ./output/fileName.html start
