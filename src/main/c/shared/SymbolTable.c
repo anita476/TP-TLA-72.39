@@ -5,11 +5,11 @@ static Logger * _logger = NULL;
 
 
 
-void initializeSemanticsModule(){
+void initializeSemanticsModule() {
     _logger = createLogger("Semantics");
 }
 
-void shutdownSemanticsModule(){
+void shutdownSemanticsModule() {
     if (_logger != NULL) {
         destroyLogger(_logger);
     }
@@ -24,11 +24,11 @@ static void freeSymbolTableItem(gpointer item) {
 }
 
 
-SymbolTable *initializeSymbolTable(){
+SymbolTable *initializeSymbolTable() {
     GHashTable * table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, freeSymbolTableItem);
-    if(table != NULL){
+    if(table != NULL) {
         SymbolTable * symbolTable = malloc(sizeof(SymbolTable));
-        if(symbolTable != NULL){
+        if(symbolTable != NULL) {
             symbolTable->table = table;
             logDebugging(_logger, "Symbol table initialized successfully");
             return symbolTable;
@@ -45,7 +45,7 @@ SymbolTable *initializeSymbolTable(){
 }
 
 
-void addSymbol(SymbolTable *symbolTable, const char *identifier, ObjectType type){
+void addSymbol(SymbolTable *symbolTable, const char *identifier, ObjectType type) {
     logDebugging(_logger, "Adding symbol: %s of type %d", identifier, type);
     if (symbolTable == NULL || identifier == NULL) {
         logError(_logger, "Cannot add symbol: symbolTable or identifier is NULL");
@@ -110,7 +110,7 @@ boolean symbolExists(SymbolTable *symbolTable, const char *identifier) {
     return g_hash_table_contains(symbolTable->table, identifier);
 }
 
-void destroySymbolTable(SymbolTable *symbolTable){
+void destroySymbolTable(SymbolTable *symbolTable) {
     logDebugging(_logger, "Executing destructor: %s", __FUNCTION__);
     if (symbolTable != NULL) {
         g_hash_table_destroy(symbolTable->table);
