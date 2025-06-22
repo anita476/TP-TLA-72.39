@@ -3,6 +3,7 @@ Presentation manyPositioningManySlides {
     Objects {
         Slide slide1 {}
         Slide slide2 {}
+        Image image {}
         Textblock heading1 {}
         Textblock heading2 {}
         Textblock heading3 {}
@@ -17,8 +18,10 @@ Presentation manyPositioningManySlides {
             add heading2 with "Hiii 2";
             add heading3 with "Hiii 3";
             add heading4 with "Hiii 4";
+            add image with "../src/main/web/images/magnus.png";
             add heading5 with "Hiii 5";
             add heading6 with "Hiii 6";
+
             heading3 below heading2;
             heading1 left heading2;
         }

@@ -316,6 +316,15 @@ static void generateItem(SymbolTableItem *object, char *identifier, char *animat
                          char *orders) {
     switch (object->type) {
     case OBJ_IMAGE:
+        if (animations && orders) {
+            fprintf(
+                _outputFile,
+                "<img src='%s' class='slide-image %s' data-animation='%s' data-anim-order='%s'>",
+                object->string, identifier, animations, orders);
+        } else {
+            fprintf(_outputFile, "<img src='%s' class='slide-image %s'>", object->string,
+                    identifier);
+        }
         break;
 
     case OBJ_TEXTBLOCK:

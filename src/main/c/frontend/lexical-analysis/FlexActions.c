@@ -98,10 +98,30 @@ Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Tok
 	return SEMICOLON;
 }
 
-
 Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
     _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-    lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);    
+    
+    // Strip quotes from the beginning and end of the string
+    char *lexeme = lexicalAnalyzerContext->lexeme;
+    int length = lexicalAnalyzerContext->length;
+    
+    // Check if the string starts and ends with quotes
+    if (length >= 2 && lexeme[0] == '"' && lexeme[length - 1] == '"') {
+        // Create a new string without the quotes
+        char *strippedString = malloc(length - 1); // -1 for null terminator, +1 for content, -2 for quotes
+        if (strippedString) {
+            strncpy(strippedString, lexeme + 1, length - 2); // Skip first quote, copy content, exclude last quote
+            strippedString[length - 2] = '\0'; // Null terminate
+            lexicalAnalyzerContext->semanticValue->string = strippedString;
+        } else {
+            // Fallback to original behavior if memory allocation fails
+            lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
+        }
+    } else {
+        // If no quotes, use the original string
+        lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
+    }
+    
     destroyLexicalAnalyzerContext(lexicalAnalyzerContext);
     return STRING;
 }
