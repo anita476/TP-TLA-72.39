@@ -47,7 +47,7 @@ static void destroy_row(gpointer data) {
 }
 
 Slide *create_slide() {
-    logInformation(_logger, "Creating a new slide");
+    logDebugging(_logger, "Creating a new slide");
     Slide *slide = calloc(1, sizeof(Slide));
     slide->rows = g_hash_table_new_full(int_hash, int_equal, NULL, (GDestroyNotify)destroy_row);
     slide->symbolToObject =
@@ -325,9 +325,9 @@ static gboolean resolve_object_position(PositionedObject *obj, GHashTable *dep_g
         info->final_col += 1;
         break;
     }
-    logInformation(
+    logDebugging(
         _logger,
-        "Object '%s' resolved to position (%d, %d) based on parent '%s' at (%d, %d) with position "
+        "Object '%s' resolved to position (%d, %d) with parent '%s' at (%d, %d) with position "
         "type %d",
         obj->identifier, info->final_row, info->final_col, info->parent->identifier, parent_row,
         parent_col, info->pos_type);
@@ -349,7 +349,7 @@ SlideList *generateObjects(Program *program) {
     Slide *currentSlide = NULL;
     for (StructureDefinition *structure = structureDefinition; structure != NULL;
          structure = structure->next) {
-        logInformation(_logger, "Processing structure: %s", structure->identifier);
+        logDebugging(_logger, "Processing structure: %s", structure->identifier);
         if (structure->content == NULL)
             continue;
         // Create a new slide
@@ -370,8 +370,8 @@ SlideList *generateObjects(Program *program) {
         apply_relative_positions(slide, structure->positions);
     }
     for (Slide *slide = list->head; slide != NULL; slide = slide->next) {
-        logInformation(_logger, "Slide '%s' has bounds: [%d, %d] x [%d, %d]", slide->identifier,
-                       slide->minRow, slide->maxRow, slide->minCol, slide->maxCol);
+        logDebugging(_logger, "Slide '%s' has bounds: [%d, %d] x [%d, %d]", slide->identifier,
+                     slide->minRow, slide->maxRow, slide->minCol, slide->maxCol);
     }
     return list;
 }

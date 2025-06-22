@@ -65,8 +65,6 @@ ObjectDefinition *ObjectListSemanticAction(ObjectDefinition *objectList,
 ObjectDefinition *ObjectDefinitionSemanticAction(CompilerState *CompilerState, ObjectType type,
                                                  char *identifier, CssProperty *cssProperties) {
     _logSyntacticAnalyzerAction(__FUNCTION__);
-    logInformation(_logger, "Creating object %s with type %d (OBJ_SLIDE=%d, OBJ_TEXTBLOCK=%d, OBJ_IMAGE=%d)", 
-                  identifier, type, OBJ_SLIDE, OBJ_TEXTBLOCK, OBJ_IMAGE);
 
     /* SEMANTICS CHECK */
     if (CompilerState->symbolTable != NULL &&
@@ -82,11 +80,11 @@ ObjectDefinition *ObjectDefinitionSemanticAction(CompilerState *CompilerState, O
     object->identifier = identifier;
     object->css_properties = cssProperties;
     object->next = NULL;
-    
+
     // Always set the properties field in the symbol table item
     SymbolTableItem *item = getSymbol(CompilerState->symbolTable, identifier);
     if (item != NULL) {
-        item->properties = cssProperties;  // This can be NULL, which is fine
+        item->properties = cssProperties; // This can be NULL, which is fine
     }
     return object;
 }

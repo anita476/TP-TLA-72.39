@@ -2,12 +2,13 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-/* MODULE INTERNAL STATE */
 FILE *_outputFile = NULL;
 boolean success = true; // in case of error
 const char _indentationCharacter = ' ';
 const char _indentationSize = 4;
 static Logger *_logger = NULL;
+
+/* MODULE INTERNAL STATE */
 
 void initializeGeneratorModule() { _logger = createLogger("Generator"); }
 
@@ -55,7 +56,6 @@ void generate(CompilerState *compilerState) {
 
 /* Private func definitions */
 void generateSlide(Slide *slide, AnimationDefinition *sequence, SymbolTable *symbolTable) {
-    // fprintf(_outputFile, "<h2>Slide: %s</h2>\n", slide->identifier);
     for (int i = slide->maxRow; i >= slide->minRow; i--) {
         Row *row = g_hash_table_lookup(slide->rows, int_key(i));
         if (row) {
@@ -353,12 +353,6 @@ static void outputProperties(CompilerState *compilerState) {
     if (SymbolTable == NULL || SymbolTable->table == NULL) {
         return;
     }
-
-    // Debug: Verify enum values
-    logInformation(_logger,
-                   "Enum values: OBJ_SLIDE=%d, OBJ_TEXTBLOCK=%d, OBJ_IMAGE=%d, OBJ_UNKNOWN=%d",
-                   OBJ_SLIDE, OBJ_TEXTBLOCK, OBJ_IMAGE, OBJ_UNKNOWN);
-
     // iterate through all symbols
     GHashTableIter iter;
     gpointer key, value;
@@ -371,40 +365,38 @@ static void outputProperties(CompilerState *compilerState) {
 
         // only output for those with properties defined
         if (item == NULL || item->properties == NULL) {
-            logInformation(_logger, "Skipping item %s - item is NULL or has no properties",
-                           identifier);
+            logDebugging(_logger, "Skipping item %s - item is NULL or has no properties",
+                         identifier);
             continue;
         }
 
         char *cssProperties = NULL;
-        logInformation(
+        logDebugging(
             _logger,
             "Processing item %s with type %d (OBJ_SLIDE=%d, OBJ_TEXTBLOCK=%d, OBJ_IMAGE=%d)",
             identifier, item->type, OBJ_SLIDE, OBJ_TEXTBLOCK, OBJ_IMAGE);
 
         switch (item->type) {
         case OBJ_IMAGE:
-            logInformation(_logger, "Calling parseImageProperties for %s", identifier);
+            logDebugging(_logger, "Calling parseImageProperties for %s", identifier);
             cssProperties = parseImageProperties(item->properties);
             break;
         case OBJ_TEXTBLOCK:
-            logInformation(_logger, "Calling parseTextblockProperties for %s", identifier);
+            logDebugging(_logger, "Calling parseTextblockProperties for %s", identifier);
             cssProperties = parseTextblockProperties(item->properties);
             break;
         case OBJ_SLIDE:
-            logInformation(_logger, "Calling parseSlideProperties for %s", identifier);
+            logDebugging(_logger, "Calling parseSlideProperties for %s", identifier);
             cssProperties = parseSlideProperties(item->properties);
             break;
         default:
-            logInformation(_logger, "Unknown object type %d for %s", item->type, identifier);
+            logDebugging(_logger, "Unknown object type %d for %s", item->type, identifier);
             continue;
         }
 
         // dont output if there were no valid props
-        if (cssProperties != NULL) {
-            if (strlen(cssProperties) > 0) {
-                fprintf(_outputFile, ".%s {\n%s }\n", identifier, cssProperties);
-            }
+        if (cssProperties != NULL && strlen(cssProperties) > 0) {
+            fprintf(_outputFile, ".%s {\n%s }\n", identifier, cssProperties);
             free(cssProperties);
         }
     }

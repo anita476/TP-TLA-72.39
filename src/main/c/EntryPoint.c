@@ -54,7 +54,10 @@ const int main(const int count, const char **arguments) {
             logWarning(logger, "No slides found");
             compilationStatus = ACCEPT;
         } else {
-            generate(&compilerState);
+            boolean flag = generate(&compilerState);
+            if (flag == FALSE) {
+                logCritical(logger, "The code-generation phase rejects the input program");
+            }
         }
 
         // ...end of the Backend. -----------------------------------------------------------------
