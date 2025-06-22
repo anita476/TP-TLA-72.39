@@ -63,13 +63,10 @@
 /* Actions */
 %token <token> ADD
 %token <token> WITH
-%token <token> TOP
-%token <token> BOTTOM
 %token <token> BELOW
 %token <token> ABOVE
 %token <token> LEFT
 %token <token> RIGHT
-%token <token> CENTER
 %token <token> START
 %token <token> THEN
 %token <token> END
@@ -212,7 +209,7 @@ animation_definitions:
 	| animation_definitions animation_definition												{ $$ = AnimationListSemanticAction($1,$2); }
 	;
 animation_definition:
-	animation_type_slides IDENTIFIER SEMICOLON												{ $$ = AnimationDefinitionPairSemanticAction(currentCompilerState(), $2, $1); }
+	animation_type_slides IDENTIFIER SEMICOLON													{ $$ = AnimationDefinitionPairSemanticAction(currentCompilerState(), $2, $1); }
 	| IDENTIFIER START animation_sequence END SEMICOLON											{ $$ = AnimationDefinitionSequenceSemanticAction(currentCompilerState(),$1, $3, 1); }
 	| IDENTIFIER START animation_sequence END REPEAT INTEGER SEMICOLON							{ $$ = AnimationDefinitionSequenceSemanticAction(currentCompilerState(),$1, $3, $6); }
 	;
