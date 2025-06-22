@@ -1,7 +1,7 @@
 ## Overview
 Pressed is a language for making HTML presentations. A pressed file is divided into three main sections:
 * **Objects**: Reusable object definition, based in CSS properties. The custom types allowed are *Slide*, *Image* and *Textblock*. All objects -including slides- must be defined in this section.
-* **Structure**: Determines the distribution of the elements in each slide, allowing positioning around an anchor. The content of textblocks and images is also set here, using *add-with* blocks. 
+* **Structure**: Determines the distribution of the elements in each slide. The content of textblocks and images is also set here, using *add-with* blocks. 
 * **Animations**: Each slide can have an animation block (*start-then-end*), with the possibility of adding *repeat* to any block. Some of the animations are *appear*, *disappear* and *rotate*.
 
 ## Instrucciones de uso
