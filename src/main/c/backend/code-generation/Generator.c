@@ -158,11 +158,11 @@ static void generateEpilogue() {
     fprintf(_outputFile, "<script src='../src/main/web/js/core.js'></script>\n");
     fprintf(_outputFile, "<script src='../src/main/web/js/animation.js'></script>\n");
     fprintf(_outputFile, "<script src='../src/main/web/js/transition.js'></script>\n");
-    fprintf(_outputFile, "<script src='../src/main/web/js/animation-sequence.js'></script>");
-    fprintf(_outputFile, "<script src='../src/main/web/js/slides.js'></script>");
-    fprintf(_outputFile, "<script src='../src/main/web/js/controller.js'></script>");
-    fprintf(_outputFile, "<script src='../src/main/web/js/ui.js'></script>");
-    fprintf(_outputFile, "<script src='../src/main/web/js/main.js'></script>");
+    fprintf(_outputFile, "<script src='../src/main/web/js/animation-sequence.js'></script>\n");
+    fprintf(_outputFile, "<script src='../src/main/web/js/slides.js'></script>\n");
+    fprintf(_outputFile, "<script src='../src/main/web/js/controller.js'></script>\n");
+    fprintf(_outputFile, "<script src='../src/main/web/js/ui.js'></script>\n");
+    fprintf(_outputFile, "<script src='../src/main/web/js/main.js'></script>\n");
     fprintf(_outputFile, "</body>\n");
     fprintf(_outputFile, "</html>\n");
 }
@@ -324,10 +324,10 @@ static void generateItem(SymbolTableItem *object, char *identifier, char *animat
         if (animations && orders) {
             fprintf(
                 _outputFile,
-                "<img src='%s' class='slide-image %s' data-animation='%s' data-anim-order='%s'>",
+                "<img src='%s' class='slide-image %s' data-animation='%s' data-anim-order='%s'>\n",
                 object->string, identifier, animations, orders);
         } else {
-            fprintf(_outputFile, "<img src='%s' class='slide-image %s'>", object->string,
+            fprintf(_outputFile, "<img src='%s' class='slide-image %s'>\n", object->string,
                     identifier);
         }
         break;
@@ -335,10 +335,10 @@ static void generateItem(SymbolTableItem *object, char *identifier, char *animat
     case OBJ_TEXTBLOCK:
         if (animations && orders) {
             fprintf(_outputFile,
-                    "<div class='%s' data-animation='%s' data-anim-order='%s'>%s</div>", identifier,
+                    "<div class='%s' data-animation='%s' data-anim-order='%s'>%s</div>\n", identifier,
                     animations, orders, (object->string == NULL) ? "" : object->string);
         } else {
-            fprintf(_outputFile, "<div class='%s'>%s</div>", identifier,
+            fprintf(_outputFile, "<div class='%s'>%s</div>\n", identifier,
                     (object->string == NULL) ? "" : object->string);
         }
         break;

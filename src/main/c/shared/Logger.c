@@ -82,7 +82,7 @@ Logger * createLogger(char * name) {
 	return logger;
 }
 
-Logger * createLoggerLevelSpecified(char * name, LoggingLevel loggingLevel){
+Logger * createLoggerLevelSpecified(char * name, LoggingLevel loggingLevel) {
 	Logger * logger = calloc(1, sizeof(Logger));
 	logger->loggingLevel = loggingLevel;
 	logger->name = calloc(1 + strlen(name), sizeof(char));
