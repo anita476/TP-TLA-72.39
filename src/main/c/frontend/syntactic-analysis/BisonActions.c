@@ -2,16 +2,14 @@
 
 /* MODULE INTERNAL STATE */
 
-static Logger * _logger = NULL;
+static Logger *_logger = NULL;
 
-void initializeBisonActionsModule() {
-	_logger = createLogger("BisonActions");
-}
+void initializeBisonActionsModule() { _logger = createLogger("BisonActions"); }
 
 void shutdownBisonActionsModule() {
-	if (_logger != NULL) {
-		destroyLogger(_logger);
-	}
+    if (_logger != NULL) {
+        destroyLogger(_logger);
+    }
 }
 
 /** IMPORTED FUNCTIONS */
@@ -20,68 +18,361 @@ extern unsigned int flexCurrentContext(void);
 
 /* PRIVATE FUNCTIONS */
 
-static void _logSyntacticAnalyzerAction(const char * functionName);
+static void _logSyntacticAnalyzerAction(const char *functionName);
 
 /**
  * Logs a syntactic-analyzer action in DEBUGGING level.
  */
-static void _logSyntacticAnalyzerAction(const char * functionName) {
-	logDebugging(_logger, "%s", functionName);
+static void _logSyntacticAnalyzerAction(const char *functionName) {
+    logDebugging(_logger, "%s", functionName);
 }
 
 /* PUBLIC FUNCTIONS */
+Program *ProgramSemanticAction(CompilerState *compilerState, char *presName,
+                               ObjectDefinition *objectList, StructureDefinition *structureList,
+                               AnimationDefinition *animationList) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    Program *program = calloc(1, sizeof(Program));
+    program->object_definitions = objectList;
+    program->structure_definitions = structureList;
+    program->animation_definitions = animationList;
+    program->presentation_identifier = presName;
+    compilerState->abstractSyntaxtTree = program;
+    if (0 < flexCurrentContext()) {
+        logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
+        compilerState->succeed = false;
+    } else if (compilerState->errorCount > 0) {
+        logError(_logger, "There are %d semantic errors in the syntactic analysis phase.",
+                 compilerState->errorCount);
+        compilerState->succeed = false;
 
-Constant * IntegerConstantSemanticAction(const int value) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Constant * constant = calloc(1, sizeof(Constant));
-	constant->value = value;
-	return constant;
+    } else {
+        logDebugging(_logger, "Syntactic analysis phase is successful.");
+        compilerState->succeed = true;
+    }
+    return program;
 }
 
-Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = calloc(1, sizeof(Expression));
-	expression->leftExpression = leftExpression;
-	expression->rightExpression = rightExpression;
-	expression->type = type;
-	return expression;
+ObjectDefinition *ObjectListSemanticAction(ObjectDefinition *objectList,
+                                           ObjectDefinition *newObject) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    if (objectList != NULL) {
+        newObject->next = objectList;
+    }
+    return newObject;
 }
 
-Expression * FactorExpressionSemanticAction(Factor * factor) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Expression * expression = calloc(1, sizeof(Expression));
-	expression->factor = factor;
-	expression->type = FACTOR;
-	return expression;
+ObjectDefinition *ObjectDefinitionSemanticAction(CompilerState *CompilerState, ObjectType type,
+                                                 char *identifier, CssProperty *cssProperties) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+
+    /* SEMANTICS CHECK */
+    if (CompilerState->symbolTable != NULL &&
+        symbolExists(CompilerState->symbolTable, identifier)) {
+        logError(_logger, "Duplicate object with identifier '%s' already exists.", identifier);
+        CompilerState->errorCount++;
+    } else {
+        addSymbol(CompilerState->symbolTable, identifier, type);
+    }
+
+    ObjectDefinition *object = calloc(1, sizeof(ObjectDefinition));
+    object->type = type;
+    object->identifier = identifier;
+    object->css_properties = cssProperties;
+    object->next = NULL;
+
+    // Always set the properties field in the symbol table item
+    SymbolTableItem *item = getSymbol(CompilerState->symbolTable, identifier);
+    if (item != NULL) {
+        item->properties = cssProperties; // This can be NULL, which is fine
+    }
+    return object;
 }
 
-Factor * ConstantFactorSemanticAction(Constant * constant) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Factor * factor = calloc(1, sizeof(Factor));
-	factor->constant = constant;
-	factor->type = CONSTANT;
-	return factor;
+CssProperty *PropertyListSemanticAction(CssProperty *propertyList, CssProperty *newProperty) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    if (propertyList != NULL) {
+        newProperty->next = propertyList;
+    }
+    return newProperty;
 }
 
-Factor * ExpressionFactorSemanticAction(Expression * expression) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Factor * factor = calloc(1, sizeof(Factor));
-	factor->expression = expression;
-	factor->type = EXPRESSION;
-	return factor;
+CssProperty *PropertySemanticAction(char *propertyName, char *value) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    CssProperty *property = calloc(1, sizeof(CssProperty));
+    property->value_type = PROP_VAL_IDENTIFIER;
+    property->property_name = propertyName;
+    property->value.identifier = value;
+    property->next = NULL;
+    return property;
 }
 
-Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression) {
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Program * program = calloc(1, sizeof(Program));
-	program->expression = expression;
-	compilerState->abstractSyntaxtTree = program;
-	if (0 < flexCurrentContext()) {
-		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
-		compilerState->succeed = false;
-	}
-	else {
-		compilerState->succeed = true;
-	}
-	return program;
+CssProperty *PropertyNumberSemanticAction(char *propertyName, int value) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    CssProperty *property = calloc(1, sizeof(CssProperty));
+    property->value_type = PROP_VAL_INTEGER;
+    property->property_name = propertyName;
+    property->value.integer = value;
+    property->next = NULL;
+    return property;
+}
+CssProperty *PropertyDecimalSemanticAction(char *propertyName, float value) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    CssProperty *property = calloc(1, sizeof(CssProperty));
+    property->value_type = PROP_VAL_DECIMAL;
+    property->property_name = propertyName;
+    property->value.decimal = value;
+    property->next = NULL;
+    return property;
+}
+StructureDefinition *StructureListSemanticAction(StructureDefinition *structureList,
+                                                 StructureDefinition *newStructure) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    if (structureList != NULL) {
+        newStructure->next = structureList;
+    }
+    return newStructure;
+}
+
+StructureDefinition *StructureDefinitionSemanticAction(CompilerState *CompilerState,
+                                                       char *identifier, SlideContent *content,
+                                                       SlideContent *positionsContent) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    /* SEMANTIC CHECKS */
+    if (!symbolExists(CompilerState->symbolTable, identifier)) {
+        logError(_logger, "Object with identifier '%s' does not exist.", identifier);
+        CompilerState->errorCount++;
+    } else if (getSymbolType(CompilerState->symbolTable, identifier) != OBJ_SLIDE) {
+        logError(_logger, "Object with identifier '%s' is not a slide.", identifier);
+        CompilerState->errorCount++;
+    }
+    /**
+     * Counter incremented AFTER the counter assignment in slide beecause the parser is ascending
+     * */
+    SymbolTableItem *item = getSymbol(CompilerState->symbolTable, identifier);
+    if (item != NULL && item->currentSlide == (-1)) {
+        item->currentSlide = CompilerState->slideCounter;
+        // Check that all position directives are defined in the slide structure
+        // Its costly to parse the list but we are avoiding unnecesary checks in code generation
+        // stage later
+        for (SlideContent *content = positionsContent; content != NULL; content = content->next) {
+            SymbolTableItem *item1 =
+                getSymbol(CompilerState->symbolTable, content->position_items.child);
+            SymbolTableItem *item2 =
+                getSymbol(CompilerState->symbolTable, content->position_items.parent);
+            if (item1 == NULL || item2 == NULL) {
+                logError(_logger,
+                         "Positioning not allowed because one or more objects do not exist");
+                CompilerState->errorCount++;
+            } else {
+                if (item1->appearsIn->len <= item->currentSlide ||
+                    g_array_index(item1->appearsIn, int, item->currentSlide) !=
+                        item->currentSlide) {
+                    logError(_logger,
+                             "Invalid positioning of item %s, item is not present in slide %d",
+                             content->position_items.child, item->currentSlide);
+                    CompilerState->errorCount++;
+                }
+                if (item2->appearsIn->len <= item->currentSlide ||
+                    g_array_index(item2->appearsIn, int, item->currentSlide) !=
+                        item->currentSlide) {
+                    logError(_logger,
+                             "Invalid positioning of item %s, item is not present in slide %d",
+                             content->position_items.parent, item->currentSlide);
+                    CompilerState->errorCount++;
+                }
+            }
+        }
+    }
+    CompilerState->slideCounter++;
+
+    StructureDefinition *structure = calloc(1, sizeof(StructureDefinition));
+    structure->identifier = identifier;
+    structure->content = content;
+    structure->positions = positionsContent;
+    structure->next = NULL;
+    return structure;
+}
+
+SlideContent *SlideContentListSemanticAction(SlideContent *slideContentList,
+                                             SlideContent *newSlideContent) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    if (slideContentList != NULL) {
+        newSlideContent->next = slideContentList;
+    }
+    return newSlideContent;
+}
+
+SlideContent *SlidePositionContentListSemanticAction(SlideContent *slideContentList,
+                                                     SlideContent *newSlideContent) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    if (slideContentList != NULL) {
+        newSlideContent->next = slideContentList;
+    }
+    return newSlideContent;
+}
+
+SlideContent *AdditionSlideContent(CompilerState *CompilerState, char *identifier, char *content) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    /* SEMANTIC CHECK */
+    SymbolTableItem *item = getSymbol(CompilerState->symbolTable, identifier);
+    if (item == NULL) {
+        logError(_logger, "Object with identifier '%s' does not exist.", identifier);
+        CompilerState->errorCount++;
+    } else {
+        SymbolTableItem *item = getSymbol(CompilerState->symbolTable, identifier);
+        // Check if the item has already been added to this specific slide
+        if (item->appearsIn->len > CompilerState->slideCounter &&
+            g_array_index(item->appearsIn, int, CompilerState->slideCounter) ==
+                CompilerState->slideCounter) {
+            logError(_logger, "Repeated object %s in a single slide", identifier);
+            CompilerState->errorCount++;
+        } else {
+            g_array_insert_val(item->appearsIn, CompilerState->slideCounter,
+                               CompilerState->slideCounter);
+        }
+    }
+    SlideContent *slideContent = calloc(1, sizeof(SlideContent));
+    slideContent->type = SLIDE_CONTENT_ADD;
+    slideContent->add.identifier = identifier;
+    slideContent->add.with_string = content;
+    item->string = content;
+    slideContent->next = NULL;
+    return slideContent;
+}
+
+SlideContent *RelativeDoublePositionSlideContent(CompilerState *compilerState, char *relative,
+                                                 char *fixed, Position position) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+
+    /* SEMANTIC CHECKS */
+    SymbolTableItem *relativeItem = getSymbol(compilerState->symbolTable, relative);
+    SymbolTableItem *fixedItem = getSymbol(compilerState->symbolTable, fixed);
+    if (relativeItem == NULL || relativeItem->type == OBJ_SLIDE) {
+        logError(_logger, "Object with identifier '%s' does not exist or is a slide", relative);
+        compilerState->errorCount++;
+    }
+    if (fixedItem == NULL || fixedItem->type == OBJ_SLIDE) {
+        logError(_logger, "Object with identifier '%s' does not exist or is a slide", fixed);
+        compilerState->errorCount++;
+    }
+    /* In domain specific the rest of the semantic checks to see if positioning is valid */
+
+    SlideContent *slideContent = calloc(1, sizeof(SlideContent));
+    slideContent->type = SLIDE_CONTENT_DOUBLE_POS;
+    slideContent->position_items.child = relative;
+    slideContent->position_items.pos = position;
+    slideContent->position_items.parent = fixed;
+    slideContent->next = NULL;
+    return slideContent;
+}
+
+AnimationDefinition *AnimationListSemanticAction(AnimationDefinition *animationList,
+                                                 AnimationDefinition *newAnimation) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    if (animationList != NULL) {
+        newAnimation->next = animationList;
+    }
+    return newAnimation;
+}
+
+AnimationDefinition *AnimationDefinitionSemanticAction(char *identifier, AnimationType type) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    AnimationDefinition *animation = calloc(1, sizeof(AnimationDefinition));
+    animation->kind = ANIM_DEF_SINGLE;
+    animation->single.identifier = identifier;
+    animation->single.type = type;
+    return animation;
+}
+
+AnimationDefinition *AnimationDefinitionSequenceSemanticAction(CompilerState *compilerState,
+                                                               char *identifier,
+                                                               AnimationStep *steps, int repeat) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+
+    /* SEMANTIC CHECKS */
+    SymbolTableItem *slideItem = getSymbol(compilerState->symbolTable, identifier);
+    if (slideItem == NULL || slideItem->type != OBJ_SLIDE) {
+        logError(_logger, "Object with identifier '%s' does not exist or is not a slide.",
+                 identifier);
+        compilerState->errorCount++;
+    }
+
+    if (steps != NULL && slideItem != NULL) {
+        /* If item is not a slide or doesnt exist we cant check this because theres no slide to
+         * compare it to */
+        for (AnimationStep *step = steps; step != NULL; step = step->next) {
+            SymbolTableItem *stepItem = getSymbol(compilerState->symbolTable, step->identifier);
+
+            gboolean error = FALSE;
+            if (stepItem == NULL) {
+                error = TRUE;
+            } else {
+                // Safely check if the object appears in the slide using your sparse array logic
+                if (!(stepItem->appearsIn->len > slideItem->currentSlide &&
+                      g_array_index(stepItem->appearsIn, int, slideItem->currentSlide) ==
+                          slideItem->currentSlide)) {
+                    error = TRUE;
+                }
+            }
+            if (error) {
+                logError(_logger,
+                         "Object with identifier '%s' does not exist or is not part of slide %d.",
+                         step->identifier, slideItem->currentSlide);
+                compilerState->errorCount++;
+            }
+        }
+    }
+
+    AnimationDefinition *animation = calloc(1, sizeof(AnimationDefinition));
+    animation->kind = ANIM_DEF_SEQUENCE;
+    animation->sequence.identifier = identifier;
+    animation->sequence.steps = steps;
+    animation->sequence.repeat_count = repeat;
+    return animation;
+}
+
+AnimationDefinition *AnimationDefinitionPairSemanticAction(CompilerState *CompilerState,
+                                                           char *identifier1, AnimationType type) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    /* SEMANTIC CHECKS */
+    SymbolTableItem *slideItem1 = getSymbol(CompilerState->symbolTable, identifier1);
+    if (slideItem1 == NULL || slideItem1->type != OBJ_SLIDE) {
+        logError(_logger, "Object with identifier '%s' does not exist or is not a slide.",
+                 identifier1);
+        CompilerState->errorCount++;
+    }
+    AnimationDefinition *animation = calloc(1, sizeof(AnimationDefinition));
+    animation->kind = ANIM_DEF_PAIR;
+    animation->pair.identifier1 = identifier1;
+    animation->pair.type = type;
+    return animation;
+}
+
+AnimationStep *AnimationSequenceSemanticAction(AnimationStep *steps, AnimationStep *new) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    if (steps != NULL) {
+        new->next = steps;
+    }
+    return new;
+}
+
+AnimationStep *AnimationStepSemanticAction(CompilerState *CompilerState, char *identifier,
+                                           AnimationType type) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    /* SEMANTIC  CHECKS */
+    SymbolTableItem *item = getSymbol(CompilerState->symbolTable, identifier);
+    if (item == NULL) {
+        logError(_logger, "Object with identifier '%s' does not exist.", identifier);
+        CompilerState->errorCount++;
+    } else if (item->type == OBJ_SLIDE) {
+        logError(_logger, "Object with identifier '%s' is a slide!!", identifier);
+        CompilerState->errorCount++;
+    }
+
+    AnimationStep *step = calloc(1, sizeof(AnimationStep));
+    step->identifier = identifier;
+    step->type = type;
+    step->next = NULL;
+    return step;
 }

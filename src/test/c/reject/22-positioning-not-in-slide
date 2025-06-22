@@ -1,0 +1,14 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+        Textblock heading1 { }
+        Textblock heading2 { }
+    }   
+
+    Structure {
+        slide1 { 
+            heading2 below heading1;
+        }
+    }
+}

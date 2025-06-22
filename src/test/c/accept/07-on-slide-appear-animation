@@ -1,0 +1,17 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+        Slide slide2 { }
+    }   
+
+    Structure {
+        slide1 { }
+        slide2 { }
+    }
+
+    Animations {
+        fade into slide2;
+    }
+
+}

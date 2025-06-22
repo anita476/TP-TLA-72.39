@@ -1,3 +1,19 @@
+## Overview
+Pressed is a language for making HTML presentations. A pressed file is divided into three main sections:
+* **Objects**: Reusable object definition, based in CSS properties. The custom types allowed are *Slide*, *Image* and *Textblock*. All objects -including slides- must be defined in this section.
+* **Structure**: Determines the distribution of the elements in each slide, allowing positioning around an anchor. The content of textblocks and images is also set here, using *add-with* blocks. 
+* **Animations**: Each slide can have an animation block (*start-then-end*), with the possibility of adding *repeat* to any block. Some of the animations are *appear*, *disappear* and *rotate*.
+
+## Aclaraciones
+Algunas cosas a tener en cuenta para esta segunda entrega del trabajo práctico:
+* Algunos de los tests propuestos en la primera entrega fueron dejados de lado, ya que requerían de validaciones a desarrollar en el backend.
+* Dependiendo de cuestiones varias de desarrollo, se evaluará agregar nuevas animaciones para la siguiente etapa del trabajo, además de animaciones entre diapositivas (*fade-into* y similar).
+
+## Librerías utilizadas
+* glib.h: Utilizada por su implementación de HashTables y arreglos. 
+
+# Original README
+
 [![✗](https://img.shields.io/badge/Release-v1.1.0-ffb600.svg?style=for-the-badge)](https://github.com/agustin-golmar/Flex-Bison-Compiler/releases)
 
 [![✗](https://github.com/agustin-golmar/Flex-Bison-Compiler/actions/workflows/pipeline.yaml/badge.svg?branch=production)](https://github.com/agustin-golmar/Flex-Bison-Compiler/actions/workflows/pipeline.yaml)

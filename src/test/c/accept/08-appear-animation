@@ -1,0 +1,20 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+        Textblock heading { }
+    }   
+
+    Structure {
+        slide1 { 
+            add heading with "hola";
+        }
+    }
+
+    Animations {
+        slide1 start 
+        then heading appear 
+        end; 
+    }
+
+}

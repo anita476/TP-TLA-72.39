@@ -1,0 +1,14 @@
+Presentation pres {
+
+	Objects {
+		Slide slide1 { }
+		Textblock heading {}
+
+	}   
+
+	Structure {
+		slide1 { 
+			add noheading with "hola";
+		}
+	}
+}

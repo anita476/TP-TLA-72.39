@@ -1,0 +1,15 @@
+Presentation presentation {
+    
+    Objects {
+        slide1 {
+            property : property
+        }
+    }   
+
+    Structure {
+        slide1 { 
+
+        }
+    }
+
+}

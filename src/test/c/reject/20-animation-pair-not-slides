@@ -1,0 +1,18 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+        Slide slide2 { }
+        Textblock imNotASlide {}
+    }   
+
+    Structure {
+        slide1 { }
+        slide2 { }
+    }
+
+    Animations {
+        slide1 fade into imNotASlide;
+    }
+
+}

@@ -1,0 +1,15 @@
+Presentation presentation {
+    
+    Objects {
+        Textblock heading  {
+            property:12!!!;
+        }
+    }   
+
+    Structure {
+        slide1 { 
+            add heading with "hola";
+        }
+    }
+
+}

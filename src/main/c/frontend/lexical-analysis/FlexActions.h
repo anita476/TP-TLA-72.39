@@ -11,24 +11,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/** Initialize module's internal state. */
+/* Initialize module's internal state. */
 void initializeFlexActionsModule();
 
-/** Shutdown module's internal state. */
+/* Shutdown module's internal state. */
 void shutdownFlexActionsModule();
 
-/**
- * Flex lexeme processing actions.
- */
-
+/* Flex lexeme processing actions. */
 void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
-Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
-Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token KeywordLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
+Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token DecimalLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token IdentifierLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token PropertyLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
+Token SemiColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
+Token OpenBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token CloseBraceLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
+/* Error */
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 #endif

@@ -1,0 +1,25 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+        Textblock heading1 { }
+        Textblock heading2 { }
+        Textblock heading3 {}
+        Textblock heading4 {}
+        Textblock heading5 {}
+        Textblock heading6 {}
+    }   
+
+    Structure {
+        slide1 { 
+            add heading1 with "Hello!";
+            add heading2 with "Hiii 2";
+            add heading3 with "Hiii 3";
+            add heading4 with "Hiii 4";
+            add heading5 with "Hiii 5";
+            add heading6 with "Hiii 6";
+            heading3 below heading2;
+            heading1 above left heading2;
+        }
+    }
+}

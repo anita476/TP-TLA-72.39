@@ -1,5 +1,9 @@
 #include "Logger.h"
 
+static LoggingLevel GLOBAL_LOGGING_LEVEL = -1;  // -1 means "not set"
+static boolean USE_GLOBAL_LOGGING_LEVEL = false;
+
+
 /* PRIVATE FUNCTIONS */
 
 static void _log(const Logger * logger, const LoggingLevel loggingLevel, const char * const format, va_list arguments);
@@ -11,7 +15,8 @@ static const char * _toContextString(const LoggingLevel loggingLevel);
  * Logs a new message at the specified level, using a format string.
  */
 static void _log(const Logger * logger, const LoggingLevel loggingLevel, const char * const format, va_list arguments) {
-	if (logger->loggingLevel <= loggingLevel) {
+	LoggingLevel effectiveLevel = USE_GLOBAL_LOGGING_LEVEL ? GLOBAL_LOGGING_LEVEL : logger->loggingLevel;
+	if (effectiveLevel <= loggingLevel) {
 		const char * context = _toContextString(loggingLevel);
 		char * effectiveFormat = concatenate(6, context, "[", logger->name, "] ", format, "\n");
 		if (ERROR <= loggingLevel) {
@@ -70,10 +75,24 @@ static const char * _toContextString(const LoggingLevel loggingLevel) {
 
 Logger * createLogger(char * name) {
 	Logger * logger = calloc(1, sizeof(Logger));
-	logger->loggingLevel = _loggingLevelFromString(getStringOrDefault("LOGGING_LEVEL", "INFORMATION"));
+	/* changed to log it all */
+	logger->loggingLevel = _loggingLevelFromString(getStringOrDefault("LOGGING_LEVEL", "ALL"));
 	logger->name = calloc(1 + strlen(name), sizeof(char));
 	strcpy(logger->name, name);
 	return logger;
+}
+
+Logger * createLoggerLevelSpecified(char * name, LoggingLevel loggingLevel){
+	Logger * logger = calloc(1, sizeof(Logger));
+	logger->loggingLevel = loggingLevel;
+	logger->name = calloc(1 + strlen(name), sizeof(char));
+	strcpy(logger->name, name);
+	return logger;
+}
+
+void setGlobalLoggingLevel(LoggingLevel level) {
+	GLOBAL_LOGGING_LEVEL = level;
+	USE_GLOBAL_LOGGING_LEVEL = true;
 }
 
 void destroyLogger(Logger * logger) {

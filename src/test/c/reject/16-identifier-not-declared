@@ -1,0 +1,16 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+        Image image {
+            width:12px;
+        }
+    }   
+
+    Structure {
+        missingSlide { 
+            add image with "local/image/path";
+        }
+    }
+
+}

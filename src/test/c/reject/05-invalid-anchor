@@ -1,0 +1,18 @@
+Presentation presentation {
+    
+    Objects {
+        Slide slide1 { }
+        Textblock heading1 { }
+        Textblock heading2 { }
+    }   
+
+    Structure {
+        slide1 { 
+            add heading1 with "hola";
+            add heading2 with "chau";
+            anchor there;
+            heading2 below heading1;
+        }
+    }
+
+}
