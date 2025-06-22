@@ -40,7 +40,7 @@ typedef struct Slide {
     int maxRow;
     int minCol;
     int maxCol;
-    GHashTable *symbolToObject; // key: identifier, value: PositionedObject*
+    GHashTable *symbolToObject; // value: PositionedObject*
     struct Slide *next;
 } Slide;
 

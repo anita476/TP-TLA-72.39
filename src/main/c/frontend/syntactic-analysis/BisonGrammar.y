@@ -218,7 +218,7 @@ animation_definition:
 	;
 animation_sequence:
 	%empty 																						{ $$ = NULL; }											
-	| animation_sequence animation_step  														{ $$ = AnimationSequenceSemanticAction($1, $2); }	
+	|  animation_step  	animation_sequence														{ $$ = AnimationSequenceSemanticAction($2, $1); }	
 	;
 animation_step:
 	THEN IDENTIFIER animation_type							               						{ $$ = AnimationStepSemanticAction(currentCompilerState(),$2, $3); }		

@@ -212,7 +212,8 @@ SlideContent *SlidePositionContentListSemanticAction(SlideContent *slideContentL
 SlideContent *AdditionSlideContent(CompilerState *CompilerState, char *identifier, char *content) {
     _logSyntacticAnalyzerAction(__FUNCTION__);
     /* SEMANTIC CHECK */
-    if (!symbolExists(CompilerState->symbolTable, identifier)) {
+    SymbolTableItem *item = getSymbol(CompilerState->symbolTable, identifier);
+    if (item == NULL) {
         logError(_logger, "Object with identifier '%s' does not exist.", identifier);
         CompilerState->errorCount++;
     } else {
@@ -232,6 +233,7 @@ SlideContent *AdditionSlideContent(CompilerState *CompilerState, char *identifie
     slideContent->type = SLIDE_CONTENT_ADD;
     slideContent->add.identifier = identifier;
     slideContent->add.with_string = content;
+    item->string = content;
     slideContent->next = NULL;
     return slideContent;
 }

@@ -21,6 +21,7 @@
 
 typedef struct {
     ObjectType type; // Type of the symbol
+    char *string;    // owned by ast, for imgs and texblocks
     int currentSlide;
     GArray *appearsIn; /* list of slides where it appears ( for semantics in animation for
                           animations) */

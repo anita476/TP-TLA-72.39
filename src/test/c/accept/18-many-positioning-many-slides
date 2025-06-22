@@ -1,18 +1,18 @@
 Presentation manyPositioningManySlides {
-    
+
     Objects {
-        Slide slide1 { }
+        Slide slide1 {}
         Slide slide2 {}
-        Textblock heading1 { }
-        Textblock heading2 { }
+        Textblock heading1 {}
+        Textblock heading2 {}
         Textblock heading3 {}
         Textblock heading4 {}
         Textblock heading5 {}
         Textblock heading6 {}
-    }   
+    }
 
     Structure {
-        slide1 { 
+        slide1 {
             add heading1 with "Hello!";
             add heading2 with "Hiii 2";
             add heading3 with "Hiii 3";
@@ -33,7 +33,9 @@ Presentation manyPositioningManySlides {
             heading1 above left heading2;
         }
     }
-     Animations {
+    Animations {
         jump into slide2;
+        slide1 start then heading1 appear then heading2 disappear then heading1 disappear end
+            repeat 10;
     }
 }

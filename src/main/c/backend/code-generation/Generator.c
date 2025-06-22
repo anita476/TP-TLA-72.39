@@ -1,4 +1,5 @@
 #include "Generator.h"
+#include <stdlib.h>
 #include <sys/stat.h>
 
 /* MODULE INTERNAL STATE */
@@ -19,9 +20,13 @@ void shutdownGeneratorModule() {
 static void generatePrologue(char *presName);
 static void generateEpilogue();
 
-static void generateSlide(Slide *slide);
+static void generateSlide(Slide *slide, AnimationDefinition *sequence, SymbolTable *symbolTable);
 static void generateSlides(CompilerState *compilerState);
+static void generateItem(SymbolTableItem *object, char *identifier, char *animations, char *orders);
 static AnimationType findAnimationTransition(Slide *slide, Program *program);
+static AnimationDefinition *findSlideAnimationSequence(Slide *slide, Program *program);
+static char *findObjAnimSteps(char *objIdentifier, AnimationDefinition *animationSeq);
+static char *findObjAnimOrders(char *objIdentifier, AnimationDefinition *animationSeq);
 
 /** PUBLIC FUNCTIONS */
 void generate(CompilerState *compilerState) {
@@ -48,27 +53,40 @@ void generate(CompilerState *compilerState) {
 }
 
 /* Private func definitions */
-void generateSlide(Slide *slide) {
-    fprintf(_outputFile, "<h2>Slide: %s</h2>\n", slide->identifier);
+void generateSlide(Slide *slide, AnimationDefinition *sequence, SymbolTable *symbolTable) {
+    // fprintf(_outputFile, "<h2>Slide: %s</h2>\n", slide->identifier);
     for (int i = slide->maxRow; i >= slide->minRow; i--) {
         Row *row = g_hash_table_lookup(slide->rows, int_key(i));
         if (row) {
             fprintf(_outputFile, "<div class='row'>\n");
+
             logDebugging(_logger, "Min column: %d, Max column: %d for row %d in slide %s",
                          row->minCol, row->maxCol, i, slide->identifier);
+
             for (int j = row->minCol; j <= row->maxCol; j++) {
                 logDebugging(_logger, "Printing column %d for row %d in slide %s", j, i,
                              slide->identifier);
                 PositionedObject *obj = g_hash_table_lookup(row->columns, int_key(j));
                 if (obj) {
-                    fprintf(_outputFile, "<span class='object'>%s</span>\n", obj->identifier);
+                    // TODO do all in same function and return a struct
+                    char *animations = findObjAnimSteps(obj->identifier, sequence);
+                    char *orders = findObjAnimOrders(obj->identifier, sequence);
+
+                    generateItem(getSymbol(symbolTable, obj->identifier), obj->identifier,
+                                 animations, orders);
+                    if (animations) {
+                        free(animations);
+                    }
+                    if (orders) {
+                        free(orders);
+                    }
                 } else {
                     logWarning(_logger, "Column %d not found in row %d of slide %s", j, i,
                                slide->identifier);
                 }
             }
+            fprintf(_outputFile, "</div>\n");
         }
-        fprintf(_outputFile, "</div>\n");
     }
 }
 
@@ -79,11 +97,11 @@ static void generateSlides(CompilerState *compilerState) {
         logError(_logger, "Cannot open output file for writing");
         return;
     }
-    fprintf(_outputFile, "<h1>Slides Overview</h1>\n");
     // iterate through the slides and print them (to file)
     int i = 0;
     for (Slide *slide = compilerState->slides->head; slide != NULL; slide = slide->next, i++) {
         AnimationType anim = findAnimationTransition(slide, program);
+        AnimationDefinition *animSeq = findSlideAnimationSequence(slide, program);
         char *animS;
         switch (anim) {
         case ANIM_FADE_INTO:
@@ -96,8 +114,7 @@ static void generateSlides(CompilerState *compilerState) {
             animS = "";
             break;
         }
-        logInformation(_logger, "Slide %s with animation type %s %d", slide->identifier, animS,
-                       anim);
+        logDebugging(_logger, "Slide %s with animation type %s %d", slide->identifier, animS, anim);
 
         if (i != 0) {
             fprintf(_outputFile, "<div class='slide %s' %s data-repeats='1'>\n", slide->identifier,
@@ -107,10 +124,9 @@ static void generateSlides(CompilerState *compilerState) {
             fprintf(_outputFile, "<div class='slide %s active' %s data-repeats='1'>\n",
                     slide->identifier, animS);
         }
-        generateSlide(slide);
+        generateSlide(slide, animSeq, compilerState->symbolTable);
         fprintf(_outputFile, "</div>\n");
     }
-    fprintf(_outputFile, "<p>End of slides overview.</p>\n");
     if (!success) {
         logCritical(_logger, "There were errors during the generation process.");
     }
@@ -152,9 +168,167 @@ static AnimationType findAnimationTransition(Slide *slide, Program *program) {
     for (AnimationDefinition *animations = program->animation_definitions; animations != NULL;
          animations = animations->next) {
         if (animations->kind == ANIM_DEF_PAIR &&
-            (strcasecmp(animations->pair.identifier1, slide->identifier))) {
+            (strcasecmp(animations->pair.identifier1, slide->identifier) == 0)) {
             return animations->pair.type;
         }
     }
     return ANIM_NO_ANIM;
+}
+
+/* This gets the FIRST animation sequence found for that slide.
+** But because the list is constructed backwards, that is the LAST sequence declared for that slide
+** therefore only the last sequence is taken into account (the rest are ignored)
+*/
+static AnimationDefinition *findSlideAnimationSequence(Slide *slide, Program *program) {
+    for (AnimationDefinition *animations = program->animation_definitions; animations != NULL;
+         animations = animations->next) {
+        if (animations->kind == ANIM_DEF_SEQUENCE &&
+            (strcasecmp(animations->sequence.identifier, slide->identifier) == 0)) {
+            logDebugging(_logger, "Animation found for slide %s, it repeats %d times",
+                         slide->identifier, animations->sequence.repeat_count);
+            return animations;
+        }
+    }
+    return NULL;
+}
+
+// Given a sequence, for each step where the object appears as identifier, concat to a string the
+// animation type (case appear, case dissapear and case rotate)
+// builds dinamically -> must free after
+
+static char *findObjAnimSteps(char *objIdentifier, AnimationDefinition *animationSeq) {
+    if (!animationSeq || animationSeq->kind != ANIM_DEF_SEQUENCE || !objIdentifier) {
+        return NULL;
+    }
+    char *result = malloc(1);
+    if (!result) {
+        logError(_logger, "Memory allocation failed");
+        success = FALSE;
+        return NULL;
+    }
+    result[0] = '\0';
+    int currentSize = 1;
+    AnimationStep *step = animationSeq->sequence.steps;
+    int first = 1;
+
+    while (step != NULL) {
+        if (strcasecmp(step->identifier, objIdentifier) == 0) {
+            const char *animType = NULL;
+            int animTypeLen = 0;
+            switch (step->type) {
+            case ANIM_APPEAR:
+                animType = "appear";
+                animTypeLen = 6;
+                break;
+            case ANIM_DISAPPEAR:
+                animType = "disappear";
+                animTypeLen = 9;
+                break;
+            case ANIM_ROTATE:
+                animType = "rotate";
+                animTypeLen = 6;
+                break;
+            default:
+                break;
+            }
+
+            if (animType) {
+                int spaceNeeded = animTypeLen + (first ? 0 : 1);
+                int newSize = currentSize + spaceNeeded;
+
+                char *newResult = realloc(result, newSize);
+                if (!newResult) {
+                    logError(_logger, "Memory reallocation failed ");
+                    free(result);
+                    return NULL;
+                }
+                result = newResult;
+                if (!first) {
+                    strcat(result, " ");
+                }
+                strcat(result, animType);
+                currentSize = newSize;
+                first = 0;
+            }
+        }
+        step = step->next;
+    }
+    if (currentSize == 1) {
+        free(result);
+        return NULL;
+    }
+    return result;
+}
+
+static char *findObjAnimOrders(char *objIdentifier, AnimationDefinition *animationSeq) {
+    if (!animationSeq || animationSeq->kind != ANIM_DEF_SEQUENCE || !objIdentifier) {
+        return NULL;
+    }
+    char *result = malloc(1);
+    if (!result) {
+        logError(_logger, "Memory allocation failed");
+        success = FAILED;
+        return NULL;
+    }
+    result[0] = '\0';
+    int currentSize = 1;
+    AnimationStep *step = animationSeq->sequence.steps;
+    int first = 1;
+    int stepNumber = 1;
+
+    while (step != NULL) {
+        if (strcasecmp(step->identifier, objIdentifier) == 0) {
+            char stepStr[16]; // up to 999999 is enough...
+            snprintf(stepStr, sizeof(stepStr), "%d", stepNumber);
+            int stepStrLen = strlen(stepStr);
+
+            int spaceNeeded = stepStrLen + (first ? 0 : 2); // +2 for comma and space if not first
+            int newSize = currentSize + spaceNeeded;
+
+            char *newResult = realloc(result, newSize);
+            if (!newResult) {
+                logError(_logger, "Memory reallocation failed");
+                free(result);
+                success = FALSE;
+                return NULL;
+            }
+            result = newResult;
+            if (!first) {
+                strcat(result, ", ");
+            }
+            strcat(result, stepStr);
+            currentSize = newSize;
+            first = 0;
+        }
+        step = step->next;
+        stepNumber++;
+    }
+    if (currentSize == 1) {
+        free(result);
+        return NULL;
+    }
+    return result;
+}
+
+/* In many cases we use switches because if/else does not scale and its quite possible other object
+ * types will be included*/
+static void generateItem(SymbolTableItem *object, char *identifier, char *animations,
+                         char *orders) {
+    switch (object->type) {
+    case OBJ_IMAGE:
+        break;
+
+    case OBJ_TEXTBLOCK:
+        if (animations && orders) {
+            fprintf(_outputFile,
+                    "<div class='%s' data-animation='%s' data-anim-order='%s'>%s</div>", identifier,
+                    animations, orders, (object->string == NULL) ? "" : object->string);
+        } else {
+            fprintf(_outputFile, "<div class='%s'>%s</div>", identifier,
+                    (object->string == NULL) ? "" : object->string);
+        }
+        break;
+    default:
+        break;
+    }
 }
