@@ -9,6 +9,9 @@ Algunas cosas a tener en cuenta para esta segunda entrega del trabajo práctico:
 * Algunos de los tests propuestos en la primera entrega fueron dejados de lado, ya que requerían de validaciones a desarrollar en el backend.
 * Dependiendo de cuestiones varias de desarrollo, se evaluará agregar nuevas animaciones para la siguiente etapa del trabajo, además de animaciones entre diapositivas (*fade-into* y similar).
 
+## Librerías utilizadas
+* glib.h: Utilizada por su implementación de HashTables y arreglos. 
+
 # Original README
 
 [![✗](https://img.shields.io/badge/Release-v1.1.0-ffb600.svg?style=for-the-badge)](https://github.com/agustin-golmar/Flex-Bison-Compiler/releases)

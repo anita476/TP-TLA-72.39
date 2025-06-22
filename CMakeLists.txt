@@ -52,11 +52,21 @@ else ()
 
 endif ()
 
+# Find and configure GLib
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
+
+# Include GLib headers and link libraries
+include_directories(${GLIB_INCLUDE_DIRS})
+link_directories(${GLIB_LIBRARY_DIRS})
+add_definitions(${GLIB_CFLAGS_OTHER})
+
 # Defines the entry-point of the application, and the source-codes (*.c extension).
 # The header files (*.h extension), are automatically included from the source-codes.
 add_executable(Compiler
 	src/main/c/backend/code-generation/Generator.c
-	src/main/c/backend/domain-specific/Calculator.c
+	src/main/c/backend/domain-specific/Layout.c
+	src/main/c/backend/domain-specific/Properties.c
 	src/main/c/EntryPoint.c
 	src/main/c/frontend/lexical-analysis/FlexActions.c
 	src/main/c/frontend/lexical-analysis/FlexScanner.c
@@ -68,9 +78,11 @@ add_executable(Compiler
 	src/main/c/shared/Environment.c
 	src/main/c/shared/Logger.c
 	src/main/c/shared/String.c
+	src/main/c/shared/SymbolTable.c
+
 	# Add more *.c files if needed (otherwise, they won't be compiled).
 	# ...
 )
 
 # Link final project and libraries.
-target_link_libraries(Compiler)
+target_link_libraries(Compiler ${GLIB_LIBRARIES})

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentation Slides</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="slides-container">
+        <!-- Slide 1: Welcome -->
+        <div class="slide active" data-repeats="3">
+            <h2 data-animation="appear" data-anim-order="1">Multiple Animations Per Element</h2>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear disappear appear" data-anim-order="2, 4, 6">
+            <p data-animation="appear" data-anim-order="3">Right image appears between left image animations</p>
+            <p data-animation="appear" data-anim-order="5">Left image disappears and reappears</p>
+        </div>
+
+        <!-- Slide 2: Left Anchor -->
+        <div class="slide" data-transition="jump">
+            <h2 data-animation="appear" data-anim-order="1">Left Anchor Example</h2>
+            <p>This slide is anchored to the left side</p>
+            <img src="images/siffrin.jpg" class="slide-image" data-animation="appear" data-anim-order="2">
+            <p data-animation="appear" data-anim-order="3">Elements are aligned to the left side of the slide</p>
+        </div>
+
+        <!-- Slide 3: Right Anchor -->
+        <div class="slide" data-transition="fade">
+            <h2 data-animation="appear" data-anim-order="1">Right Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide is anchored to the right side</p>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements are aligned to the right side of the slide</p>
+        </div>
+
+        <!-- Slide 4: Top Anchor -->
+        <div class="slide" data-transition="jump">
+            <h2 data-animation="appear" data-anim-order="1">Top Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide is anchored to the top</p>
+            <img src="images/siffrin.jpg" class="slide-image" data-animation="appear barrel-roll" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements start from the top of the slide</p>
+        </div>
+
+        <!-- Slide 5: Bottom Anchor -->
+        <div class="slide" data-transition="fade">
+            <h2 data-animation="appear" data-anim-order="1">Bottom Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide is anchored to the bottom</p>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements are positioned at the bottom of the slide</p>
+        </div>
+
+        <!-- Slide 6: Center Anchor -->
+        <div class="slide" data-transition="jump">
+            <h2 data-animation="appear" data-anim-order="1">Center Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This is the default center anchor</p>
+            <img src="images/siffrin.jpg" class="slide-image" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements are centered both horizontally and vertically</p>
+        </div>
+
+        <!-- Slide 7: Top-Left Anchor -->
+        <div class="slide" data-transition="fade">
+            <h2 data-animation="appear" data-anim-order="1">Top-Left Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide is anchored to the top-left corner</p>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements start from the top-left corner</p>
+        </div>
+
+        <!-- Slide 8: Top-Right Anchor -->
+        <div class="slide" data-transition="jump">
+            <h2 data-animation="appear" data-anim-order="1">Top-Right Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide is anchored to the top-right corner</p>
+            <img src="images/siffrin.jpg" class="slide-image" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements start from the top-right corner</p>
+        </div>
+
+        <!-- Slide 9: Bottom-Left Anchor -->
+        <div class="slide" data-transition="fade">
+            <h2 data-animation="appear" data-anim-order="1">Bottom-Left Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide is anchored to the bottom-left corner</p>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements start from the bottom-left corner</p>
+        </div>
+
+        <!-- Slide 10: Bottom-Right Anchor -->
+        <div class="slide" data-transition="jump">
+            <h2 data-animation="appear" data-anim-order="1">Bottom-Right Anchor Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide is anchored to the bottom-right corner</p>
+            <img src="images/siffrin.jpg" class="slide-image" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Elements start from the bottom-right corner</p>
+        </div>
+
+        <!-- Slide 11: Sequential Animations -->
+        <div class="slide" data-transition="jump">
+            <h2 data-animation="appear" data-anim-order="1">Sequential Animations</h2>
+            <p data-animation="appear" data-anim-order="2">Press right arrow to see each animation</p>
+            <img src="images/siffrin.jpg" class="slide-image" data-animation="appear barrel-roll" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Press left arrow to go back</p>
+        </div>
+
+        <!-- Slide 12: Image with Text -->
+        <div class="slide" data-transition="jump">
+            <h2 data-animation="appear" data-anim-order="1">Image with Text</h2>
+            <p data-animation="appear" data-anim-order="2">You can combine images with text descriptions</p>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear barrel-roll" data-anim-order="3">
+        </div>
+
+        <!-- Slide 13: Thank You (No Transition) -->
+        <div class="slide">
+            <h2 data-animation="appear" data-anim-order="1">Thank You!</h2>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear barrel-roll" data-anim-order="2">
+            <p data-animation="appear" data-anim-order="3">Any questions?</p>
+        </div>
+        
+        <!-- Slide 14: No Animations Example -->
+        <div class="slide">
+            <h2>No Animations Example</h2>
+            <p>This slide has no animations</p>
+            <img src="images/siffrin.jpg" class="slide-image">
+            <p>Elements are visible immediately</p>
+        </div>
+        
+        <!-- Slide 15: Repeat Animations Example -->
+        <div class="slide" data-repeats="3">
+            <h2 data-animation="appear" data-anim-order="1">Repeat Animations Example</h2>
+            <p data-animation="appear" data-anim-order="2">This slide will repeat its animations 3 times</p>
+            <img src="images/magnus.png" class="slide-image" data-animation="appear barrel-roll" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">Press right arrow to see animations repeat</p>
+            <p data-animation="appear" data-anim-order="5">Press left arrow to go back through repeats</p>
+        </div>
+
+        <!-- Slide 16: Mixed Animation Order Example -->
+        <div class="slide">
+            <h2 data-animation="appear" data-anim-order="1">Mixed Animation Order</h2>
+            <img src="images/magnus.png" class="slide-image left" data-animation="appear" data-anim-order="2">
+            <img src="images/siffrin.jpg" class="slide-image right" data-animation="appear" data-anim-order="3">
+            <p data-animation="appear" data-anim-order="4">First image appears</p>
+            <p data-animation="appear" data-anim-order="6">Third animation is this text</p>
+            <img src="images/magnus.png" class="slide-image bottom" data-animation="appear" data-anim-order="5">
+        </div>
+
+        <!-- Slide 17: Multiple Animations Per Element -->
+        <div class="slide">
+            <h2 data-animation="appear" data-anim-order="1">Multiple Animations Per Element</h2>
+            <img src="images/magnus.png" class="slide-image left" data-animation="appear disappear appear" data-anim-order="2, 4, 6">
+            <p data-animation="appear" data-anim-order="3">Left image appears first</p>
+            <img src="images/siffrin.jpg" class="slide-image right" data-animation="appear" data-anim-order="5">
+            <p data-animation="appear" data-anim-order="7">Right image appears between left image animations</p>
+            <p data-animation="appear" data-anim-order="8">Left image disappears and reappears</p>
+        </div>
+
+        <!-- Slide 18: Complex Animation Sequence -->
+        <div class="slide">
+            <h2 data-animation="appear" data-anim-order="1">Complex Animation Sequence</h2>
+            <img src="images/magnus.png" class="slide-image left" data-animation="appear disappear" data-anim-order="2, 7">
+            <p data-animation="appear" data-anim-order="3">First: Left image appears</p>
+            <img src="images/siffrin.jpg" class="slide-image right" data-animation="appear" data-anim-order="4">
+            <p data-animation="appear" data-anim-order="5">Second: Right image appears</p>
+            <p data-animation="appear disappear" data-anim-order="6, 9">Third: This text appears then disappears</p>
+            <img src="images/magnus.png" class="slide-image bottom" data-animation="appear barrel-roll" data-anim-order="8, 10">
+            <p data-animation="appear" data-anim-order="11">Fourth: Bottom image appears with barrel roll</p>
+        </div>
+    </div>
+
+    <!-- Slide number indicator -->
+    <div class="slide-number"></div>
+
+    <!-- Core scripts -->
+    <script src="js/core.js"></script>
+    <script src="js/animation.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/animation-sequence.js"></script>
+    <script src="js/slides.js"></script>
+    <script src="js/controller.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

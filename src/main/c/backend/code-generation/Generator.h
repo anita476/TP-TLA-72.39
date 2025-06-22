@@ -5,6 +5,8 @@
 #include "../../shared/CompilerState.h"
 #include "../../shared/Logger.h"
 #include "../../shared/String.h"
+#include "../domain-specific/Layout.h"
+#include "../domain-specific/Properties.h"
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -17,6 +19,6 @@ void shutdownGeneratorModule();
 /**
  * Generates the final output using the current compiler state.
  */
-void generate(CompilerState * compilerState);
+boolean generate(CompilerState *compilerState);
 
 #endif

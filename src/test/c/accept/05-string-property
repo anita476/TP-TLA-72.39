@@ -3,7 +3,8 @@ Presentation presentation {
     Objects {
         Slide slide1 { }
         Textblock heading { 
-            text-color: green;
+            color:rgb(36, 188, 230);
+            font-family : "Arial, sans-serif";
         }
     }   
 

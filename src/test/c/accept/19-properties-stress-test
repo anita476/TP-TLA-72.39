@@ -1,0 +1,65 @@
+Presentation manyPositioningManySlides {
+
+    Objects {
+        Slide slide1 {
+            background-color: aquamarine;
+        }
+        Slide slide2 {
+            background-color: bisque;
+        }
+        Image image { 
+            border-width:5px;
+            border-color:rgb(218, 25, 25);
+            border-style: solid;
+            border-radius: 500px;
+        }
+        Textblock heading1 {
+            background-color: rgb(36, 188, 230);
+            font-size: 50px;
+        }
+        Textblock heading2 {
+                        background-color: rgb(177, 157, 45);
+
+        }
+        Textblock heading3 {
+                        background-color: rgb(120, 24, 56);
+
+        }
+        Textblock heading4 {            background-color: rgb(22, 157, 31);
+}
+        Textblock heading5 {            background-color: rgb(74, 26, 90);
+}
+        Textblock heading6 {            background-color: rgb(28, 38, 41);
+}
+    }
+
+    Structure {
+        slide1 {
+            add heading1 with "Hello!";
+            add heading2 with "Hiii 2";
+            add heading3 with "Hiii 3";
+            add heading4 with "Hiii 4";
+            add image with "../src/main/web/images/magnus.png";
+            add heading5 with "Hiii 5";
+            add heading6 with "Hiii 6";
+
+            heading3 below heading2;
+            heading1 left heading2;
+        }
+        slide2 {
+            add heading1 with "Hello!";
+            add heading2 with "Hiii 2";
+            add heading3 with "Hiii 3";
+            add heading4 with "Hiii 4";
+            add heading5 with "Hiii 5";
+            add heading6 with "Hiii 6";
+            heading3 below heading2;
+            heading1 above left heading2;
+        }
+    }
+    Animations {
+        jump into slide2;
+        slide1 start then heading1 appear then heading2 disappear then heading1 disappear end
+            repeat 10;
+    }
+}
