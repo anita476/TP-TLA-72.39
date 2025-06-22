@@ -25,12 +25,8 @@ SlideProperty getSlidePropertyKey(const char *name);
 
 char *parseImageProperties(CssProperty *properties) {
     if (properties == NULL) {
-        printf("DEBUG: parseImageProperties returning empty string (properties is NULL)\n");
         return "";
     }
-
-    printf("DEBUG: parseImageProperties processing properties\n");
-
     char *result = malloc(1);
     if (!result) {
         return "";
@@ -87,6 +83,10 @@ char *parseImageProperties(CssProperty *properties) {
 
         ImageProperty type = getImagePropertyKey(props->property_name);
         if (type == IMG_UNKNOWN) {
+            if (props->value_type == PROP_VAL_INTEGER ||
+                props->value_type == PROP_VAL_DECIMAL) {
+                free(value);
+            }
             CssProperty *next = props->next;
             props = next;
             continue;
@@ -179,6 +179,10 @@ char *parseTextblockProperties(CssProperty *properties) {
 
         TextblockProperty type = getTextblockPropertyKey(props->property_name);
         if (type == TXT_UNKNOWN) {
+            if (props->value_type == PROP_VAL_INTEGER ||
+                props->value_type == PROP_VAL_DECIMAL) {
+                free(value);
+            }
             CssProperty *next = props->next;
             props = next;
             continue;
@@ -213,11 +217,8 @@ char *parseTextblockProperties(CssProperty *properties) {
 char *parseSlideProperties(CssProperty *properties) {
 
     if (properties == NULL) {
-        printf("DEBUG: parseSlideProperties returning empty string (properties is NULL)\n");
         return "";
     }
-
-    printf("DEBUG: parseSlideProperties processing properties\n");
 
     char *result = malloc(1);
     if (!result) {
@@ -277,6 +278,10 @@ char *parseSlideProperties(CssProperty *properties) {
 
         SlideProperty type = getSlidePropertyKey(props->property_name);
         if (type == SLD_UNKNOWN) {
+            if (props->value_type == PROP_VAL_INTEGER ||
+                props->value_type == PROP_VAL_DECIMAL) {
+                free(value);
+            }
             CssProperty *next = props->next;
             props = next;
             continue;

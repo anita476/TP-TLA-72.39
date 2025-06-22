@@ -31,7 +31,7 @@ static char *findObjAnimSteps(char *objIdentifier, AnimationDefinition *animatio
 static char *findObjAnimOrders(char *objIdentifier, AnimationDefinition *animationSeq);
 
 /** PUBLIC FUNCTIONS */
-void generate(CompilerState *compilerState) {
+boolean generate(CompilerState *compilerState) {
     logDebugging(_logger, "Generating final output...");
 
     int mkdirStatus = mkdir("output", 0755);
@@ -43,7 +43,7 @@ void generate(CompilerState *compilerState) {
     _outputFile = fopen(filepath, "w");
     if (_outputFile == NULL) {
         logError(_logger, "Cannot open output file for writing");
-        return;
+        return false;
     }
     generatePrologue(compilerState);
     // TODO generate css classes for objects
@@ -395,8 +395,10 @@ static void outputProperties(CompilerState *compilerState) {
         }
 
         // dont output if there were no valid props
-        if (cssProperties != NULL && strlen(cssProperties) > 0) {
-            fprintf(_outputFile, ".%s {\n%s }\n", identifier, cssProperties);
+        if (cssProperties != NULL) {
+            if (strlen(cssProperties) > 0) {
+                fprintf(_outputFile, ".%s {\n%s }\n", identifier, cssProperties);
+            }
             free(cssProperties);
         }
     }
