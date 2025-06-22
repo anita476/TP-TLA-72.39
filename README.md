@@ -33,15 +33,12 @@ Para compilar un programa de Pressed:
 ./script/ubuntu/start.sh pathAlPrograma
 ```
 
-Opcionalmente, se puede agregar -v para modo verboso:
+Opcionalmente, se puede agregar -v para modo verboso y ver los logs hasta nivel DEBUG:
 ```bash
 ./script/ubuntu/start.sh pathAlPrograma -v
 ```
 
-Para correr el HTML resultante, desde fuera del contenedor:
-```bash
-./output/fileName.html start
-```
+Para ver la presentación resultante, se puede abrir el HTML producido en la carpeta output desde cualquier navegador o visualizador de HTML que soporte JavaScript.
 
 ## Librerías utilizadas
 * glib.h: Utilizada por su implementación de HashTables y arreglos. 
