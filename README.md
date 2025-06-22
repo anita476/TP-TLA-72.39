@@ -4,27 +4,39 @@ Pressed is a language for making HTML presentations. A pressed file is divided i
 * **Structure**: Determines the distribution of the elements in each slide, allowing positioning around an anchor. The content of textblocks and images is also set here, using *add-with* blocks. 
 * **Animations**: Each slide can have an animation block (*start-then-end*), with the possibility of adding *repeat* to any block. Some of the animations are *appear*, *disappear* and *rotate*.
 
-## Instrucciones de compilación
+## Instrucciones de uso
 Inicialización del contenedor en Linux:
+```bash
 ./script/ubuntu/docker-build.sh
 ./script/ubuntu/docker-run.sh
+```
 
 Inicialización del contenedor en Windows:
+```bash
 ./script/windows/docker-build.bat
 ./script/windows/docker-run.bat
+```
 
 Dentro del contenedor:
+```bash
 ./script/ubuntu/install.sh
 ./script/ubuntu/build.sh
+```
 
 Para correr los tests:
+```bash
 ./script/ubuntu/test.sh
+```
 
 Para compilar un programa de Pressed:
+```bash
 ./script/ubuntu/start.sh pathAlPrograma
+```
 
 Para correr el HTML resultante, desde fuera del contenedor:
+```bash
 ./output/fileName.html start
+```
 
 ## Librerías utilizadas
 * glib.h: Utilizada por su implementación de HashTables y arreglos. 
