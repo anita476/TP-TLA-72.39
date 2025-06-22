@@ -19,9 +19,9 @@ typedef struct {
     boolean succeed;
 
     int errorCount;   // track errors during syntactic analysis
-    int slideCounter; // "scope" counter (stack unnecesary for now)
+    int slideCounter; // "scope" counter
 
-    SymbolTable *symbolTable; // TODO: Add a symbol table.
+    SymbolTable *symbolTable;
 
     // Array of slides for div generation, Domain specific
     // One slot for each slide
